@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DongWorld - Platform streaming donghua terbaik dengan koleksi terlengkap dan kualitas HD">
+    <meta name="keywords" content="donghua, anime china, streaming donghua, watch donghua online">
+    <meta name="author" content="DongWorld Team">
+    <meta property="og:title" content="DongWorld - Streaming Donghua Berkualitas">
+    <meta property="og:description" content="Nonton donghua favoritmu dengan kualitas HD dan subtitle Indonesia">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dongworld.example.com">
+    
+    <title>DongWorld - Streaming Donghua Berkualitas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- <link rel="icon" href="images/logo.png" type="image/png"> -->
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Sidebar Toggle Button -->
+            <div class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <!-- Logo -->
+            <a href="index.html" class="logo">
+                <span>DongWorld</span>
+            </a>
+            
+            <!-- Search Container (Desktop) -->
+            <div class="search-container">
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="Cari donghua...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            
+            <!-- Mobile Search Toggle -->
+            <div class="mobile-search-toggle">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        
+        <!-- Mobile Search (Hidden by default) -->
+        <div class="mobile-search-container">
+            <form id="mobile-search-form">
+                <input type="text" id="mobile-search-input" placeholder="Cari donghua...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu / Sidebar -->
+    <div class="mobile-menu">
+        <a href="#home" class="active"><i class="fas fa-home"></i> Beranda</a>
+        <a href="#top"><i class="fas fa-crown"></i> Top Donghua</a>
+        <a href="#history"><i class="fas fa-history"></i> Riwayat</a>
+        <a href="#movies"><i class="fas fa-film"></i> Movie</a>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-slider">
+                <!-- Slide 1 -->
+                <div class="hero-slide" style="background-image: url('https://anichin.club/wp-content/uploads/2023/12/Supreme-Alchemy.webp')">
+                    <div class="hero-content">
+                        <div class="hero-info">
+                            <h1 class="hero-title">Soul Land</h1>
+                            <p class="hero-synopsis">Tang San, seorang jenius dalam senjata tersembunyi, bereinkarnasi di dunia Douluo Dalu di mana setiap orang memiliki semangat mereka sendiri.</p>
+                            <a href="#soul-land" class="btn-primary hero-watch-btn">Mulai Nonton</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="hero-slide" style="background-image: url('images/image2.jpg')">
+                    <div class="hero-content">
+                        <div class="hero-info">
+                            <h1 class="hero-title">Battle Through the Heavens</h1>
+                            <p class="hero-synopsis">Xiao Yan, seorang pemuda berbakat yang kehilangan semua kekuatannya, memulai perjalanan untuk mendapatkan kembali kekuatannya.</p>
+                            <a href="#battle-through-the-heavens" class="btn-primary hero-watch-btn">Mulai Nonton</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="hero-slide" style="background-image: url('images/image3.jpg')">
+                    <div class="hero-content">
+                        <div class="hero-info">
+                            <h1 class="hero-title">The Grandmaster of Demonic Cultivation</h1>
+                            <p class="hero-synopsis">Wei Wuxian, seorang kultivator yang menggunakan jalan iblis, dibangkitkan setelah 13 tahun kematiannya.</p>
+                            <a href="#mo-dao-zu-shi" class="btn-primary hero-watch-btn">Mulai Nonton</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <button class="hero-prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="hero-next"><i class="fas fa-chevron-right"></i></button>
+            
+            <!-- Pagination -->
+            <div class="hero-pagination">
+                <span class="hero-pagination-bullet active"></span>
+                <span class="hero-pagination-bullet"></span>
+                <span class="hero-pagination-bullet"></span>
+            </div>
+        </section>
+        
+        <!-- Trending Section -->
+        <section id="trending" class="section">
+            <div class="section-header">
+                <h2>Trending Minggu Ini</h2>
+                <a href="#" class="see-all">Lihat Semua</a>
+            </div>
+            
+            <div class="card-container">
+                <!-- Card items will be populated by JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Watch History Section -->
+        <section id="history" class="section">
+            <div class="section-header">
+                <h2>Riwayat Nonton</h2>
+                <button id="clear-history" class="btn-clear">Bersihkan Riwayat</button>
+            </div>
+            
+            <div class="history-container">
+                <!-- History items will be populated by JavaScript -->
+                <div class="empty-state">
+                    <i class="fas fa-history"></i>
+                    <p>Riwayat nontonmu masih kosong</p>
+                    <a href="#trending" class="btn-primary">Mulai Menonton</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Search Results Section (Hidden by default) -->
+        <section id="search-results" class="section hidden">
+            <div class="section-header">
+                <h2>Hasil Pencarian</h2>
+                <button id="close-search" class="btn-clear">Tutup</button>
+            </div>
+            
+            <div class="search-results-container">
+                <!-- Search results will be populated by JavaScript -->
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <!-- <img src="images/logo.png" alt="DongWorld Logo"> -->
+                    <span>DongWorld</span>
+                </a>
+                <p>Platform streaming donghua terbaik dengan koleksi terlengkap dan kualitas HD</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+            
+            <!-- <div class="footer-links">
+                <div class="links-column">
+                    <h3>Navigasi</h3>
+                    <ul>
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#top">Top Donghua</a></li>
+                        <li><a href="#history">Riwayat</a></li>
+                        <li><a href="#movies">Movies</a></li>
+                    </ul>
+                </div>
+                
+                <div class="links-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Syarat & Ketentuan</a></li>
+                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><a href="#">DMCA</a></li>
+                        <li><a href="#">Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <div class="links-column">
+                    <h3>Informasi</h3>
+                    <ul>
+                        <li><a href="#">Tentang Kami</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Donasi</a></li>
+                        <li><a href="#">Karir</a></li>
+                    </ul>
+                </div>
+            </div> -->
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 DongWorld. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="js/script.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>
