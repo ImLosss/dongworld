@@ -91,19 +91,13 @@
                             
                             <!-- Server Selection -->
                             <div class="dl-server-selection">
-                                <div class="dl-server-tabs">
-                                    <button class="dl-server-tab active" data-server="dailymotion">
-                                        <i class="fab fa-dailymotion"></i> Dailymotion
-                                    </button>
-                                    <button class="dl-server-tab" data-server="krakenfiles">
-                                        <i class="fas fa-server"></i> KrakenFiles
-                                    </button>
-                                    <button class="dl-server-tab" data-server="streamtape">
-                                        <i class="fas fa-server"></i> Streamtape
-                                    </button>
-                                </div>
+                            <select id="server-select">
+                                <option value="dailymotion">Dailymotion</option>
+                                <option value="krakenfiles">KrakenFiles</option>
+                                <option value="streamtape">Streamtape</option>
+                            </select>
                             </div>
-                            
+
                             <!-- Video Info -->
                             <div class="dl-stream-info">
                                 <h1 class="dl-stream-title">Soul Land - Episode 1</h1>
@@ -164,17 +158,6 @@
                         </div>
                     </section>
 
-                    <section id="trending" class="dl-section">
-                        <div class="dl-section-header">
-                            <h2>Recomendation</h2>
-                            <a href="#" class="dl-see-all">Lihat Semua</a>
-                        </div>
-                        
-                        <div class="dl-card-container">
-                            <!-- Card items will be populated by JavaScript -->
-                        </div>
-                    </section>
-                    
                     <!-- Comments Section -->
                     <section class="dl-comments-section">
                         <div class="dl-comments-header">
@@ -238,79 +221,124 @@
                             <button class="dl-btn-secondary">Muat Lebih Banyak</button>
                         </div>
                     </section>
+
+                    <!-- Recommendation Section -->
+                    <section id="recommendation" class="dl-section">
+                        <div class="dl-section-header">
+                            <h2>Rekomendasi</h2>
+                        </div>
+                        <div class="dl-recommendation-container">
+                            <!-- Card items will be populated by JavaScript -->
+                        </div>
+                    </section>
                 </div>
-                
-                <!-- Episode List (Desktop) -->
-                <div class="col-12 col-lg-4 dl-episode-sidebar d-none d-lg-block">
-                    <div class="dl-episode-container">
-                        <div class="dl-episode-header">
-                            <h2>Daftar Episode</h2>
-                            <div class="dl-episode-filter">
-                                <select>
-                                    <option>Musim 1</option>
-                                    <option>Musim 2</option>
-                                    <option>Musim 3</option>
-                                </select>
+
+                <!-- Sidebar -->
+                <div class="col-12 col-lg-4">
+                    <div class="dl-episode-sidebar d-none d-lg-block">
+                        <div class="dl-episode-container">
+                            <div class="dl-episode-header">
+                                <h2>Daftar Episode</h2>
+                                <div class="dl-episode-filter">
+                                    <select>
+                                        <option>Musim 1</option>
+                                        <option>Musim 2</option>
+                                        <option>Musim 3</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="dl-episode-list-container">
-                            <div class="dl-episode-list">
-                                <!-- Episode items will be populated by JavaScript -->
-                                <a href="#" class="dl-episode-item active">
-                                    <span class="dl-episode-number">Episode 1</span>
-                                    <span class="dl-episode-title">Dunia Baru</span>
-                                    <span class="dl-episode-duration">24:15</span>
-                                </a>
-                                
-                                <a href="#" class="dl-episode-item">
-                                    <span class="dl-episode-number">Episode 2</span>
-                                    <span class="dl-episode-title">Semangat Ganda</span>
-                                    <span class="dl-episode-duration">23:48</span>
-                                </a>
-                                
-                                <a href="#" class="dl-episode-item">
-                                    <span class="dl-episode-number">Episode 3</span>
-                                    <span class="dl-episode-title">Master Besi</span>
-                                    <span class="dl-episode-duration">24:02</span>
-                                </a>
-                                
-                                <a href="#" class="dl-episode-item">
-                                    <span class="dl-episode-number">Episode 4</span>
-                                    <span class="dl-episode-title">Pertarungan Pertama</span>
-                                    <span class="dl-episode-duration">23:56</span>
-                                </a>
-                                
-                                <a href="#" class="dl-episode-item">
-                                    <span class="dl-episode-number">Episode 5</span>
-                                    <span class="dl-episode-title">Akademi Shrek</span>
-                                    <span class="dl-episode-duration">24:21</span>
-                                </a>
-                                
-                                <a href="#" class="dl-episode-item">
-                                    <span class="dl-episode-number">Episode 6</span>
-                                    <span class="dl-episode-title">Ujian Masuk</span>
-                                    <span class="dl-episode-duration">24:10</span>
-                                </a>
-                                
-                                <a href="#" class="dl-episode-item">
-                                    <span class="dl-episode-number">Episode 7</span>
-                                    <span class="dl-episode-title">Tujuh Monster Shrek</span>
-                                    <span class="dl-episode-duration">24:15</span>
-                                </a>
-                                
-                                <a href="#" class="dl-episode-item">
-                                    <span class="dl-episode-number">Episode 8</span>
-                                    <span class="dl-episode-title">Pelatihan Keras</span>
-                                    <span class="dl-episode-duration">23:59</span>
-                                </a>
+                            <div class="dl-episode-list-container">
+                                <div class="dl-episode-list">
+                                    <!-- Episode items will be populated by JavaScript -->
+                                    <a href="#" class="dl-episode-item active">
+                                        <span class="dl-episode-number">Episode 1</span>
+                                        <span class="dl-episode-title">Dunia Baru</span>
+                                        <span class="dl-episode-duration">24:15</span>
+                                    </a>
+
+                                    <a href="#" class="dl-episode-item">
+                                        <span class="dl-episode-number">Episode 2</span>
+                                        <span class="dl-episode-title">Semangat Ganda</span>
+                                        <span class="dl-episode-duration">23:48</span>
+                                    </a>
+
+                                    <a href="#" class="dl-episode-item">
+                                        <span class="dl-episode-number">Episode 3</span>
+                                        <span class="dl-episode-title">Master Besi</span>
+                                        <span class="dl-episode-duration">24:02</span>
+                                    </a>
+
+                                    <a href="#" class="dl-episode-item">
+                                        <span class="dl-episode-number">Episode 4</span>
+                                        <span class="dl-episode-title">Pertarungan Pertama</span>
+                                        <span class="dl-episode-duration">23:56</span>
+                                    </a>
+
+                                    <a href="#" class="dl-episode-item">
+                                        <span class="dl-episode-number">Episode 5</span>
+                                        <span class="dl-episode-title">Akademi Shrek</span>
+                                        <span class="dl-episode-duration">24:21</span>
+                                    </a>
+
+                                    <a href="#" class="dl-episode-item">
+                                        <span class="dl-episode-number">Episode 6</span>
+                                        <span class="dl-episode-title">Ujian Masuk</span>
+                                        <span class="dl-episode-duration">24:10</span>
+                                    </a>
+
+                                    <a href="#" class="dl-episode-item">
+                                        <span class="dl-episode-number">Episode 7</span>
+                                        <span class="dl-episode-title">Tujuh Monster Shrek</span>
+                                        <span class="dl-episode-duration">24:15</span>
+                                    </a>
+
+                                    <a href="#" class="dl-episode-item">
+                                        <span class="dl-episode-number">Episode 8</span>
+                                        <span class="dl-episode-title">Pelatihan Keras</span>
+                                        <span class="dl-episode-duration">23:59</span>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="dl-episode-pagination">
-                            <button class="dl-btn-secondary"><i class="fas fa-chevron-left"></i> Sebelumnya</button>
-                            <button class="dl-btn-secondary">Selanjutnya <i class="fas fa-chevron-right"></i></button>
+
+                            <div class="dl-episode-pagination">
+                                <button class="dl-btn-secondary"><i class="fas fa-chevron-left"></i> Sebelumnya</button>
+                                <button class="dl-btn-secondary">Selanjutnya <i class="fas fa-chevron-right"></i></button>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Watch History Section -->
+                    <section id="history" class="dl-section dl-compact">
+                        <div class="dl-history-container">
+                            <div class="dl-history-item">
+                                <div class="dl-history-content">
+                                    <h2 class="dl-history-title">Riwayat Nonton</h2>
+                                    <button id="dl-clear-history" class="dl-btn-clear" style="margin-top:-25px;">Bersihkan Riwayat</button>
+                                    <div class="dl-empty-state" style="margin-top:24px;">
+                                        <i class="fas fa-history"></i>
+                                        <p>Riwayat nontonmu masih kosong</p>
+                                        <a href="#" class="dl-btn-primary">Mulai Menonton</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Community Card -->
+                    <section id="community" class="dl-section dl-compact">
+                        <div class="dl-side-card">
+                            <h2>Komunitas</h2>
+                            <a href="https://t.me/dongworld" class="dl-btn-primary"><i class="fab fa-telegram"></i> Telegram</a>
+                        </div>
+                    </section>
+
+                    <!-- Donation Card -->
+                    <section id="donation" class="dl-section dl-compact">
+                        <div class="dl-side-card">
+                            <h2>Donasi</h2>
+                            <a href="#" class="dl-btn-primary"><i class="fas fa-donate"></i> Donasi</a>
+                        </div>
+                    </section>
                 </div>
             </div>
         </main>
@@ -351,16 +379,13 @@
         });
         
         // Server switching
-        document.querySelectorAll('.dl-server-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.dl-server-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // In a real implementation, you would change the iframe src here
-                // For demo, we'll just log it
-                console.log('Switching to server:', this.dataset.server);
+        const serverSelect = document.getElementById('server-select');
+        if (serverSelect) {
+            serverSelect.addEventListener('change', function() {
+                // In a real implementation, change the iframe source
+                console.log('Switching to server:', this.value);
             });
-        });
+        }
         
         // Episode list pagination
         document.querySelectorAll('.dl-episode-pagination button').forEach(btn => {
@@ -382,6 +407,7 @@
         });
     </script>
     <script src="js/script.js"></script>
+    <script src="js/search.js"></script>
     <script src="js/stream.js"></script>
 </body>
 </html>
