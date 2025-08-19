@@ -1,28 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Sidebar Toggle
-    const sidebarToggle = document.querySelector('.sidebar-toggle');
-    const mobileMenu = document.querySelector('.mobile-menu');
+    const sidebarToggle = document.querySelector('.dl-sidebar-toggle');
+    const mobileMenu = document.querySelector('.dl-mobile-menu');
     
     sidebarToggle.addEventListener('click', function() {
-        mobileMenu.classList.toggle('active');
+        mobileMenu.classList.toggle('dl-active');
     });
     
     // Mobile Search Toggle
-    const mobileSearchToggle = document.querySelector('.mobile-search-toggle');
-    const mobileSearchContainer = document.querySelector('.mobile-search-container');
+    const mobileSearchToggle = document.querySelector('.dl-mobile-search-toggle');
+    const mobileSearchContainer = document.querySelector('.dl-mobile-search-container');
     
     mobileSearchToggle.addEventListener('click', function() {
-        mobileSearchContainer.classList.toggle('active');
+        mobileSearchContainer.classList.toggle('dl-active');
     });
     
     // Close sidebar when clicking outside
     document.addEventListener('click', function(event) {
-        if (!event.target.closest('.sidebar-toggle') && !event.target.closest('.mobile-menu')) {
-            mobileMenu.classList.remove('active');
+        if (!event.target.closest('.dl-sidebar-toggle') && !event.target.closest('.dl-mobile-menu')) {
+            mobileMenu.classList.remove('dl-active');
         }
         
-        if (!event.target.closest('.mobile-search-toggle') && !event.target.closest('.mobile-search-container')) {
-            mobileSearchContainer.classList.remove('active');
+        if (!event.target.closest('.dl-mobile-search-toggle') && !event.target.closest('.dl-mobile-search-container')) {
+            mobileSearchContainer.classList.remove('dl-active');
         }
     });
     
@@ -105,11 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     // Hero Slider Functionality
-    const heroSlider = document.querySelector('.hero-slider');
-    const slides = document.querySelectorAll('.hero-slide');
-    const bullets = document.querySelectorAll('.hero-pagination-bullet');
-    const prevBtn = document.querySelector('.hero-prev');
-    const nextBtn = document.querySelector('.hero-next');
+    const heroSlider = document.querySelector('.dl-hero-slider');
+    const slides = document.querySelectorAll('.dl-hero-slide');
+    const bullets = document.querySelectorAll('.dl-hero-pagination-bullet');
+    const prevBtn = document.querySelector('.dl-hero-prev');
+    const nextBtn = document.querySelector('.dl-hero-next');
     
     let currentSlide = 0;
     let slideInterval;
@@ -178,43 +178,43 @@ document.addEventListener('DOMContentLoaded', function() {
     heroSlider.addEventListener('mouseleave', startInterval);
     
     // Populate trending section
-    const trendingContainer = document.querySelector('#trending .card-container');
+    const trendingContainer = document.querySelector('#trending .dl-card-container');
     donghuaData.slice(0, 6).forEach(item => {
         trendingContainer.appendChild(createCard(item));
     });
     
     // Populate watch history
-    const historyContainer = document.querySelector('.history-container');
+    const historyContainer = document.querySelector('.dl-history-container');
     if (watchHistory.length > 0) {
-        document.querySelector('.empty-state').classList.add('hidden');
+        document.querySelector('.dl-empty-state').classList.add('dl-hidden');
         watchHistory.forEach(item => {
             historyContainer.appendChild(createHistoryItem(item));
         });
     }
     
     // Clear history button
-    const clearHistoryBtn = document.getElementById('clear-history');
+    const clearHistoryBtn = document.getElementById('dl-clear-history');
     clearHistoryBtn.addEventListener('click', function() {
         historyContainer.innerHTML = `
-            <div class="empty-state">
+            <div class="dl-empty-state">
                 <i class="fas fa-history"></i>
                 <p>Riwayat nontonmu masih kosong</p>
-                <a href="#trending" class="btn-primary">Mulai Menonton</a>
+                <a href="#trending" class="dl-btn-primary">Mulai Menonton</a>
             </div>
         `;
     });
     
     // Filter top donghua by genre
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterButtons = document.querySelectorAll('.dl-filter-btn');
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             // Remove active class from all buttons
-            filterButtons.forEach(btn => btn.classList.remove('active'));
+            filterButtons.forEach(btn => btn.classList.remove('dl-active'));
             // Add active class to clicked button
-            this.classList.add('active');
+            this.classList.add('dl-active');
             
             const filter = this.dataset.filter;
-            const cards = document.querySelectorAll('.top-donghua .card');
+            const cards = document.querySelectorAll('.dl-top-donghua .dl-card');
             
             cards.forEach(card => {
                 if (filter === 'all') {
@@ -234,17 +234,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper function to create card element
     function createCard(item) {
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'dl-card';
         card.innerHTML = `
-            <div class="card-img">
+            <div class="dl-card-img">
                 <img src="${item.image}" alt="${item.title}">
-                <div class="card-badge">NEW</div>
+                <div class="dl-card-badge">NEW</div>
             </div>
-            <div class="card-content">
-                <h3 class="card-title">${item.title}</h3>
-                <div class="card-meta">
+            <div class="dl-card-content">
+                <h3 class="dl-card-title">${item.title}</h3>
+                <div class="dl-card-meta">
                     <span>${item.episodes} eps</span>
-                    <span class="card-rating"><i class="fas fa-star"></i> ${item.rating}</span>
+                    <span class="dl-card-rating"><i class="fas fa-star"></i> ${item.rating}</span>
                 </div>
             </div>
         `;
@@ -254,16 +254,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper function to create history item
     function createHistoryItem(item) {
         const historyItem = document.createElement('div');
-        historyItem.className = 'history-item';
+        historyItem.className = 'dl-history-item';
         historyItem.innerHTML = `
-            <div class="history-content">
-                <h3 class="history-title">${item.title}</h3>
-                <div class="history-meta">
+            <div class="dl-history-content">
+                <h3 class="dl-history-title">${item.title}</h3>
+                <div class="dl-history-meta">
                     <span>${item.episode}</span>
                     <span>${item.time}</span>
                 </div>
-                <div class="history-progress">
-                    <div class="history-progress-bar" style="width: ${item.progress}%"></div>
+                <div class="dl-history-progress">
+                    <div class="dl-history-progress-bar" style="width: ${item.progress}%"></div>
                 </div>
             </div>
         `;

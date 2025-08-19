@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const searchForm = document.getElementById('search-form');
-    const searchInput = document.getElementById('search-input');
-    const searchResultsSection = document.getElementById('search-results');
-    const closeSearchBtn = document.getElementById('close-search');
+    const searchForm = document.getElementById('dl-search-form');
+    const searchInput = document.getElementById('dl-search-input');
+    const searchResultsSection = document.getElementById('dl-search-results');
+    const closeSearchBtn = document.getElementById('dl-close-search');
     
     // Sample data for search (in a real app, this would come from an API)
     const searchData = [
@@ -57,12 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (query.length === 0) return;
         
         // Hide all sections
-        document.querySelectorAll('.section:not(#search-results)').forEach(section => {
-            section.classList.add('hidden');
+        document.querySelectorAll('.dl-section:not(#dl-search-results)').forEach(section => {
+            section.classList.add('dl-hidden');
         });
         
         // Show search results section
-        searchResultsSection.classList.remove('hidden');
+        searchResultsSection.classList.remove('dl-hidden');
         
         // Filter search results
         const results = searchData.filter(item => 
@@ -70,12 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
         );
         
         // Display results
-        const resultsContainer = document.querySelector('.search-results-container');
+        const resultsContainer = document.querySelector('.dl-search-results-container');
         resultsContainer.innerHTML = '';
         
         if (results.length === 0) {
             resultsContainer.innerHTML = `
-                <div class="empty-state">
+                <div class="dl-empty-state">
                     <i class="fas fa-search"></i>
                     <p>Tidak ada hasil untuk "${query}"</p>
                     <p>Coba kata kunci yang berbeda</p>
@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Close search results
     closeSearchBtn.addEventListener('click', function() {
-        searchResultsSection.classList.add('hidden');
-        document.querySelectorAll('.section:not(#search-results)').forEach(section => {
-            section.classList.remove('hidden');
+        searchResultsSection.classList.add('dl-hidden');
+        document.querySelectorAll('.dl-section:not(#dl-search-results)').forEach(section => {
+            section.classList.remove('dl-hidden');
         });
         searchInput.value = '';
     });
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper function to create search result item
     function createSearchResultItem(item) {
         const resultItem = document.createElement('a');
-        resultItem.className = 'search-result-item';
+        resultItem.className = 'dl-search-result-item';
         resultItem.href = `#${item.id}`;
         
         const meta = item.type === 'Series' 
@@ -111,12 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
             : item.duration;
         
         resultItem.innerHTML = `
-            <div class="search-result-img">
+            <div class="dl-search-result-img">
                 <img src="${item.image}" alt="${item.title}">
             </div>
             <div>
-                <h3 class="search-result-title">${item.title}</h3>
-                <p class="search-result-meta">${item.type} • ${meta}</p>
+                <h3 class="dl-search-result-title">${item.title}</h3>
+                <p class="dl-search-result-meta">${item.type} • ${meta}</p>
             </div>
         `;
         

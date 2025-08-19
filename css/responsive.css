@@ -1,50 +1,50 @@
 /* Tablet Devices */
 @media (max-width: 992px) {
-    .nav-links {
+    .dl-nav-links {
         display: none;
     }
     
-    .mobile-menu-btn {
+    .dl-mobile-menu-btn {
         display: block;
     }
     
-    .search-container {
+    .dl-search-container {
         order: 3;
         width: 100%;
         margin-top: 10px;
     }
     
-    .nav-container {
+    .dl-nav-container {
         flex-wrap: wrap;
     }
     
-    .mobile-menu-btn {
+    .dl-mobile-menu-btn {
         display: block;
     }
     
-    .hero-content h1 {
+    .dl-hero-content h1 {
         font-size: 2.5rem;
     }
     
-    .footer-container {
+    .dl-footer-container {
         grid-template-columns: 1fr;
         gap: 30px;
     }
     
-    .footer-links {
+    .dl-footer-links {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .card-container {
+    .dl-card-container {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 15px;
     }
     
-    .top-donghua .card {
+    .dl-top-donghua .dl-card {
         flex-direction: row;
     }
     
-    .top-donghua .card-img {
+    .dl-top-donghua .dl-card-img {
         width: 100px;
         height: auto;
     }
@@ -52,89 +52,89 @@
 
 /* Mobile Devices */
 @media (max-width: 768px) {
-    .nav-container {
+    .dl-nav-container {
         gap: 10px;
         padding: 0 10px;
     }
     
-    .logo span {
+    .dl-logo span {
         font-size: 1.3rem;
     }
     
-    #search-input {
+    #dl-search-input {
         padding: 8px 12px;
         font-size: 0.8rem;
     }
     
-    .sidebar-toggle {
+    .dl-sidebar-toggle {
         display: block;
         margin-right: 10px;
     }
     
-    .logo {
+    .dl-logo {
         margin-right: 0;
     }
     
-    .hero-section {
+    .dl-hero-section {
         height: auto;
         padding: 100px 0 60px;
     }
     
-    .hero-buttons {
+    .dl-hero-buttons {
         flex-direction: column;
         gap: 10px;
     }
 
-    .hero-title {
+    .dl-hero-title {
         font-size: 2rem;
     }
     
-    .hero-synopsis {
+    .dl-hero-synopsis {
         font-size: 1rem;
         -webkit-line-clamp: 4;
     }
     
-    .hero-controls {
+    .dl-hero-controls {
         bottom: 20px;
     }
     
-    .section {
+    .dl-section {
         padding: 40px 20px;
     }
     
-    .section-header {
+    .dl-section-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
     
-    .filter-options {
+    .dl-filter-options {
         flex-wrap: wrap;
     }
     
-    .footer-links {
+    .dl-footer-links {
         grid-template-columns: 1fr;
     }
     
-    .history-item {
+    .dl-history-item {
         flex-direction: column;
         gap: 10px;
     }
     
-    .history-img {
+    .dl-history-img {
         width: 100%;
         height: 150px;
     }
     
-    .card-container {
+    .dl-card-container {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     }
     
-    .top-donghua .card {
+    .dl-top-donghua .dl-card {
         flex-direction: column;
     }
     
-    .top-donghua .card-img {
+    .dl-top-donghua .dl-card-img {
         width: 100%;
         height: 180px;
     }
@@ -142,57 +142,57 @@
 
 /* Small Mobile Devices */
 @media (max-width: 480px) {
-    .navbar {
+    .dl-navbar {
         padding: 8px 0;
     }
     
-    .logo span {
+    .dl-logo span {
         font-size: 1.2rem;
     }
     
-    .search-container {
+    .dl-search-container {
         display: none;
     }
     
-    .mobile-search-toggle {
+    .dl-mobile-search-toggle {
         display: block;
         font-size: 1.1rem;
     }
     
-    .mobile-search-container.active {
+    .dl-mobile-search-container.dl-active {
         display: block;
     }
     
-    .hero-content h1 {
+    .dl-hero-content h1 {
         font-size: 2rem;
     }
     
-    .hero-content p {
+    .dl-hero-content p {
         font-size: 1rem;
     }
 
-    .hero-title {
+    .dl-hero-title {
         font-size: 1.8rem;
     }
     
-    .hero-synopsis {
+    .dl-hero-synopsis {
         -webkit-line-clamp: 3;
     }
     
-    .hero-watch-btn {
+    .dl-hero-watch-btn {
         padding: 10px 20px;
         font-size: 1rem;
     }
     
-    .card-container {
+    .dl-card-container {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
     
-    .card-img {
+    .dl-card-img {
         height: 180px;
     }
     
-    .movies-grid .card-img {
+    .dl-movies-grid .dl-card-img {
         height: 220px;
     }
 }
