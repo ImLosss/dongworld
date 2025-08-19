@@ -57,32 +57,12 @@
     background-color: var(--darker-color);
 }
 
-.dl-server-tabs {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.dl-server-tab {
+.dl-server-selection select {
     padding: 8px 15px;
     border-radius: 5px;
     background-color: var(--secondary-color);
-    color: var(--gray-color);
-    font-size: 0.9rem;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.dl-server-tab.active {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.dl-server-tab:hover:not(.active) {
-    background-color: var(--dark-color);
-    color: white;
+    color: var(--light-color);
+    border: none;
 }
 
 /* Stream Info */
@@ -517,6 +497,19 @@
 .dl-mobile-episode-list-container {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch; /* Untuk smooth scroll di iOS */
+}
+
+/* Recommendation Section */
+.dl-recommendation-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 15px 0;
+}
+
+.dl-recommendation-container .dl-card {
+    flex: 0 0 auto;
+    width: 180px;
 }
 
 /* Responsive Adjustments */

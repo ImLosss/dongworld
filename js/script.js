@@ -179,9 +179,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Populate trending section
     const trendingContainer = document.querySelector('#trending .dl-card-container');
-    donghuaData.slice(0, 6).forEach(item => {
-        trendingContainer.appendChild(createCard(item));
-    });
+    if (trendingContainer) {
+        donghuaData.slice(0, 6).forEach(item => {
+            trendingContainer.appendChild(createCard(item));
+        });
+    }
+
+    const moviesContainer = document.querySelector('#movies .dl-card-container');
+    if (moviesContainer) {
+        donghuaData.slice(0, 6).forEach(item => {
+            moviesContainer.appendChild(createCard(item));
+        });
+    }
+
+    const allSeriesContainer = document.querySelector('#all-series .dl-card-container');
+    if (allSeriesContainer) {
+        donghuaData.forEach(item => {
+            allSeriesContainer.appendChild(createCard(item));
+        });
+    }
     
     // Populate watch history
     const historyContainer = document.querySelector('.dl-history-container');
