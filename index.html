@@ -39,7 +39,7 @@
                 
                 <!-- Search Container (Desktop) -->
                 <div class="dl-search-container">
-                    <form id="dl-search-form">
+                    <form id="dl-search-form" action="search.html">
                         <input type="text" id="dl-search-input" placeholder="Cari donghua...">
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
@@ -53,7 +53,7 @@
             
             <!-- Mobile Search (Hidden by default) -->
             <div class="dl-mobile-search-container">
-                <form id="dl-mobile-search-form">
+                <form id="dl-mobile-search-form" action="search.html">
                     <input type="text" id="dl-mobile-search-input" placeholder="Cari donghua...">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
@@ -123,15 +123,26 @@
                     <!-- Trending Section -->
                     <section id="trending" class="dl-section">
                         <div class="dl-section-header">
-                            <h2>Trending Minggu Ini</h2>
-                            <a href="#" class="dl-see-all">Lihat Semua</a>
+                            <h2>Rilisan Terbaru</h2>
+                            <a href="all-series.html" class="dl-see-all">Lihat Semua</a>
                         </div>
-                        
+
                         <div class="dl-card-container">
                             <!-- Card items will be populated by JavaScript -->
                         </div>
                     </section>
-                    
+
+                    <!-- Movies Section -->
+                    <section id="movies" class="dl-section">
+                        <div class="dl-section-header">
+                            <h2>Movies</h2>
+                            <a href="all-series.html" class="dl-see-all">Lihat Semua</a>
+                        </div>
+                        <div class="dl-card-container">
+                            <!-- Movie cards will be populated by JavaScript -->
+                        </div>
+                    </section>
+
                     <!-- Search Results Section (Hidden by default) -->
                     <section id="dl-search-results" class="dl-section dl-hidden">
                         <div class="dl-section-header">
@@ -161,6 +172,22 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </section>
+
+                    <!-- Community Card -->
+                    <section id="community" class="dl-section">
+                        <div class="dl-side-card">
+                            <h2>Komunitas</h2>
+                            <a href="https://t.me/dongworld" class="dl-btn-primary"><i class="fab fa-telegram"></i> Telegram</a>
+                        </div>
+                    </section>
+
+                    <!-- Donation Card -->
+                    <section id="donation" class="dl-section">
+                        <div class="dl-side-card">
+                            <h2>Donasi</h2>
+                            <a href="#" class="dl-btn-primary"><i class="fas fa-donate"></i> Donasi</a>
                         </div>
                     </section>
                 </div>

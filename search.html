@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DongWorld - Platform streaming donghua terbaik dengan koleksi terlengkap dan kualitas HD">
+    <meta name="keywords" content="donghua, anime china, streaming donghua, watch donghua online">
+    <meta name="author" content="DongWorld Team">
+    <meta property="og:title" content="DongWorld - Streaming Donghua Berkualitas">
+    <meta property="og:description" content="Nonton donghua favoritmu dengan kualitas HD dan subtitle Indonesia">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dongworld.example.com">
+
+    <title>Pencarian | DongWorld</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="dl-root">
+        <!-- Navbar -->
+        <nav class="dl-navbar">
+            <div class="dl-nav-container">
+                <div class="dl-sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <a href="index.html" class="dl-logo">
+                    <span>DongWorld</span>
+                </a>
+                <div class="dl-search-container">
+                    <form id="dl-search-form" action="search.html">
+                        <input type="text" id="dl-search-input" placeholder="Cari donghua...">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="dl-mobile-search-toggle">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            <div class="dl-mobile-search-container">
+                <form id="dl-mobile-search-form" action="search.html">
+                    <input type="text" id="dl-mobile-search-input" placeholder="Cari donghua...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu / Sidebar -->
+        <div class="dl-mobile-menu">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Beranda</a>
+            <a href="#top"><i class="fas fa-crown"></i> Top Donghua</a>
+            <a href="#history"><i class="fas fa-history"></i> Riwayat</a>
+            <a href="#movies"><i class="fas fa-film"></i> Movie</a>
+        </div>
+
+        <!-- Main Content -->
+        <main class="dl-main-content">
+            <div class="row">
+                <div class="col-12 col-md-9">
+                    <section id="dl-search-results" class="dl-section">
+                        <div class="dl-section-header">
+                            <h2>Hasil Pencarian</h2>
+                            <button id="dl-close-search" class="dl-btn-clear">Tutup</button>
+                        </div>
+                        <div class="dl-search-results-container">
+                            <!-- Search results will be populated by JavaScript -->
+                        </div>
+                    </section>
+                </div>
+                <div class="col-12 col-md-3">
+                    <!-- Watch History Section -->
+                    <section id="history" class="dl-section">
+                        <div class="dl-history-container">
+                            <div class="dl-history-item">
+                                <div class="dl-history-content">
+                                    <h2 class="dl-history-title">Riwayat Nonton</h2>
+                                    <button id="dl-clear-history" class="dl-btn-clear" style="margin-top:-25px;">Bersihkan Riwayat</button>
+                                    <div class="dl-empty-state" style="margin-top:24px;">
+                                        <i class="fas fa-history"></i>
+                                        <p>Riwayat nontonmu masih kosong</p>
+                                        <a href="index.html#trending" class="dl-btn-primary">Mulai Menonton</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Community Card -->
+                    <section id="community" class="dl-section">
+                        <div class="dl-side-card">
+                            <h2>Komunitas</h2>
+                            <a href="https://t.me/dongworld" class="dl-btn-primary"><i class="fab fa-telegram"></i> Telegram</a>
+                        </div>
+                    </section>
+
+                    <!-- Donation Card -->
+                    <section id="donation" class="dl-section">
+                        <div class="dl-side-card">
+                            <h2>Donasi</h2>
+                            <a href="#" class="dl-btn-primary"><i class="fas fa-donate"></i> Donasi</a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dl-footer">
+            <div class="dl-footer-container">
+                <div class="dl-footer-brand">
+                    <a href="#" class="dl-logo">
+                        <span>DongWorld</span>
+                    </a>
+                    <p>Platform streaming donghua terbaik dengan koleksi terlengkap dan kualitas HD</p>
+                    <div class="dl-social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="dl-footer-bottom">
+                <p>&copy; 2023 DongWorld. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let zoomLevel = 1;
+        const dlRoot = document.getElementById('dl-root');
+        window.addEventListener('wheel', function (e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                zoomLevel += e.deltaY > 0 ? -0.05 : 0.05;
+                zoomLevel = Math.max(0.3, Math.min(zoomLevel, 3));
+                dlRoot.style.transform = `scale(${zoomLevel})`;
+            }
+        }, { passive: false });
+        window.addEventListener('keydown', function (e) {
+            if (e.ctrlKey && (e.key === '=' || e.key === '+' || e.key === '-' || e.key === '_')) {
+                e.preventDefault();
+                zoomLevel += (e.key === '-' || e.key === '_') ? -0.05 : 0.05;
+                zoomLevel = Math.max(0.3, Math.min(zoomLevel, 3));
+                dlRoot.style.transform = `scale(${zoomLevel})`;
+            }
+        });
+    </script>
+    <script src="js/script.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>
+
