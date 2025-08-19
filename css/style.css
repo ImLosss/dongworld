@@ -232,7 +232,7 @@ button {
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.dl-mobile-menu.active {
+.dl-mobile-menu.dl-active {
     left: 0;
 }
 
@@ -247,7 +247,7 @@ button {
     border-bottom: none;
 }
 
-.dl-mobile-menu a.active {
+.dl-mobile-menu a.dl-active {
     color: var(--primary-color);
 }
 
@@ -803,4 +803,8 @@ button {
 #dl-root {
   transform-origin: top center;
   transition: transform 0.2s ease-in-out;
+}
+
+.dl-section {
+    scroll-margin-top: 40px; /* sesuaikan dengan tinggi navbar */
 }
