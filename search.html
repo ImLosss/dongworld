@@ -16,9 +16,7 @@
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 <body>
     <div id="dl-root">
@@ -31,23 +29,11 @@
                 <a href="index.html" class="dl-logo">
                     <span>DongWorld</span>
                 </a>
-                <div class="dl-search-container">
-                    <form id="dl-search-form" action="search.html">
-                        <input type="text" id="dl-search-input" placeholder="Cari donghua...">
-                        <button type="submit"><i class="fas fa-search"></i></button>
-                    </form>
-                </div>
-                <div class="dl-mobile-search-toggle">
-                    <i class="fas fa-search"></i>
-                </div>
-            </div>
-            <div class="dl-mobile-search-container">
-                <form id="dl-mobile-search-form" action="search.html">
-                    <input type="text" id="dl-mobile-search-input" placeholder="Cari donghua...">
-                    <button type="submit"><i class="fas fa-search"></i></button>
-                </form>
-            </div>
-        </nav>
+                  <div class="dl-search-container">
+                      <a href="search.html"><i class="fas fa-search"></i></a>
+                  </div>
+              </div>
+          </nav>
 
         <!-- Mobile Menu / Sidebar -->
         <div class="dl-mobile-menu">
@@ -63,8 +49,8 @@
                 <div class="col-12 col-md-9">
                     <section id="dl-search-results" class="dl-section">
                         <div class="dl-section-header">
-                            <h2>Hasil Pencarian</h2>
-                            <button id="dl-close-search" class="dl-btn-clear">Tutup</button>
+                              <h2>Hasil Pencarian</h2>
+                              <a href="index.html" class="dl-btn-clear">Tutup</a>
                         </div>
                         <div class="dl-search-results-container">
                             <!-- Search results will be populated by JavaScript -->
@@ -130,28 +116,6 @@
         </footer>
     </div>
 
-    <script>
-        let zoomLevel = 1;
-        const dlRoot = document.getElementById('dl-root');
-        window.addEventListener('wheel', function (e) {
-            if (e.ctrlKey) {
-                e.preventDefault();
-                zoomLevel += e.deltaY > 0 ? -0.05 : 0.05;
-                zoomLevel = Math.max(0.3, Math.min(zoomLevel, 3));
-                dlRoot.style.transform = `scale(${zoomLevel})`;
-            }
-        }, { passive: false });
-        window.addEventListener('keydown', function (e) {
-            if (e.ctrlKey && (e.key === '=' || e.key === '+' || e.key === '-' || e.key === '_')) {
-                e.preventDefault();
-                zoomLevel += (e.key === '-' || e.key === '_') ? -0.05 : 0.05;
-                zoomLevel = Math.max(0.3, Math.min(zoomLevel, 3));
-                dlRoot.style.transform = `scale(${zoomLevel})`;
-            }
-        });
-    </script>
-    <script src="js/script.js"></script>
-    <script src="js/search.js"></script>
-</body>
-</html>
+  </body>
+  </html>
 
