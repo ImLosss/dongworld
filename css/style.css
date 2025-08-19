@@ -386,8 +386,12 @@ button {
 
 /* Sections */
 .dl-section {
-    padding: 60px 10px;
+    padding: 40px 10px;
     position: relative;
+}
+
+.dl-section.dl-compact {
+    padding: 20px 10px;
 }
 
 .dl-section-header {
@@ -616,6 +620,30 @@ button {
     height: 100%;
     background-color: var(--primary-color);
     width: 70%;
+}
+
+/* Simple side cards */
+.dl-side-card {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.dl-side-card i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+/* Filter dropdowns */
+.dl-filter-options select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: var(--secondary-color);
+    color: var(--light-color);
+    border: none;
 }
 
 .dl-empty-state {

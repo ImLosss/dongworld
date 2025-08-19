@@ -99,7 +99,11 @@
     }
     
     .dl-section {
-        padding: 40px 20px;
+        padding: 30px 15px;
+    }
+
+    .dl-section.dl-compact {
+        padding: 15px 10px;
     }
     
     .dl-section-header {
