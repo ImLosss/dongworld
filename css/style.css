@@ -384,9 +384,58 @@ button {
     transform: scale(1.2);
 }
 
+/* Breadcrumb */
+.dl-breadcrumb-card {
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+/* Sesuaikan spacing breadcrumb saat di dalam card */
+.dl-breadcrumb-card .dl-breadcrumb {
+    margin: 0;
+    padding: 10px 15px;
+}
+
+.dl-breadcrumb {
+    margin: 10px 15px 0; /* sejajar padding dl-stream-info */
+    font-size: 0.9rem;
+}
+.dl-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.dl-breadcrumb li {
+    color: #adb5bd;
+}
+.dl-breadcrumb li + li::before {
+    content: ">";
+    color: #6c757d;
+    margin: 0 4px 0 2px;
+}
+.dl-breadcrumb a {
+    color: var(--gray-color);
+}
+.dl-breadcrumb a:hover,
+.dl-breadcrumb a:focus {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.dl-breadcrumb [aria-current="page"] {
+    color: #e9ecef;
+    font-weight: 600;
+}
+
 /* Sections */
 .dl-section {
-    padding: 20px 10px;
+    padding: 10px 10px;
     position: relative;
 }
 

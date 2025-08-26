@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 2,
             title: 'Battle Through the Heavens',
-            image: 'https://via.placeholder.com/300x450/2f3542/ffffff?text=Battle+Through+the+Heavens',
+            image: 'images/image.jpg',
             type: 'Series',
             episodes: 150
         },
