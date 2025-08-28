@@ -22,7 +22,7 @@
   <title>
     Kopi Ngumpul @yield('title')
   </title>
-  
+
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
   <!-- Nucleo Icons -->
@@ -37,7 +37,7 @@
   {{-- jQuery --}}
   <script src="{{ asset('assets/js/jquery-1.11.1.min.js') }}"
   crossorigin="anonymous"></script>
-  
+
   <!-- Select2 CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet">
 
@@ -159,6 +159,28 @@
         showConfirmButton: false,
         timerProgressBar: true
       })
+    }
+
+    // Global delete confirmation
+    function modalHapus(id) {
+      Swal.fire({
+          title: "Kamu yakin?",
+          text: "Kamu tidak akan bisa membatalkannya setelah ini!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#a1a1a1",
+          confirmButtonText: "Ya, hapus saja!"
+      }).then((result) => {
+          if (result.isConfirmed) {
+              submit(id);
+          }
+      });
+    }
+
+    function submit(id) {
+      const form = document.getElementById('form_' + id);
+      if (form) form.submit();
     }
   </script>
 

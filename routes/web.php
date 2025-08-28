@@ -3,6 +3,7 @@
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\LogoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GenreController; // add
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -14,11 +15,15 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout')->mid
 
 Route::group([
     'middleware' => ['auth'],
-    'namespace'  => 'App\Http\Controllers\admin',
     'prefix'     => '/',
 ], function () {
 
     // routeDashboard
     Route::get('/', [DashboardController::class, 'index'])->name('home');
     //endRoute
+
+    // routeGenre
+    Route::get('genre/datatable', [GenreController::class, 'datatable'])->name('genre.datatable');
+    Route::resource('genre', GenreController::class)->names('genre');
+    // endRoute
 });
