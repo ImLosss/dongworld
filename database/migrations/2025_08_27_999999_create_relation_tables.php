@@ -15,6 +15,15 @@ return new class extends Migration
             $table->foreign('series_id')->references('id')->on('series')->onDelete('cascade');
             $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade');
         });
+
+        Schema::table('episodes', function (Blueprint $table) {
+            $table->foreign('series_id')->references('id')->on('series')->onDelete('cascade');
+        });
+
+        Schema::table('links', function (Blueprint $table) {
+            $table->foreign('episode_id')->references('id')->on('episodes')->onDelete('cascade');
+            $table->foreign('server_id')->references('id')->on('servers')->onDelete('cascade');
+        });
     }
 
     /**

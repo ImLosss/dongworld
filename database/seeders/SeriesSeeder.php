@@ -17,9 +17,10 @@ class SeriesSeeder extends Seeder
             'name' => 'Renegade Immortal',
             'slug' => 'renegade-immortal',
             'synopsis' => 'This is an example series synopsis.',
-            'thumbnail' => 'path/to/thumbnail.jpg',
+            'thumbnail' => 'storage/series/C1vi4nBu8KssC48lj0pqdUFZ8ZiVf4X3MLBhjntF.png',
             'release_date' => '2020-08-27',
             'rating' => 4.5,
+            'total_episodes' => 200,
             'type' => 'episodes',
         ]);
     }

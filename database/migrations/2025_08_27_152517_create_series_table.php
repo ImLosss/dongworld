@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('synopsis')->nullable();
+            $table->text('total_episodes')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('release_date')->nullable();
             $table->float('rating')->default(4);

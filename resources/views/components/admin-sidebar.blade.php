@@ -33,16 +33,16 @@
                 </li>
             @endrole
 
-            @canany('seriesAccess')
+            @can('seriesAccess')
                 <li class="nav-item">
-                    <a class="nav-link {{ (Request::is('series','series/*') ? 'active' : '') }}" href="#">
+                    <a class="nav-link {{ (Request::is('series','series/*') ? 'active' : '') }}" href="{{ route('series.index') }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-film {{ (Request::is('series','series/*') ? '' : 'text-dark') }} text-sm"></i>
                         </div>
                         <span class="nav-link-text ms-1">Series</span>
                     </a>
                 </li>
-            @endcanany
+            @endcan
 
             @can('genreAccess')
                 <li class="nav-item">
@@ -51,6 +51,16 @@
                             <i class="fa-solid fa-tags {{ (Request::is('genre','genre/*') ? '' : 'text-dark') }} text-sm"></i>
                         </div>
                         <span class="nav-link-text ms-1">Genre</span>
+                    </a>
+                </li>
+            @endcan
+            @can('serverAccess')
+                <li class="nav-item">
+                    <a class="nav-link {{ (Request::is('server','server/*') ? 'active' : '') }}" href="{{ route('server.index') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-server {{ (Request::is('server','server/*') ? '' : 'text-dark') }} text-sm"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Server</span>
                     </a>
                 </li>
             @endcan

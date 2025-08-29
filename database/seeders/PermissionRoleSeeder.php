@@ -42,5 +42,13 @@ class PermissionRoleSeeder extends Seeder
         ->assignRole(['superadmin']);
         Permission::create(['name' => 'genreDelete'])
         ->assignRole(['superadmin']);
+        Permission::create(['name' => 'serverAccess'])
+        ->assignRole(['subber', 'superadmin']);
+        Permission::create(['name' => 'serverAdd'])
+        ->assignRole(['superadmin']);
+        Permission::create(['name' => 'serverUpdate'])
+        ->assignRole(['superadmin']);
+        Permission::create(['name' => 'serverDelete'])
+        ->assignRole(['superadmin']);
     }
 }
