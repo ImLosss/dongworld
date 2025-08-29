@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GenreController; // add
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\ServerController;
+use App\Http\Controllers\EpisodeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -37,5 +38,12 @@ Route::group([
     // routeServer
     Route::get('server/datatable', [ServerController::class, 'datatable'])->name('server.datatable');
     Route::resource('server', ServerController::class)->names('server');
+    // endRoute
+
+    // routeEpisodes nested in series
+    Route::get('series/{series}/episodes/datatable', [EpisodeController::class, 'datatable'])->name('episode.datatable');
+    Route::resource('series.episode', EpisodeController::class)->parameters([
+        'episode' => 'episode'
+    ])->names('episode');
     // endRoute
 });

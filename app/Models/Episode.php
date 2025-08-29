@@ -13,8 +13,12 @@ class Episode extends Model
         return $this->belongsTo(Series::class);
     }
 
+    public function links() {
+        return $this->hasMany(Link::class);
+    }
+
     public function linkForServer(int $server_id)
     {
-        return $this->hasMany(Link::class)->where('server_id', $server_id);
+        return $this->links()->where('server_id', $server_id);
     }
 }

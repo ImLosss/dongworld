@@ -52,7 +52,7 @@ class SeriesController extends Controller
                 }
 
                 if ($user && $user->can('episodeAccess')) {
-                    $episodes = '<a href="' . route('series.show', $data->id) . '" class="ms-2" data-bs-toggle="tooltip" title="Episodes">'
+                    $episodes = '<a href="' . route('episode.index', $data->id) . '" class="ms-2" data-bs-toggle="tooltip" title="Episodes">'
                               . '<i class="fa-solid fa-circle-plus text-success"></i>'
                               . '</a>';
                 }
