@@ -52,8 +52,33 @@
                 @endforeach
             </div>
 
+            <hr class="horizontal dark my-4">
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-control-label mb-2">Upload Video (opsional)</label>
+                </div>
+                <div class="col-md-12">
+                    <div id="dropzone" class="w-100 p-4 border border-2 border-dashed rounded-3 text-center cursor-pointer"
+                         style="border-style: dashed !important;">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary" style="font-size: 32px;"></i>
+                        <div class="mt-2 text-sm">Drag & drop file video di sini atau klik untuk memilih</div>
+                        <div id="fileName" class="text-xs text-secondary mt-1"></div>
+                        <input id="videoFile" type="file" accept="video/*" style="display:none;" />
+                    </div>
+                    <div class="mt-3" id="progressWrap" style="display:none;">
+                        <div class="progress" style="height: 10px;">
+                            <div id="uploadBar" class="progress-bar bg-gradient-dark" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small id="progressText" class="text-xs text-secondary">0%</small>
+                            <small id="statusText" class="text-xs text-secondary">Menunggu file...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">Simpan</button>
+                <button id="submit" type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">Simpan</button>
             </div>
         </form>
     </div>
@@ -61,4 +86,108 @@
 @endsection
 
 @section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dz = document.getElementById('dropzone');
+        const fileInput = document.getElementById('videoFile');
+        const fileName = document.getElementById('fileName');
+    // no external API URL, we upload to our server endpoint
+        const progressWrap = document.getElementById('progressWrap');
+        const bar = document.getElementById('uploadBar');
+        const progressText = document.getElementById('progressText');
+        const statusText = document.getElementById('statusText');
+
+        function resetProgress() {
+            progressWrap.style.display = 'none';
+            bar.style.width = '0%';
+            bar.setAttribute('aria-valuenow', '0');
+            progressText.textContent = '0%';
+            statusText.textContent = 'Menunggu file...';
+        }
+
+        function setUploading(percent, text) {
+            progressWrap.style.display = 'block';
+            const p = Math.max(0, Math.min(100, Math.round(percent)));
+            bar.style.width = p + '%';
+            bar.setAttribute('aria-valuenow', String(p));
+            text = text ? text : 'Done';
+            progressText.textContent = text + ' / ' + p + '%' + ' (Reload Halaman jika mengalami bug saat proses upload)';
+        }
+
+        function csrfToken() {
+            const el = document.querySelector('meta[name="csrf-token"]');
+            return el ? el.getAttribute('content') : '{{ csrf_token() }}';
+        }
+
+        function uploadFile(file) {
+            $('#submit').prop('disabled', true);
+            fileName.textContent = file.name + ' (' + Math.round(file.size/1024/1024*10)/10 + ' MB)';
+            // Use XHR for progress events
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ route('upload.store') }}', true);
+            // Build multipart form data: many APIs expect 'file'
+            const formData = new FormData();
+            formData.append('file', file);
+            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken());
+            statusText.textContent = 'Mengupload...';
+            setUploading(0);
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total) * 100;
+                    const text = e.loaded < 1024*1024 ? (Math.round(e.loaded/1024*10)/10)+' KB' : (Math.round(e.loaded/1024/1024*10)/10)+' MB';
+                    setUploading(percent, text);
+                }
+            };
+            xhr.onerror = function() {
+                statusText.textContent = 'Gagal upload (network error)';
+            };
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        setUploading(100);
+                        statusText.textContent = 'Selesai diupload';
+                        $('#submit').prop('disabled', false);
+                    } else {
+                        let msg = 'Gagal upload (' + xhr.status + ')';
+                        try { const resp = JSON.parse(xhr.responseText); if (resp && resp.message) msg += ' - ' + resp.message; } catch(e){}
+                        statusText.textContent = msg;
+                    }
+                }
+            };
+            xhr.send(formData);
+        }
+
+        // drag & drop
+        dz.addEventListener('click', () => fileInput.click());
+        dz.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dz.classList.add('bg-light');
+        });
+        dz.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dz.classList.remove('bg-light');
+        });
+        dz.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dz.classList.remove('bg-light');
+            const files = e.dataTransfer.files;
+            if (!files || !files.length) return;
+            const file = files[0];
+            if (!file.type.startsWith('video/')) {
+                statusText.textContent = 'File bukan video';
+                return;
+            }
+            uploadFile(file);
+        });
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('video/')) {
+                statusText.textContent = 'File bukan video';
+                return;
+            }
+            uploadFile(file);
+        });
+    });
+</script>
 @endsection

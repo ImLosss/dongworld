@@ -171,7 +171,7 @@ class EpisodeController extends Controller
                 return $series->name . ' - Episode ' . ($e->episode_number ?? '-');
             })
             ->addColumn('server', function (Episode $e) {
-                return $e->links->map(fn($l) => optional($l->server)->name)->filter()->unique()->implode(', ');
+                return $e->links->map(fn($l) => optional($l->server)->name)->filter()->unique()->implode(', ') ? : 'Belum';
             })
             ->editColumn('created_at', fn (Episode $e) => optional($e->created_at)?->format('d M Y H:i'))
             ->addColumn('action', function (Episode $data) use ($user, $series) {
