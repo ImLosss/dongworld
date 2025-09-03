@@ -20,17 +20,28 @@ class UploadController extends Controller
 
         $file = $request->file('file');
 
-        // Store to public/videos with a hashed filename
-    $path = $file->store('videos', 'public');
-    $url = asset('storage/' . $path);
+        // Kirim file langsung sebagai multipart (tanpa menyimpan di Laravel)
+        $resp = Http::withHeaders([
+            'sb-webhook-token' => 'sbwhook-lwatbodiymchocuj2fdbt1qs',
+        ])->timeout(0) // opsional: biar nggak timeout untuk file besar
+        ->attach(
+            'file',
+            fopen($file->getRealPath(), 'r'),
+            $file->getClientOriginalName()
+        )->post('http://153.92.4.128:2050/upload', [
+            'name' => $file->getClientOriginalName(),
+            'mime' => $file->getClientMimeType(),
+            'size' => $file->getSize(),
+            'kind' => 'video_upload',
+        ]);
 
         return response()->json([
-            'message' => 'Uploaded successfully',
-            'path' => $path,
-            'url' => $url,
-            'name' => $file->getClientOriginalName(),
-            'size' => $file->getSize(),
-            'mime' => $file->getClientMimeType(),
+            'message'    => 'Forwarded to Node',
+            'name'       => $file->getClientOriginalName(),
+            'size'       => $file->getSize(),
+            'mime'       => $file->getClientMimeType(),
+            'forwarded'  => $resp->successful(),
+            'forwardMsg' => $resp->json() ?? null,
         ]);
     }
 

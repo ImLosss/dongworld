@@ -96,6 +96,8 @@
         const bar = document.getElementById('uploadBar');
         const progressText = document.getElementById('progressText');
         const statusText = document.getElementById('statusText');
+        let isUploading = false;
+        let activeXhr = null;
 
         function resetProgress() {
             progressWrap.style.display = 'none';
@@ -119,8 +121,18 @@
             return el ? el.getAttribute('content') : '{{ csrf_token() }}';
         }
 
+        function lockUI(lock) {
+            isUploading = lock;
+            $('#submit').prop('disabled', lock);
+            dz.style.pointerEvents = lock ? 'none' : 'auto';
+            dz.classList.toggle('opacity-50', lock);
+        }
+
         function uploadFile(file) {
-            $('#submit').prop('disabled', true);
+            if (isUploading && activeXhr) { // batalkan upload sebelumnya
+                try { activeXhr.abort(); } catch(e) {}
+            }
+            lockUI(true);
             fileName.textContent = file.name + ' (' + Math.round(file.size/1024/1024*10)/10 + ' MB)';
             // Use XHR for progress events
             const xhr = new XMLHttpRequest();
@@ -131,34 +143,44 @@
             xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken());
             statusText.textContent = 'Mengupload...';
             setUploading(0);
+
+            let lastTs = 0;
+            let lastPct = -1;
             xhr.upload.onprogress = function (e) {
-                if (e.lengthComputable) {
-                    const percent = (e.loaded / e.total) * 100;
-                    const text = e.loaded < 1024*1024 ? (Math.round(e.loaded/1024*10)/10)+' KB' : (Math.round(e.loaded/1024/1024*10)/10)+' MB';
-                    setUploading(percent, text);
-                }
+                if (!e.lengthComputable) return;
+                const now = performance.now();
+                const pct = Math.floor((e.loaded / e.total) * 100);
+                if (pct === lastPct && (now - lastTs) < 100) return;
+                lastPct = pct;
+                lastTs = now;
+
+                const text = e.loaded < 1024*1024
+                    ? (Math.round(e.loaded/1024*10)/10)+' KB'
+                    : (Math.round(e.loaded/1024/1024*10)/10)+' MB';
+                setUploading(pct, text);
             };
             xhr.onerror = function() {
                 statusText.textContent = 'Gagal upload (network error)';
+                lockUI(false);
             };
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        setUploading(100);
-                        statusText.textContent = 'Selesai diupload';
-                        $('#submit').prop('disabled', false);
-                    } else {
-                        let msg = 'Gagal upload (' + xhr.status + ')';
-                        try { const resp = JSON.parse(xhr.responseText); if (resp && resp.message) msg += ' - ' + resp.message; } catch(e){}
-                        statusText.textContent = msg;
-                    }
+                if (xhr.readyState !== 4) return;
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    setUploading(100);
+                    statusText.textContent = 'Selesai diupload';
+                } else if (xhr.status !== 0) { // 0 berarti dibatalkan
+                    let msg = 'Gagal upload (' + xhr.status + ')';
+                    try { const resp = JSON.parse(xhr.responseText); if (resp && resp.message) msg += ' - ' + resp.message; } catch(e){}
+                    statusText.textContent = msg;
                 }
+                lockUI(false);
+                activeXhr = null;
             };
             xhr.send(formData);
         }
 
         // drag & drop
-        dz.addEventListener('click', () => fileInput.click());
+        dz.addEventListener('click', () => { if (!isUploading) fileInput.click(); });
         dz.addEventListener('dragover', (e) => {
             e.preventDefault();
             dz.classList.add('bg-light');
