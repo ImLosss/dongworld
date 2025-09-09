@@ -1,0 +1,198 @@
+/* Tablet Devices */
+@media (max-width: 992px) {
+    .dl-nav-links {
+        display: none;
+    }
+    
+    .dl-mobile-menu-btn {
+        display: block;
+    }
+    
+    .dl-search-container {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .dl-nav-container {
+        flex-wrap: wrap;
+    }
+    
+    .dl-mobile-menu-btn {
+        display: block;
+    }
+    
+    .dl-hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .dl-footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .dl-footer-links {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .dl-card-container {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+    }
+    
+    .dl-top-donghua .dl-card {
+        flex-direction: row;
+    }
+    
+    .dl-top-donghua .dl-card-img {
+        width: 100px;
+        height: auto;
+    }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+    .dl-nav-container {
+        gap: 10px;
+        padding: 0 10px;
+    }
+    
+    .dl-logo span {
+        font-size: 1.3rem;
+    }
+    
+    #dl-search-input {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .dl-sidebar-toggle {
+        display: block;
+        margin-right: 10px;
+    }
+    
+    .dl-logo {
+        margin-right: 0;
+    }
+    
+    .dl-hero-section {
+        height: auto;
+        padding: 100px 0 60px;
+    }
+    
+    .dl-hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .dl-hero-title {
+        font-size: 2rem;
+    }
+    
+    .dl-hero-synopsis {
+        font-size: 1rem;
+        -webkit-line-clamp: 4;
+    }
+    
+    .dl-hero-controls {
+        bottom: 20px;
+    }
+    
+    .dl-section {
+        padding: 10px 20px;
+    }
+    
+    .dl-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .dl-filter-options {
+        flex-wrap: wrap;
+    }
+    
+    .dl-footer-links {
+        grid-template-columns: 1fr;
+    }
+    
+    .dl-history-item {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .dl-history-img {
+        width: 100%;
+        height: 150px;
+    }
+    
+    .dl-card-container {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    
+    .dl-top-donghua .dl-card {
+        flex-direction: column;
+    }
+    
+    .dl-top-donghua .dl-card-img {
+        width: 100%;
+        height: 180px;
+    }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 480px) {
+    .dl-navbar {
+        padding: 8px 0;
+    }
+    
+    .dl-logo span {
+        font-size: 1.2rem;
+    }
+    
+    .dl-search-container {
+        display: none;
+    }
+    
+    .dl-mobile-search-toggle {
+        display: block;
+        font-size: 1.1rem;
+    }
+    
+    .dl-mobile-search-container.dl-active {
+        display: block;
+    }
+    
+    .dl-hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .dl-hero-content p {
+        font-size: 1rem;
+    }
+
+    .dl-hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .dl-hero-synopsis {
+        -webkit-line-clamp: 3;
+    }
+    
+    .dl-hero-watch-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .dl-card-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .dl-card-img {
+        height: 180px;
+    }
+    
+    .dl-movies-grid .dl-card-img {
+        height: 220px;
+    }
+}
