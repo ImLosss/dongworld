@@ -99,6 +99,11 @@ button {
     background-color: var(--dark-color);
 }
 
+.dl-btn-secondary[disabled] {
+  pointer-events: none; 
+  opacity: 0.5;       
+}
+
 .dl-btn-clear {
     color: var(--gray-color);
     font-size: 0.8rem;

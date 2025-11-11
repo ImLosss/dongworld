@@ -362,56 +362,6 @@
     margin-top: 30px;
 }
 
-/* Mobile Episode List */
-.dl-mobile-episodes {
-    display: none;
-    background-color: var(--secondary-color);
-    border-radius: 8px;
-    margin: 10px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
-
-.dl-mobile-episode-header {
-    padding: 15px;
-    background-color: var(--darker-color);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.dl-mobile-episode-header h2 {
-    font-size: 1.3rem;
-    color: white;
-    margin: 0;
-}
-
-.dl-mobile-episode-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 15px;
-}
-
-.dl-mobile-episode-item {
-    padding: 10px;
-    background-color: var(--darker-color);
-    border-radius: 5px;
-    text-align: center;
-    color: var(--gray-color);
-    transition: var(--transition);
-}
-
-.dl-mobile-episode-item:hover {
-    background-color: rgba(255,255,255,0.05);
-    color: white;
-}
-
-.dl-mobile-episode-item.active {
-    background-color: rgba(255, 71, 84, 0.2);
-    color: var(--primary-color);
-    font-weight: 600;
-}
-
 
 /* Episode Sidebar */
 .dl-episode-sidebar {
@@ -446,11 +396,6 @@
     background-color: var(--secondary-color);
     color: white;
     border: 1px solid rgba(255,255,255,0.1);
-}
-
-.dl-episode-list {
-    max-height: 600px;
-    overflow-y: auto;
 }
 
 .dl-episode-item {
@@ -503,62 +448,115 @@
 .dl-episode-pagination button {
     padding: 8px 15px;
     font-size: 0.9rem;
+    border-radius: 6px;
 }
 
 /* Desktop Episode Scroll */
 .dl-episode-list-container {
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 0 15px;
+    position: relative;
+    /* padding: 0 15px; */
 }
 
 .dl-episode-list {
+    max-height: 500px;
+    overflow-y: auto; 
     display: flex;
     flex-direction: column;
     gap: 5px;
     padding: 5px 0;
+    position: relative;
 }
 
 /* Custom scrollbar */
-.dl-episode-list-container::-webkit-scrollbar {
+.dl-episode-list::-webkit-scrollbar {
     width: 6px;
 }
 
-.dl-episode-list-container::-webkit-scrollbar-track {
+.dl-episode-list::-webkit-scrollbar-track {
     background: var(--secondary-color);
     border-radius: 3px;
 }
 
-.dl-episode-list-container::-webkit-scrollbar-thumb {
+.dl-episode-list::-webkit-scrollbar-thumb {
     background: var(--primary-color);
     border-radius: 3px;
 }
 
-/* Mobile Episode Scroll */
-.dl-mobile-episode-list-container {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 0 15px 15px;
+/* Mobile Episode List */
+.dl-mobile-episodes {
+    display: none;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    margin: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.dl-mobile-episode-header {
+    padding: 15px;
+    background-color: var(--darker-color);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.dl-mobile-episode-header h2 {
+    font-size: 1.3rem;
+    color: white;
+    margin: 0;
 }
 
 .dl-mobile-episode-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    padding: 5px 0;
+    padding: 15px;
+}
+
+.dl-mobile-episode-item {
+    padding: 10px;
+    background-color: var(--darker-color);
+    border-radius: 5px;
+    text-align: center;
+    color: var(--gray-color);
+    transition: var(--transition);
+}
+
+.dl-mobile-episode-item:hover {
+    background-color: rgba(255,255,255,0.05);
+    color: white;
+}
+
+.dl-mobile-episode-item.active {
+    background-color: rgba(255, 71, 84, 0.2);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Mobile Episode Scroll */
+.dl-mobile-episode-list-container {
+    position: relative;
+    max-height: 300px;
+    overflow-y: hidden;
+}
+
+.dl-mobile-episode-list {
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative; 
 }
 
 /* Custom scrollbar untuk mobile */
-.dl-mobile-episode-list-container::-webkit-scrollbar {
+.dl-mobile-episode-list::-webkit-scrollbar {
     width: 4px;
 }
 
-.dl-mobile-episode-list-container::-webkit-scrollbar-thumb {
+.dl-mobile-episode-list::-webkit-scrollbar-thumb {
     background: var(--primary-color);
 }
 
 .dl-episode-list-container,
-.dl-mobile-episode-list-container {
+.dl-mobile-episode-list {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch; /* Untuk smooth scroll di iOS */
 }

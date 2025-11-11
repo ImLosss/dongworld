@@ -54,7 +54,6 @@ export default function RootLayout({
           {children}
           <Footer />
           <Script src="/js/search.js" strategy="afterInteractive" />
-          <Script src="/js/script.js" strategy="afterInteractive" />
           </main>
         </div>
       </body>
