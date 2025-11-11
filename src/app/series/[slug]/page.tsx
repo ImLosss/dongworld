@@ -49,7 +49,7 @@ export default async function SeriesDetail({ params }: Params) {
           <section className="dl-donghua-details">
             <div className="dl-details-content">
               <div className="dl-details-poster">
-                <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} alt={series.name} width={100} height={100} />
+                <Image src={process.env.NEXT_PUBLIC_BASE_URL_BACKEND + series.thumbnail} alt={series.name} width={100} height={100} />
               </div>
               <div className="dl-details-info">
                 <h1 className="dl-details-title">{series.name}</h1>
