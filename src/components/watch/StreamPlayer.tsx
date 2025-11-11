@@ -4,7 +4,6 @@ import { useState } from "react";
 
 interface StreamPlayerProps {
     detail: any;
-    episodes: any;
 }
 
 export default function StreamPlayer({ detail }: StreamPlayerProps) {
