@@ -1,4 +1,3 @@
-import Script from "next/script";
 import "@/styles/stream.css";
 import "@/styles/series.css";
 import Image from "next/image";
@@ -21,8 +20,8 @@ export default async function StreamPage({ params } : Params) {
     });
     if (!res.ok) return notFound();
     const data = await res.json();
-    let episodes = data.episodes;
-    let detail = data['detail-episode'];
+    const episodes = data.episodes;
+    const detail = data['detail-episode'];
     return (
         <>
             {/* Stream Notification */}
