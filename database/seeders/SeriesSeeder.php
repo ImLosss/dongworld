@@ -17,10 +17,23 @@ class SeriesSeeder extends Seeder
             'name' => 'Renegade Immortal',
             'slug' => 'renegade-immortal',
             'synopsis' => 'This is an example series synopsis.',
-            'thumbnail' => 'storage/series/C1vi4nBu8KssC48lj0pqdUFZ8ZiVf4X3MLBhjntF.png',
+            'thumbnail' => 'storage/series/image.jpg',
             'release_date' => '2020-08-27',
             'rating' => 4.5,
             'total_episodes' => 200,
+            'current_episode' => 21,
+            'type' => 'episodes',
+        ]);
+
+        Series::create([
+            'name' => 'Alchemy Supreme',
+            'slug' => 'alchemy-supreme',
+            'synopsis' => 'This is an example series synopsis.',
+            'thumbnail' => 'storage/series/image2.jpg',
+            'release_date' => '2020-08-27',
+            'rating' => 4.5,
+            'total_episodes' => 200,
+            'current_episode' => 50,
             'type' => 'episodes',
         ]);
     }

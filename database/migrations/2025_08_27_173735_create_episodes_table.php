@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('series_id')->onDelete('cascade');
             $table->integer('episode_number')->nullable();
             $table->string('slug')->unique();
+            $table->unsignedBigInteger('user_id')->onDelete('SET NULL')->nullable();
             $table->timestamps();
         });
     }

@@ -31,11 +31,9 @@ class SeriesController extends Controller
             ->addColumn('thumbnail', fn (Series $s) => $s->thumbnail ? '<img src="' . asset($s->thumbnail) . '" alt="thumb" style="height:40px;width:auto;border-radius:6px;object-fit:cover;">' : '-')
             ->addColumn('type', fn (Series $s) => $s->type)
             ->addColumn('rating', fn (Series $s) => $s->rating)
-            ->addColumn('total_episodes', fn (Series $s) => $s->total_episodes)
+            ->addColumn('total_episodes', fn (Series $s) =>   $s->current_episode . '/' . $s->total_episodes)
             ->addColumn('release_date', fn (Series $s) => $s->release_date)
-            ->addColumn('synopsis', fn (Series $s) => e(Str::limit((string) $s->synopsis, 30)))
             ->addColumn('genres', fn (Series $s) => $s->genres->pluck('name')->implode(', '))
-            ->editColumn('created_at', fn (Series $s) => optional($s->created_at)?->format('d M Y H:i'))
             ->addColumn('action', function (Series $data) use ($user) {
                 $update = '';
                 $delete = '';
@@ -86,6 +84,8 @@ class SeriesController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:series,slug',
             'type' => 'required|in:movie,episodes',
+            'duration' => 'nullable|integer',
+            'studios' => 'nullable|string',
             'rating' => 'nullable|numeric',
             'synopsis' => 'nullable|string',
             'total_episodes' => 'nullable',
@@ -142,6 +142,8 @@ class SeriesController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:series,slug,' . $series->id,
             'type' => 'required|in:movie,episodes',
+            'duration' => 'nullable|integer',
+            'studios' => 'nullable|string',
             'rating' => 'nullable|numeric',
             'synopsis' => 'nullable|string',
             'total_episodes' => 'nullable',

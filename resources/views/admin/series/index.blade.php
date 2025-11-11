@@ -44,11 +44,9 @@
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Nama</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Tipe</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Rating</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Sinopsis</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Total</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Rilis</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Genres</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Tanggal</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Aksi</th>
                             </tr>
                         </thead>
@@ -78,11 +76,9 @@
                 { data: 'name', name: 'name', className: 'text-sm' },
                 { data: 'type', name: 'type', className: 'text-sm' },
                 { data: 'rating', name: 'rating', className: 'text-sm' },
-                { data: 'synopsis', name: 'synopsis', className: 'text-sm', orderable: false, searchable: false },
                 { data: 'total_episodes', name: 'total_episodes', className: 'text-sm' },
                 { data: 'release_date', name: 'release_date', className: 'text-sm' },
                 { data: 'genres', name: 'genres', className: 'text-sm', orderable: false, searchable: false },
-                { data: 'created_at', name: 'created_at', className: 'text-sm' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-sm' },
             ],
             language: {

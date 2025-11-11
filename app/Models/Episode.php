@@ -21,4 +21,9 @@ class Episode extends Model
     {
         return $this->links()->where('server_id', $server_id);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

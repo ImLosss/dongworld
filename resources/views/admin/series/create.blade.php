@@ -73,6 +73,26 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group has-validation">
+                        <label for="duration" class="form-control-label">Duration</label>
+                        <input class="form-control @error('duration') border border-danger rounded-3 @enderror" type="number" placeholder="Duration in minutes" name="duration" value="{{ old('duration') }}">
+                        @error('duration')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="studios" class="form-control-label">Studios</label>
+                        <input class="form-control @error('studios') border border-danger rounded-3 @enderror" type="text" placeholder="Studios" name="studios" value="{{ old('studios') }}">
+                        @error('studios')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
                         <label for="rating" class="form-control-label">Rating</label>
                         <input class="form-control @error('rating') border border-danger rounded-3 @enderror" type="number" step="0.1" min="0" max="10" placeholder="7.5" name="rating" value="{{ old('rating') }}">
                         @error('rating')

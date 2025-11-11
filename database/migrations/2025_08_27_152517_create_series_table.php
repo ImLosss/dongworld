@@ -16,8 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('synopsis')->nullable();
+            $table->integer('duration')->nullable();
+            $table->text('current_episode')->nullable();
             $table->text('total_episodes')->nullable();
             $table->string('thumbnail')->nullable();
+            $table->string('studios')->nullable();
             $table->string('release_date')->nullable();
             $table->float('rating')->default(4);
             $table->enum('type', ['movie', 'episodes'])->default('episodes');

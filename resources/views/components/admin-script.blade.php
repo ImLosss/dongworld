@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}">
 <script
     src="{{ asset('assets/js/datatables.min.js') }}">
-</script> 
+</script>
 <script>
   var win = navigator.platform.indexOf('Win') > -1;
   if (win && document.querySelector('#sidenav-scrollbar')) {
