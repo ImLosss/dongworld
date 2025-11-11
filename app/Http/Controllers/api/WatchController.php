@@ -22,7 +22,7 @@ class WatchController extends Controller
             ->paginate(25);
 
         $detailEpisode->series->genres_string = $detailEpisode->series->genres->pluck('name')->implode(', ');
-        $detailEpisode->uploader = $detailEpisode->user->name ? $detailEpisode->user->name : 'Admin';
+        $detailEpisode->uploader = $detailEpisode->user?->name ? $detailEpisode->user->name : 'Admin';
 
         return response()->json([
             'detail-episode' => $detailEpisode,
