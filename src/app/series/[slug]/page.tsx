@@ -20,8 +20,8 @@ export default async function SeriesDetail({ params }: Params) {
   });
   if (!res.ok) return notFound();
   const data = await res.json();
-  let episodes = data.episodes;
-  let series = data.series;
+  const episodes = data.episodes;
+  const series = data.series;
 
   return (
     <>
@@ -39,7 +39,7 @@ export default async function SeriesDetail({ params }: Params) {
             <div className="dl-breadcrumb-card">
               <nav className="dl-breadcrumb" aria-label="Breadcrumb">
                 <ol>
-                  <li><a href="/">Beranda</a></li>
+                  <li><Link href="/">Beranda</Link></li>
                   <li aria-current="page">{series.name}</li>
                 </ol>
               </nav>
