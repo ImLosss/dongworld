@@ -40,8 +40,6 @@ class EpisodeController extends Controller
             'episode_number' => 'nullable|integer',
         ]);
 
-        $validated['user_id'] = $request->user()->id;
-
         // slug logic
         $seriesNameSlug = Str::slug($series->name);
         if ($series->type === 'movie') {
@@ -57,6 +55,7 @@ class EpisodeController extends Controller
             'series_id' => $series->id,
             'episode_number' => $validated['episode_number'] ?? null,
             'slug' => $slug,
+            'user_id' => $request->user()->id,
         ]);
 
         // optional link inputs per server
@@ -104,8 +103,6 @@ class EpisodeController extends Controller
             'episode_number' => 'nullable|integer',
         ]);
 
-        $validated['user_id'] = $request->user()->id;
-
         // slug logic
         $seriesNameSlug = Str::slug($series->name);
         if ($series->type === 'movie') {
@@ -120,6 +117,7 @@ class EpisodeController extends Controller
         $episode->update([
             'episode_number' => $validated['episode_number'] ?? null,
             'slug' => $slug,
+            'user_id' => $request->user()->id,
         ]);
 
         // update/create links per server (optional)
