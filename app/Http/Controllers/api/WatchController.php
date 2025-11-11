@@ -17,8 +17,6 @@ class WatchController extends Controller
             ], 404);
         }
 
-        dd($detailEpisode);
-
         $episodes = Episode::where('series_id', $detailEpisode->series_id)
             ->orderBy('episode_number')
             ->paginate(25);
