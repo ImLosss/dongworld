@@ -66,7 +66,7 @@ export default async function SeriesDetail({ params }: Params) {
               </div>
             </div>
           </section>
-          <EpisodeSectionMobile slug={slug} initialEpisodes={data.episodes} />
+          <EpisodeSectionMobile slug={slug} initialEpisodes={episodes} />
           {/* Comments Section */}
           <section className="dl-comments-section">
             <div className="dl-comments-header">
