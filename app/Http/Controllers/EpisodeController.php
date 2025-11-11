@@ -37,7 +37,7 @@ class EpisodeController extends Controller
     public function store(Request $request, Series $series)
     {
         $validated = $request->validate([
-            'episode_number' => 'nullable|integer',
+            'episode_number' => 'integer|unique:episodes,episode_number'
         ]);
 
         // slug logic
