@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") || 1;
