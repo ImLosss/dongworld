@@ -40,6 +40,8 @@ class EpisodeController extends Controller
             'episode_number' => 'nullable|integer',
         ]);
 
+        $validated['user_id'] = $request->user()->id;
+
         // slug logic
         $seriesNameSlug = Str::slug($series->name);
         if ($series->type === 'movie') {
@@ -101,6 +103,8 @@ class EpisodeController extends Controller
         $validated = $request->validate([
             'episode_number' => 'nullable|integer',
         ]);
+
+        $validated['user_id'] = $request->user()->id;
 
         // slug logic
         $seriesNameSlug = Str::slug($series->name);
