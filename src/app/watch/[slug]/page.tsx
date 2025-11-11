@@ -39,16 +39,16 @@ export default async function StreamPage({ params } : Params) {
                     <section className="dl-donghua-details">
                         <div className="dl-details-content">
                             <div className="dl-details-poster">
-                                <Image src="/images/image.jpg" alt="Soul Land Poster" width={100} height={100} />
+                                <Image src={process.env.BASE_URL_BACKEND + detail.series.thumbnail} alt={detail.series.name} width={100} height={100} />
                             </div>
                             <div className="dl-details-info">
                                 <h1 className="dl-details-title">{detail.series.name}</h1>
                                 <div className="dl-details-meta">
                                     <span><i className="fas fa-star"></i> {detail.series.rating}/5</span>
-                                    <span><i className="fas fa-tags"></i> Action, Adventure, Fantasy</span>
-                                    <span><i className="fas fa-building"></i> Sparkly Key Animation Studio</span>
+                                    <span><i className="fas fa-tags"></i> {detail.series.genres_string}</span>
+                                    <span><i className="fas fa-building"></i> {detail.series.studios}</span>
                                     <span><i className="fas fa-flag"></i> China</span>
-                                    <span><i className="fas fa-calendar"></i> 2018 - Sekarang</span>
+                                    <span><i className="fas fa-calendar"></i> {detail.series.release_date}</span>
                                 </div>
                                 <div className="dl-details-synopsis">
                                     <h3>Sinopsis</h3>
