@@ -28,7 +28,7 @@ export default function EpisodeSectionMobile({ slug, initialEpisodes, selectedEp
         )}
         <div className="dl-mobile-episode-list">
           {episodes.data.map((episode: any) => (
-            <a key={episode.id} href="#" className={selectedEpisode === episode.episode_number ? "dl-mobile-episode-item active" : "dl-mobile-episode-item"}>
+            <a key={episode.id} href={'/watch/' + episode.slug} className={selectedEpisode === episode.episode_number ? "dl-mobile-episode-item active" : "dl-mobile-episode-item"}>
               Episode {episode.episode_number}
             </a>
           ))}
