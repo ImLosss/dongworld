@@ -34,7 +34,7 @@ export default async function StreamPage({ params } : Params) {
             <div className="row">
                 <div className="col-12 col-lg-8">
                     {/* Stream Player Section */}
-                    <StreamPlayer detail={detail} episodes={episodes} />
+                    <StreamPlayer detail={detail} />
                     {/* Donghua Details */}
                     <section className="dl-donghua-details">
                         <div className="dl-details-content">

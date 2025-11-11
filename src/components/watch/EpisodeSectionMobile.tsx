@@ -13,7 +13,7 @@ export default function EpisodeSectionMobile({ slug, initialEpisodes, selectedEp
       .then(res => res.json())
       .then(data => setEpisodes(data.episodes))
       .finally(() => setLoading(false));
-  }, [page]);
+  }, [page, slug, episodes.current_page]);
 
   return (
     <section className="dl-mobile-episodes">

@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 
 interface StreamPlayerProps {
@@ -6,7 +7,7 @@ interface StreamPlayerProps {
     episodes: any;
 }
 
-export default function StreamPlayer({ detail, episodes }: StreamPlayerProps) {
+export default function StreamPlayer({ detail }: StreamPlayerProps) {
     const [selectedServer, setSelectedServer] = useState(detail.links?.[0]?.url || "");
 
     const handleServerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -19,8 +20,8 @@ export default function StreamPlayer({ detail, episodes }: StreamPlayerProps) {
             <div className="dl-breadcrumb-card">
                 <nav className="dl-breadcrumb" aria-label="Breadcrumb">
                     <ol>
-                        <li><a href="/">Beranda</a></li>
-                        <li><a href={`/series/${detail.series.slug}`}>{detail.series.name}</a></li>
+                        <li><Link href="/">Beranda</Link></li>
+                        <li><Link href={`/series/${detail.series.slug}`}>{detail.series.name}</Link></li>
                         <li aria-current="page">Episode {detail.episode_number}</li>
                     </ol>
                 </nav>
