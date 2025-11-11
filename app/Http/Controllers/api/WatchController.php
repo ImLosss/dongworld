@@ -21,6 +21,8 @@ class WatchController extends Controller
             ->orderBy('episode_number')
             ->paginate(25);
 
+        $detailEpisode->series->genres_string = $detailEpisode->series->genres->pluck('name')->implode(', ');
+
         return response()->json([
             'detail-episode' => $detailEpisode,
             'episodes' => $episodes
