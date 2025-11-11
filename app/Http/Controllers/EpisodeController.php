@@ -100,7 +100,7 @@ class EpisodeController extends Controller
     public function update(Request $request, Series $series, Episode $episode)
     {
         $validated = $request->validate([
-            'episode_number' => 'nullable|integer',
+            'episode_number' => 'integer|unique:episodes,episode_number',
         ]);
 
         // slug logic
