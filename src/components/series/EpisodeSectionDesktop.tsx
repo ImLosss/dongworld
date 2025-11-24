@@ -3,13 +3,28 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
+    const storageKey = `episode_page_${slug}`;
+    
+    // Load page dari localStorage
+    const getSavedPage = () => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem(storageKey);
+            return saved ? parseInt(saved) : initialEpisodes.current_page;
+        }
+        return initialEpisodes.current_page;
+    };
+
     const [episodes, setEpisodes] = useState(initialEpisodes);
-    const [page, setPage] = useState(episodes.current_page);
+    const [page, setPage] = useState(getSavedPage());
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (page === episodes.current_page) return;
+        
         setLoading(true);
+
+        localStorage.setItem(storageKey, page.toString());
+        
         fetch(`/api/series/${slug}?page=${page}`)
             .then(res => res.json())
             .then(data => setEpisodes(data.episodes))

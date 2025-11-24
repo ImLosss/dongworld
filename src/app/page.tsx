@@ -74,7 +74,7 @@ export default async function Home() {
                 return (
                   <SeriesList key={series.id} href={`/series/${series.slug}`}>
                     <div className="dl-card-img">
-                      <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} alt="alchemy" fill />
+                      <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt="alchemy" fill />
                       <div className="dl-card-badge">NEW</div>
                     </div>
                     <div className="dl-card-content">

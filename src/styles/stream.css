@@ -1,14 +1,9 @@
-/* Stream Page Specific Styles */
-.dl-stream-container {
-    padding-top: 70px;
-    background-color: var(--dark-color);
-}
-
 .dl-stream-notification {
     background-color: rgba(255, 71, 84, 0.1);
     border-left: 4px solid var(--primary-color);
     padding: 12px 20px;
-    margin: 20px 0;
+    margin: 10px 10px;
+    margin-top: 80px;
     border-radius: 0 4px 4px 0;
 }
 
