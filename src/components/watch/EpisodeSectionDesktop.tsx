@@ -26,7 +26,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes, selectedE
 
         localStorage.setItem(storageKey, page.toString());
         
-        fetch(`/api/series/${slug}?page=${page}`)
+        fetch(`/api/watch/${slug}?page=${page}`)
             .then(res => res.json())
             .then(data => setEpisodes(data.episodes))
             .finally(() => setLoading(false));
