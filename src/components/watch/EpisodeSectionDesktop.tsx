@@ -1,16 +1,32 @@
 "use client";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import Link from "next/link";
 
-export default function EpisodeSectionDesktop({ slug, initialEpisodes, selectedEpisode }: { slug: string, initialEpisodes: any, selectedEpisode: number }) {
+export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
+    const storageKey = `episode_page_${slug}`;
+    
+    // Load page dari localStorage
+    const getSavedPage = () => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem(storageKey);
+            return saved ? parseInt(saved) : initialEpisodes.current_page;
+        }
+        return initialEpisodes.current_page;
+    };
+
     const [episodes, setEpisodes] = useState(initialEpisodes);
-    const [page, setPage] = useState(episodes.current_page);
+    const [page, setPage] = useState(getSavedPage());
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (page === episodes.current_page) return;
+        
         setLoading(true);
-        fetch(`/api/watch/${slug}?page=${page}`)
+
+        localStorage.setItem(storageKey, page.toString());
+        
+        fetch(`/api/series/${slug}?page=${page}`)
             .then(res => res.json())
             .then(data => setEpisodes(data.episodes))
             .finally(() => setLoading(false));
@@ -28,13 +44,20 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes, selectedE
                     </div>
                 )}
                 <div className="dl-episode-list" style={loading ? { opacity: 0.5, pointerEvents: "none" } : {}}>
-                    {episodes.data.map((episode: any) => (
-                        <a key={episode.id} href={'/watch/' + episode.slug} className={selectedEpisode === episode.episode_number ? "dl-episode-item active" : "dl-episode-item"}>
-                            <span className="dl-episode-number">Episode {episode.episode_number}</span>
-                            <span className="dl-episode-title">{episode.title}</span>
-                            <span className="dl-episode-duration">{dayjs(episode.created_at).format("DD MMM YYYY")}</span>
-                        </a>
-                    ))}
+                    {episodes.data && episodes.data.length > 0 ? (
+                        episodes.data.map((episode: any) => (
+                            <Link key={episode.id} href={'/watch/' + episode.slug} className="dl-episode-item">
+                                <span className="dl-episode-number">Episode {episode.episode_number}</span>
+                                <span className="dl-episode-title">{episode.title}</span>
+                                <span className="dl-episode-duration">{dayjs(episode.created_at).format("DD MMM YYYY")}</span>
+                            </Link>
+                        ))
+                    ) : (
+                        <div className="dl-episode-empty">
+                            <i className="fas fa-inbox"></i>
+                            <p>Segera tayang</p>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="dl-episode-pagination">
