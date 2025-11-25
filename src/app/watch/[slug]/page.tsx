@@ -27,7 +27,8 @@ export default async function StreamPage({ params } : Params) {
         method: 'POST',
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
-        }
+        },
+        cache: 'no-store'
     })
     return (
         <>
