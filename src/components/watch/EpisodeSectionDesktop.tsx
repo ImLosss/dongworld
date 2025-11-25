@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 
-export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
+export default function EpisodeSectionDesktop({ slug, initialEpisodes, selectedEpisode }: { slug: string, initialEpisodes: any, selectedEpisode: any }) {
     const storageKey = `episode_page_${slug}`;
     
     // Load page dari localStorage
@@ -46,7 +46,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
                 <div className="dl-episode-list" style={loading ? { opacity: 0.5, pointerEvents: "none" } : {}}>
                     {episodes.data && episodes.data.length > 0 ? (
                         episodes.data.map((episode: any) => (
-                            <Link key={episode.id} href={'/watch/' + episode.slug} className="dl-episode-item">
+                            <Link key={episode.id} href={'/watch/' + episode.slug} className={selectedEpisode === episode.episode_number ? "dl-episode-item active" : "dl-episode-item"}>
                                 <span className="dl-episode-number">Episode {episode.episode_number}</span>
                                 <span className="dl-episode-title">{episode.title}</span>
                                 <span className="dl-episode-duration">{dayjs(episode.created_at).format("DD MMM YYYY")}</span>

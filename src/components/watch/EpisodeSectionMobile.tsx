@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export default function EpisodeSection({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
+export default function EpisodeSection({ slug, initialEpisodes, selectedEpisode }: { slug: string, initialEpisodes: any, selectedEpisode: any }) {
   const storageKey = `episode_page_${slug}`;
     
   // Load page dari localStorage
@@ -41,7 +41,7 @@ export default function EpisodeSection({ slug, initialEpisodes }: { slug: string
         <div className="dl-mobile-episode-list">
           {episodes.data && episodes.data.length > 0 ? (
             episodes.data.map((episode: any) => (
-              <a key={episode.id} href={'/watch/' + episode.slug} className="dl-mobile-episode-item">
+              <a key={episode.id} href={'/watch/' + episode.slug} className={selectedEpisode === episode.episode_number ? "dl-mobile-episode-item active" : "dl-mobile-episode-item"}>
                 Episode {episode.episode_number}
               </a>
             ))
