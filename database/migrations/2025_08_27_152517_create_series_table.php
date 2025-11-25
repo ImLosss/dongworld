@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('studios')->nullable();
             $table->string('release_date')->nullable();
             $table->float('rating')->default(4);
+            $table->integer('views')->default(0);
             $table->enum('type', ['movie', 'episodes'])->default('episodes');
             $table->timestamps();
         });

@@ -27,5 +27,7 @@ Route::group(
         Route::get('/all-series', [HomeController::class, 'getSeries']);
         Route::get('/series/{slug}', [SeriesController::class, 'getSeriesDetail']);
         Route::get('/watch/{slug}', [WatchController::class, 'watch']);
+        Route::get('/recommendations', [SeriesController::class, 'getRecomendation']);
+        Route::post('/view-series/{slug}', [SeriesController::class, 'incrementViewCount']);
     }
 );
