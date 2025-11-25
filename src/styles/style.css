@@ -793,6 +793,7 @@ button {
 .dl-social-links {
     display: flex;
     gap: 15px;
+    justify-content: center;
 }
 
 .dl-social-links a {
@@ -863,4 +864,27 @@ button {
 
 .dl-section {
     scroll-margin-top: 40px; /* sesuaikan dengan tinggi navbar */
+}
+
+.dl-episode-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.dl-episode-empty i {
+    font-size: 3rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.dl-episode-empty p {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
 }

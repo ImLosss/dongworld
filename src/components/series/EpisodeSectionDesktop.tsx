@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
     const storageKey = `episode_page_${slug}`;
@@ -43,13 +44,20 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
                     </div>
                 )}
                 <div className="dl-episode-list" style={loading ? { opacity: 0.5, pointerEvents: "none" } : {}}>
-                    {episodes.data.map((episode: any) => (
-                        <a key={episode.id} href={'/watch/' + episode.slug} className="dl-episode-item">
-                            <span className="dl-episode-number">Episode {episode.episode_number}</span>
-                            <span className="dl-episode-title">{episode.title}</span>
-                            <span className="dl-episode-duration">{dayjs(episode.created_at).format("DD MMM YYYY")}</span>
-                        </a>
-                    ))}
+                    {episodes.data && episodes.data.length > 0 ? (
+                        episodes.data.map((episode: any) => (
+                            <Link key={episode.id} href={'/watch/' + episode.slug} className="dl-episode-item">
+                                <span className="dl-episode-number">Episode {episode.episode_number}</span>
+                                <span className="dl-episode-title">{episode.title}</span>
+                                <span className="dl-episode-duration">{dayjs(episode.created_at).format("DD MMM YYYY")}</span>
+                            </Link>
+                        ))
+                    ) : (
+                        <div className="dl-episode-empty">
+                            <i className="fas fa-inbox"></i>
+                            <p>Segera tayang</p>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="dl-episode-pagination">

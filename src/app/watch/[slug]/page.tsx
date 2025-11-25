@@ -13,15 +13,22 @@ interface Params {
 export default async function StreamPage({ params } : Params) {
     const { slug } = await params
     const res = await fetch(`${process.env.BASE_URL_BACKEND}api/watch/${slug}`, {
-    headers: {
-        'X-API-KEY': process.env.APIKEY_BACKEND as string,
-    },
-    cache: 'no-store'
+        headers: {
+            'X-API-KEY': process.env.APIKEY_BACKEND as string,
+        },
+        cache: 'no-store'
     });
     if (!res.ok) return notFound();
     const data = await res.json();
     const episodes = data.episodes;
     const detail = data['detail-episode'];
+
+    fetch(`${process.env.BASE_URL_BACKEND}api/view-series/${detail.series.slug}`, {
+        method: 'POST',
+        headers: {
+            'X-API-KEY': process.env.APIKEY_BACKEND as string,
+        }
+    })
     return (
         <>
             {/* Stream Notification */}

@@ -29,7 +29,7 @@ export default function StreamPlayer({ detail }: StreamPlayerProps) {
             <div className="dl-stream-player-container">
                 {/* Video Info */}
                 <div className="dl-stream-info">
-                    <h1 className="dl-stream-title">{detail.series.name} - Episode {detail.episode_number}</h1>
+                    <h1 className="dl-stream-title">{detail.series.name} Episode {detail.episode_number} Subtitle Indonesia</h1>
                     <div className="dl-stream-meta">
                         <span>
                             Diposting oleh <b>{detail.uploader || 'Admin'}</b> pada {new Date(detail.created_at).toLocaleDateString('id-ID')} | 

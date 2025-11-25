@@ -5,6 +5,7 @@ import "@/styles/series.css";
 import Link from "next/link";
 import EpisodeSectionMobile from "@/components/series/EpisodeSectionMobile";
 import EpisodeSectionDesktop from "@/components/series/EpisodeSectionDesktop";
+import RecommendationSection from "@/components/series/RecommendationSection";
 
 interface Params {
   params: { slug: string };
@@ -18,10 +19,20 @@ export default async function SeriesDetail({ params }: Params) {
     },
     cache: 'no-store'
   });
+
+  const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}api/recommendations`, {
+    headers: {
+      'X-API-KEY': process.env.APIKEY_BACKEND as string,
+    },
+    cache: 'no-store'
+  });
+  
   if (!res.ok) return notFound();
   const data = await res.json();
   const episodes = data.episodes;
   const series = data.series;
+
+  const recommendationsData = await recommendations.json();
 
   return (
     <>
@@ -54,10 +65,11 @@ export default async function SeriesDetail({ params }: Params) {
               <div className="dl-details-info">
                 <h1 className="dl-details-title">{series.name}</h1>
                 <div className="dl-details-meta">
-                  <span><i className="fas fa-star"></i> {series.rating}</span>
-                  <span><i className="fas fa-tags"></i> {series.genres_string}</span>
-                  <span><i className="fas fa-calendar"></i> {series.release_date}</span>
-                  <span><i className="fas fa-video"></i> {series.current_episode}/{series.total_episodes} Episode</span>
+                  <span><i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}</span>
+                  <span><i className="fas fa-tags"></i>{series.genres_string ? series.genres_string : "Unknown"}</span>
+                  <span><i className="fas fa-calendar"></i>{series.release_date ? series.release_date : "Unknown"}</span>
+                  <span><i className="fas fa-video"></i>{series.current_episode}/{series.total_episodes} Episode</span>
+                  <span><i className="fas fa-eye"></i>{series.views}</span>
                 </div>
                 <div className="dl-details-synopsis">
                   <h3>Sinopsis</h3>
@@ -132,26 +144,7 @@ export default async function SeriesDetail({ params }: Params) {
           </section>
 
           {/* Recommendation Section */}
-          <section id="recommendation" className="dl-section">
-            <div className="dl-section-header">
-              <h2>Rekomendasi</h2>
-            </div>
-            <div className="dl-recommendation-container">
-              <div className="dl-card">
-                <div className="dl-card-img">
-                  <Image src="/images/image2.jpg" alt="asd" width={100} height={100} />
-                  <div className="dl-card-badge">NEW</div>
-                </div>
-                <div className="dl-card-content">
-                  <h3 className="dl-card-title">Soul Land</h3>
-                  <div className="dl-card-meta">
-                    <span>21 eps</span>
-                    <span className="dl-card-rating"><i className="fas fa-star"></i> 3.5</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <RecommendationSection series={recommendationsData.series} />
         </div>
 
         <div className="col-12 col-lg-4">
@@ -162,14 +155,16 @@ export default async function SeriesDetail({ params }: Params) {
           {/* Watch History Section */}
           <section id="history" className="dl-section">
             <div className="dl-history-container">
+              {/* History items will be populated by JavaScript */}
               <div className="dl-history-item">
                 <div className="dl-history-content">
                   <h2 className="dl-history-title">Riwayat Nonton</h2>
-                  <button id="dl-clear-history" className="dl-btn-clear">Bersihkan Riwayat</button>
-                  <div className="dl-empty-state">
+                  <button id="dl-clear-history" className="dl-btn-clear" style={{ marginTop: "-25px" }}>Bersihkan Riwayat</button>
+                  {/* Empty state or history list will be here */}
+                  <div className="dl-empty-state" style={{ marginTop: "24px" }}>
                     <i className="fas fa-history"></i>
                     <p>Riwayat nontonmu masih kosong</p>
-                    <a href="#" className="dl-btn-primary">Mulai Menonton</a>
+                    <a href="#trending" className="dl-btn-primary">Mulai Menonton</a>
                   </div>
                 </div>
               </div>

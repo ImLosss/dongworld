@@ -39,11 +39,18 @@ export default function EpisodeSection({ slug, initialEpisodes }: { slug: string
           </div>
         )}
         <div className="dl-mobile-episode-list">
-          {episodes.data.map((episode: any) => (
-            <a key={episode.id} href={'/watch/' + episode.slug} className="dl-mobile-episode-item">
-              Episode {episode.episode_number}
-            </a>
-          ))}
+          {episodes.data && episodes.data.length > 0 ? (
+            episodes.data.map((episode: any) => (
+              <a key={episode.id} href={'/watch/' + episode.slug} className="dl-mobile-episode-item">
+                Episode {episode.episode_number}
+              </a>
+            ))
+          ) : (
+            <div className="dl-episode-empty">
+              <i className="fas fa-inbox"></i>
+              <p>Segera tayang</p>
+            </div>
+          )}
         </div>
       </div>
       <div className="dl-episode-pagination">
