@@ -28,10 +28,7 @@ export default async function StreamPage({ params } : Params) {
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
         },
-        next: { 
-            revalidate: 60, 
-            tags: [`episode-${slug}`] 
-        }
+        cache: 'no-store'
     })
     return (
         <>
