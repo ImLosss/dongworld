@@ -2,25 +2,19 @@
 import { useState, useEffect } from "react";
 
 export default function EpisodeSection({ slug, initialEpisodes, selectedEpisode }: { slug: string, initialEpisodes: any, selectedEpisode: any }) {
-  const storageKey = `episode_page_${slug}`;
-    
-  // Load page dari localStorage
-  const getSavedPage = () => {
-      if (typeof window !== 'undefined') {
-          const saved = localStorage.getItem(storageKey);
-          return saved ? parseInt(saved) : initialEpisodes.current_page;
-      }
-      return initialEpisodes.current_page;
-  };
+  const calculatePageFromEpisode = (episodeNumber: number, perPage: number = initialEpisodes.per_page) => {
+        return Math.ceil(episodeNumber / perPage);
+    };
+
+  const initialPage = calculatePageFromEpisode(selectedEpisode);
   
   const [episodes, setEpisodes] = useState(initialEpisodes);
-  const [page, setPage] = useState(getSavedPage());
+  const [page, setPage] = useState(initialPage);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (page === episodes.current_page) return;
     setLoading(true);
-    localStorage.setItem(storageKey, page.toString());
     fetch(`/api/watch/${slug}?page=${page}`)
       .then(res => res.json())
       .then(data => setEpisodes(data.episodes))
