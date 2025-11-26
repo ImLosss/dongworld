@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react"
 
 // Data 20 komentar simulasi
 const MOCK_COMMENTS = [
