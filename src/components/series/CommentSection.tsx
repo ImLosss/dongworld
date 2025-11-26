@@ -102,7 +102,7 @@ export default function CommentSection() {
         alert("Komentar berhasil ditambahkan!");
     };
 
-    const handleReply = (author: String) => {
+    const handleReply = (author: string) => {
         return () => {
             setCommentText(`@${author} `);
         };

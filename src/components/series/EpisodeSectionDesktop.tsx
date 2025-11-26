@@ -4,12 +4,11 @@ import dayjs from "dayjs";
 import Link from "next/link";
 
 export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
-    const storageKey = `episode_page_${slug}`;
     
     // Load page dari localStorage
     const getSavedPage = () => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem(storageKey);
+            const saved = localStorage.getItem(`episode_page_${slug}`);
             return saved ? parseInt(saved) : initialEpisodes.current_page;
         }
         return initialEpisodes.current_page;
@@ -24,7 +23,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
         
         setLoading(true);
 
-        localStorage.setItem(storageKey, page.toString());
+        localStorage.setItem(`episode_page_${slug}`, page.toString());
         
         fetch(`/api/series/${slug}?page=${page}`)
             .then(res => res.json())
