@@ -226,12 +226,58 @@
 }
 
 /* Comments Section */
+.dl-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 400px; /* ✅ Tinggi maksimal */
+    overflow-y: auto; /* ✅ Scrollable */
+    padding-right: 10px;
+    scroll-behavior: smooth;
+    padding: 15px;
+}
+
+/* Custom scrollbar untuk comments */
+.dl-comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dl-comments-list::-webkit-scrollbar-track {
+    background: var(--darker-color);
+    border-radius: 3px;
+}
+
+.dl-comments-list::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.dl-comments-list::-webkit-scrollbar-thumb:hover {
+    background: #ff3d4d;
+}
+
+/* Input nama */
+.dl-comment-name-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 5px;
+    background-color: var(--darker-color);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
 .dl-comments-section {
     background-color: var(--secondary-color);
     border-radius: 8px;
-    padding: 15px;
+    /* padding: 15px; */
     box-shadow: var(--shadow);
     margin: 10px;
+}
+
+.dl-comments-header-form {
+    padding: 15px;
 }
 
 .dl-comments-header {
@@ -352,9 +398,115 @@
     color: var(--primary-color);
 }
 
+.dl-comments-list-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.dl-comments-list-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(
+        to bottom, 
+        var(--secondary-color) 0%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.dl-comments-list-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(
+        to top, 
+        var(--secondary-color) 0%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Hide fade saat scroll di paling atas */
+.dl-comments-list-container.scroll-top::before {
+    opacity: 0;
+}
+
+/* Hide fade saat scroll di paling bawah */
+.dl-comments-list-container.scroll-bottom::after {
+    opacity: 0;
+}
+
+/* Loading state */
+.dl-comments-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    color: var(--gray-color);
+}
+
+.dl-comments-loading .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Avatar placeholder */
+.dl-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), #ff3d4d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.dl-comment-avatar .dl-avatar-placeholder i {
+    font-size: 1.2rem;
+}
+
+/* End of comments */
+.dl-comments-end {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    color: var(--gray-color);
+    font-size: 0.9rem;
+}
+
+.dl-comments-end i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
 .dl-comments-load-more {
-    text-align: center;
-    margin-top: 30px;
+    display: none; 
 }
 
 

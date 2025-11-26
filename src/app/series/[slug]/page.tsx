@@ -6,6 +6,7 @@ import Link from "next/link";
 import EpisodeSectionMobile from "@/components/series/EpisodeSectionMobile";
 import EpisodeSectionDesktop from "@/components/series/EpisodeSectionDesktop";
 import RecommendationSection from "@/components/series/RecommendationSection";
+import CommentSection from "@/components/series/CommentSection";
 
 interface Params {
   params: { slug: string };
@@ -80,68 +81,7 @@ export default async function SeriesDetail({ params }: Params) {
           </section>
           <EpisodeSectionMobile slug={slug} initialEpisodes={episodes} />
           {/* Comments Section */}
-          <section className="dl-comments-section">
-            <div className="dl-comments-header">
-              <h2>Komentar</h2>
-              <span className="dl-comments-count">45 Komentar</span>
-            </div>
-
-            <div className="dl-comment-form">
-              <div className="dl-comment-avatar">
-                {/* <img src="https://ui-avatars.com/api/?name=Pengguna" alt="User Avatar"> */}
-              </div>
-              <form>
-                <textarea placeholder="Tulis komentarmu di sini..."></textarea>
-                <button type="submit" className="dl-btn-primary">Kirim</button>
-              </form>
-            </div>
-
-            <div className="dl-comments-list">
-              {/* Comment 1 */}
-              <div className="dl-comment">
-                <div className="dl-comment-avatar">
-                  {/* <img src="https://ui-avatars.com/api/?name=John+Doe" alt="John Doe"> */}
-                </div>
-                <div className="dl-comment-content">
-                  <div className="dl-comment-header">
-                    <span className="dl-comment-author">John Doe</span>
-                    <span className="dl-comment-date">2 hari lalu</span>
-                  </div>
-                  <div className="dl-comment-text">
-                    Donghua ini keren banget! Animasi dan ceritanya sangat memukau. Tidak sabar menunggu episode selanjutnya!
-                  </div>
-                  <div className="dl-comment-actions">
-                    <button className="dl-comment-like"><i className="fas fa-thumbs-up"></i> 12</button>
-                    <button className="dl-comment-reply">Balas</button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Comment 2 */}
-              <div className="dl-comment">
-                <div className="dl-comment-avatar">
-                  {/* <img src="https://ui-avatars.com/api/?name=Jane+Smith" alt="Jane Smith"> */}
-                </div>
-                <div className="dl-comment-content">
-                  <div className="dl-comment-header">
-                    <span className="dl-comment-author">Jane Smith</span>
-                    <span className="dl-comment-date">5 hari lalu</span>
-                  </div>
-                  <div className="dl-comment-text">
-                    Karakter Tang San sangat inspiratif. Dia membuktikan bahwa kerja keras bisa mengalahkan bakat alami.
-                  </div>
-                  <div className="dl-comment-actions">
-                    <button className="dl-comment-like"><i className="fas fa-thumbs-up"></i> 8</button>
-                    <button className="dl-comment-reply">Balas</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="dl-comments-load-more">
-              <button className="dl-btn-secondary">Muat Lebih Banyak</button>
-            </div>
-          </section>
+          <CommentSection />
 
           {/* Recommendation Section */}
           <RecommendationSection series={recommendationsData.series} />
