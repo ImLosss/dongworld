@@ -45,6 +45,7 @@ export default function RootLayout({
         <meta name="author" content="DongWorld Team" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous"/>
+        <script type='text/javascript' src='//pl28153160.effectivegatecpm.com/9a/6b/7f/9a6b7f078134c58d46071005022176d6.js'></script>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SmartlinkAd />
