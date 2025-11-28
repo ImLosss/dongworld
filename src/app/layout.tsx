@@ -8,6 +8,7 @@ import Footer from "@/components/footer";
 import Script from "next/script";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import SmartlinkAd from "@/components/Smartlink Ads";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous"/>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <SmartlinkAd />
         <div id="dl-root">
           <main className="dl-main-content">
           <Navbar />
