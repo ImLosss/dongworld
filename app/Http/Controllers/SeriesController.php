@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Genre;
 use App\Models\Series;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -82,18 +84,23 @@ class SeriesController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'aliases' => 'nullable|string',
             'slug' => 'nullable|string|max:255|unique:series,slug',
-            'type' => 'required|in:movie,episodes',
+            'type' => 'required',
+            'status' => 'required',
             'duration' => 'nullable|integer',
             'studios' => 'nullable|string',
             'rating' => 'nullable|numeric',
             'synopsis' => 'nullable|string',
-            'total_episodes' => 'nullable',
+            'total_episodes' => 'nullable|numeric',
             'release_date' => 'nullable|string',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
         ]);
+        $validated['aliases'] = array_filter(array_map('trim', explode(',', $request->aliases)));
+
+        // dd($validated);
 
         // Ensure slug from name if not provided from UI
         if (empty($validated['slug'])) {
@@ -106,6 +113,19 @@ class SeriesController extends Controller
             $validated['thumbnail'] = 'storage/' . $path; // save src path
         } else {
             unset($validated['thumbnail']);
+            if ($request->filled('thumbnail_url')) {
+                try {
+                    $remote = Http::get($request->thumbnail_url);
+                    if ($remote->successful()) {
+                        $ext = pathinfo(parse_url($request->thumbnail_url, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+                        $filename = 'series/' . Str::uuid() . '.' . $ext;
+                        Storage::disk('public')->put($filename, $remote->body());
+                        $validated['thumbnail'] = 'storage/' . $filename;
+                    }
+                } catch (\Throwable $e) {
+                    // optional: log error atau abaikan sehingga user bisa upload manual
+                }
+            }
         }
 
         $series = Series::create($validated);
@@ -140,18 +160,21 @@ class SeriesController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'aliases' => 'nullable|string',
             'slug' => 'nullable|string|max:255|unique:series,slug,' . $series->id,
-            'type' => 'required|in:movie,episodes',
+            'type' => 'required',
+            'status' => 'required',
             'duration' => 'nullable|integer',
             'studios' => 'nullable|string',
             'rating' => 'nullable|numeric',
             'synopsis' => 'nullable|string',
-            'total_episodes' => 'nullable',
+            'total_episodes' => 'nullable|numeric|min:0',
             'release_date' => 'nullable|string',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
         ]);
+        $validated['aliases'] = array_filter(array_map('trim', explode(',', $request->aliases)));
 
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name']);
@@ -159,6 +182,9 @@ class SeriesController extends Controller
 
         // Handle thumbnail upload if provided
         if ($request->hasFile('thumbnail')) {
+            if ($series->thumbnail) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $series->thumbnail));
+            }
             $path = $request->file('thumbnail')->store('series', 'public');
             $validated['thumbnail'] = 'storage/' . $path; // save src path
         } else {
@@ -178,9 +204,34 @@ class SeriesController extends Controller
      */
     public function destroy(Series $series)
     {
+        if ($series->thumbnail) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $series->thumbnail));
+        }
+
         $series->delete();
+
         return redirect()->route('series.index')
             ->with('alert', 'success')
             ->with('message', 'Series berhasil dihapus');
+    }
+
+    public function fetchFromMal(Request $request)
+    {
+        $request->validate(['q' => 'required|string|min:3']);
+
+        try {
+            $response = Http::get('https://api.jikan.moe/v4/anime', [
+                'q' => $request->q,
+                'limit' => 20,
+            ]);
+
+            if (!$response->ok()) {
+                return response()->json(['message' => 'Upstream error'], 502);
+            }
+
+            return response()->json($response->json());
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Server error'], 500);
+        }
     }
 }

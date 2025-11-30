@@ -27,27 +27,12 @@
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="name" class="form-control-label">Nama</label>
-                        <input class="form-control @error('name') border border-danger rounded-3 @enderror" type="text" placeholder="Nama Series" name="name" value="{{ old('name') }}" autofocus>
+                        <input class="form-control @error('name') border border-danger rounded-3 @enderror" type="text" placeholder="Nama Series" name="name" id="name" value="{{ old('name') }}" autofocus>
                         @error('name')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="genres" class="form-control-label">Genres</label>
-                        <select name="genres[]" id="genres" class="form-control select2 @error('genres') border border-danger rounded-3 @enderror" multiple>
-                            @foreach($genres as $g)
-                                <option value="{{ $g->id }}" {{ collect(old('genres', []))->contains($g->id) ? 'selected' : '' }}>{{ $g->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('genres')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="slug" class="form-control-label">Slug</label>
@@ -57,18 +42,64 @@
                         @enderror
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="type" class="form-control-label">Tipe</label>
                         <select name="type" class="form-control @error('type') border border-danger rounded-3 @enderror">
-                            <option value="episodes" {{ old('type') == 'episodes' ? 'selected' : '' }}>Episodes</option>
+                            <option value="tv" {{ old('type') == 'tv' ? 'selected' : '' }}>TV</option>
+                            <option value="ona" {{ old('type') == 'ona' ? 'selected' : '' }}>ONA</option>
                             <option value="movie" {{ old('type') == 'movie' ? 'selected' : '' }}>Movie</option>
+                            <option value="special" {{ old('type') == 'special' ? 'selected' : '' }}>Special</option>
+                            <option value="ova" {{ old('type') == 'ova' ? 'selected' : '' }}>OVA</option>
+                            <option value="pv" {{ old('type') == 'pv' ? 'selected' : '' }}>PV</option>
                         </select>
                         @error('type')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="type" class="form-control-label">Status</label>
+                        <select name="status" class="form-control @error('status') border border-danger rounded-3 @enderror">
+                            <option value="ongoing" {{ old('status') == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                            <option value="complete" {{ old('status') == 'complete' ? 'selected' : '' }}>Complete</option>
+                            <option value="dropped" {{ old('status') == 'dropped' ? 'selected' : '' }}>Dropped</option>
+                        </select>
+                        @error('status')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="genres" class="form-control-label">Genres</label>
+                        <select name="genres[]" id="genres" class="form-control select2 @error('genres') border border-danger rounded-3 @enderror" multiple>
+                            @foreach($genres as $g)
+                                <option value="{{ $g->id }}" {{ collect(old('genres', []))->contains($g->id) ? 'selected' : '' }}>{{ $g->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('genres')
+                            <p class="text-danger text-xs mt-2" id="genres-error">{{ $message }}</p>
+                        @else
+                            <p class="text-warning text-xs mt-2 d-none" id="genres-error"></p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="total_episodes" class="form-control-label">Total Episode</label>
+                        <input class="form-control @error('total_episodes') border border-danger rounded-3 @enderror" type="number" placeholder="12" name="total_episodes" value="{{ old('total_episodes') }}">
+                        @error('total_episodes')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
             </div>
             <div class="row">
                 <div class="col-md-6">
@@ -102,9 +133,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group has-validation">
-                        <label for="thumbnail" class="form-control-label">Thumbnail</label>
-                        <input id="thumbnailInput" class="form-control @error('thumbnail') border border-danger rounded-3 @enderror" type="file" accept="image/*" name="thumbnail">
-                        @error('thumbnail')
+                        <label for="aliases" class="form-control-label">Aliases</label>
+                        <input class="form-control @error('aliases') border border-danger rounded-3 @enderror" type="text" placeholder="Pisah dengan koma (,)" name="aliases" value="{{ old('aliases') }}" autofocus>
+                        @error('aliases')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
@@ -122,9 +153,11 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group has-validation">
-                        <label for="total_episodes" class="form-control-label">Total Episode</label>
-                        <input class="form-control @error('total_episodes') border border-danger rounded-3 @enderror" type="text" placeholder="12" name="total_episodes" value="{{ old('total_episodes') }}">
-                        @error('total_episodes')
+                        <label for="thumbnail" class="form-control-label">Thumbnail</label>
+                        <input id="thumbnailInput" class="form-control @error('thumbnail') border border-danger rounded-3 @enderror" type="file" accept="image/*" name="thumbnail">
+                        <input type="hidden" name="thumbnail_url" id="thumbnailUrl">
+                        <div id="thumbPreviewWrapper" class="mt-2"></div>
+                        @error('thumbnail')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
@@ -142,16 +175,183 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary btn-md mt-4 mb-4 me-2" data-toggle="modal" data-target="#exampleModal">{{ 'Get Data From MyAnimeList' }}</button>
                 <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ 'Simpan' }}</button>
             </div>
         </form>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Get Data From MyAnimeList</h5>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="searchDonghua" placeholder="Type to Search Donghua/Anime">
+            <div id="searchResults" class="mt-2"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('script')
 <script>
+    function parseDurationToMinutes(text) {
+        if (!text) return '';
+        const hoursMatch = text.match(/(\d+)\s*hr/);
+        const minutesMatch = text.match(/(\d+)\s*min/);
+        const hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+        const minutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;
+        return hours * 60 + minutes;
+    }
+    let searchTimeout;
+
     document.addEventListener('DOMContentLoaded', function () {
+        $('#searchDonghua').on('input', function() {
+            clearTimeout(searchTimeout);
+
+            let query = $(this).val();
+
+            if (query.length < 3) {
+                $('#searchResults').empty();
+                return;
+            }
+
+            // Tunggu 500ms setelah user berhenti mengetik
+            searchTimeout = setTimeout(() => {
+                console.log('Searching for:', query);
+                let resultsContainer = $('#searchResults');
+                resultsContainer.empty();
+
+                $.ajax({
+                    url: '{{ route('series.fetch-mal') }}',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        q: query
+                    },
+                    success: (res) => {
+                        res.data.forEach(item => {
+                            resultsContainer.append(`
+                                <div class="card mb-2">
+                                    <div class="card-body p-2">
+                                        <div class="row align-items-center g-2">
+                                            <div class="col-3 col-md-2">
+                                                <img src="${item.images.webp.image_url}" alt="${item.title}" class="img-fluid rounded" style="width: 100%; height: auto; object-fit: cover;">
+                                            </div>
+                                            <div class="col-9 col-md-8">
+                                                <h6 class="mb-1 text-sm" style="word-wrap: break-word;">${item.title}</h6>
+                                                <div>
+                                                    <span class="badge badge-sm bg-gradient-info">${item.status}</span>
+                                                    <span class="badge badge-sm bg-gradient-secondary">${item.episodes} eps</span>
+                                                    <span class="badge badge-sm bg-gradient-warning">⭐ ${item.score}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-2 text-md-end mt-2 mt-md-0">
+                                                <button type="button" class="btn btn-sm btn-primary select-anime w-100 w-md-auto"
+                                                        data-id="${item.mal_id}"
+                                                        data-title="${item.title}"
+                                                        data-episodes="${item.episodes}"
+                                                        data-rating="${item.score}"
+                                                        data-synopsis="${item.synopsis}"
+                                                        data-aliases="${item.titles.map(t => t.title).join(', ')}"
+                                                        data-thumbnail="${item.images.webp.image_url}"
+                                                        data-studios="${item.studios.map(s => s.name).join(', ')}"
+                                                        data-status="${item.status == "Finished Airing" ? "complete" : "ongoing"}"
+                                                        data-type="${item.type}"
+                                                        data-genres='${JSON.stringify(item.genres || []).replace(/"/g, '&quot;')}'
+                                                        data-date="${item.aired.from}"
+                                                        data-duration="${parseDurationToMinutes(item.duration)}">
+                                                    Pilih
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+
+                        $('.select-anime').on('click', function() {
+                            let data = $(this).data();
+                            const malGenres = Array.isArray(data.genres) ? data.genres.map(g => g.name.toLowerCase()) : [];
+
+                            const matchedIds = [];
+                            const availableNames = [];
+                            $('#genres option').each(function () {
+                                const optionName = $(this).text().trim().toLowerCase();
+                                availableNames.push({ name: optionName, id: $(this).val() });
+                                if (malGenres.includes(optionName)) {
+                                    matchedIds.push($(this).val());
+                                }
+                            });
+
+                            $('#genres').val(matchedIds).trigger('change');
+
+                            const missing = malGenres.filter(name => !availableNames.some(opt => opt.name === name));
+                            const genresError = $('#genres-error');
+                            if (missing.length) {
+                                genresError
+                                    .removeClass('d-none')
+                                    .text(`Genre berikut belum tersedia di sistem: ${missing.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')}`);
+                            } else {
+                                genresError.addClass('d-none').text('');
+                            }
+
+                            // Isi form dengan data yang dipilih
+                            $('input[name="name"]').val(data.title).trigger('input');
+                            $('input[name="total_episodes"]').val(data.episodes);
+                            $('input[name="rating"]').val(Number.parseFloat(data.rating ?? 0).toFixed(1));
+                            $('textarea[name="synopsis"]').val(data.synopsis);
+                            $('#thumbnailUrl').val(data.thumbnail);
+                            $('input[name="studios"]').val(data.studios);
+                            $('input[name="duration"]').val(data.duration);
+                            $('input[name="aliases"]').val(data.aliases);
+                            if (data.date) {
+                                const releaseDate = new Date(data.date);
+                                const year = releaseDate.getFullYear();
+                                const month = String(releaseDate.getMonth() + 1).padStart(2, '0');
+                                const day = String(releaseDate.getDate()).padStart(2, '0');
+                                $('input[name="release_date"]').val(`${year}-${month}-${day}`);
+                            }
+                            $('select[name="status"]').val(data.status.toLowerCase());
+                            $('select[name="type"]').val(data.type.toLowerCase());
+
+                            $('#thumbPreviewWrapper').html(`
+                                <img src="${data.thumbnail}" alt="${data.title}" style="height:80px;border-radius:6px;object-fit:cover;">
+                            `);
+
+                            $('#thumbPreview').remove();
+                            $('#thumbnailInput').val('');
+
+                            // Tutup modal
+                            $('#exampleModal button[data-dismiss="modal"]').trigger('click');
+                        });
+                    },
+                    error: (err) => console.error(err)
+                });
+            }, 500);
+        });
+
+        $('#name').on('input', function() {
+            const nameVal = $(this).val();
+            const slugVal = slugify(nameVal);
+            $('input[name="slug"]').val(slugVal);
+        });
+
         // initialize select2 for genres
         if (window.$ && $('#genres').length) {
             $('#genres').select2({
@@ -160,9 +360,6 @@
             });
         }
 
-        // auto-generate slug from name
-        const nameInput = document.querySelector('input[name="name"]');
-        const slugInput = document.querySelector('input[name="slug"]');
         function slugify(text){
             return text
                 .toString()
@@ -173,18 +370,13 @@
                 .replace(/[\s-]+/g, '-')
                 .replace(/^-+|-+$/g, '');
         }
-        if (nameInput && slugInput) {
-            nameInput.addEventListener('input', function(){
-                if (!slugInput.value || slugInput.value === slugify(slugInput.value)) {
-                    slugInput.value = slugify(nameInput.value);
-                }
-            });
-        }
 
         // preview selected thumbnail
         const thumbInput = document.getElementById('thumbnailInput');
         if (thumbInput) {
             thumbInput.addEventListener('change', function (e) {
+                $('#thumbnailUrl').val('');
+                $('#thumbPreviewWrapper').empty();
                 const file = e.target.files && e.target.files[0];
                 if (!file) return;
                 const url = URL.createObjectURL(file);

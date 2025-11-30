@@ -14,17 +14,19 @@ return new class extends Migration
         Schema::create('series', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->json('aliases')->nullable();
             $table->string('slug')->unique();
             $table->text('synopsis')->nullable();
             $table->integer('duration')->nullable();
-            $table->text('current_episode')->nullable();
-            $table->text('total_episodes')->nullable();
+            $table->integer('current_episode')->default(0);
+            $table->integer('total_episodes')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('studios')->nullable();
             $table->string('release_date')->nullable();
             $table->float('rating')->default(4);
             $table->integer('views')->default(0);
-            $table->enum('type', ['movie', 'episodes'])->default('episodes');
+            $table->enum('status', ['ongoing', 'complete', 'dropped']);
+            $table->enum('type', ['movie', 'tv', 'special', 'ova', 'pv', 'ona'])->default('tv');
             $table->timestamps();
         });
     }

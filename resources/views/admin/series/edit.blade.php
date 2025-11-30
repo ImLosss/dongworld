@@ -27,13 +27,55 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group has-validation">
-            <label for="name" class="form-control-label">Nama</label>
-            <input class="form-control @error('name') border border-danger rounded-3 @enderror" type="text" placeholder="Nama Series" name="name" value="{{ old('name', $series->name) }}" autofocus>
+                        <label for="name" class="form-control-label">Nama</label>
+                        <input class="form-control @error('name') border border-danger rounded-3 @enderror" type="text" placeholder="Nama Series" name="name" value="{{ old('name', $series->name) }}" autofocus>
                         @error('name')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="slug" class="form-control-label">Slug</label>
+                        <input class="form-control @error('slug') border border-danger rounded-3 @enderror" type="text" placeholder="slug-series" name="slug" value="{{ old('slug', $series->slug) }}">
+                        @error('slug')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="type" class="form-control-label">Tipe</label>
+                        <select name="type" class="form-control @error('type') border border-danger rounded-3 @enderror">
+                            <option value="tv" {{ old('type', $series->type) == 'tv' ? 'selected' : '' }}>TV</option>
+                            <option value="ona" {{ old('type', $series->type) == 'ona' ? 'selected' : '' }}>ONA</option>
+                            <option value="movie" {{ old('type', $series->type) == 'movie' ? 'selected' : '' }}>Movie</option>
+                            <option value="special" {{ old('type', $series->type) == 'special' ? 'selected' : '' }}>Special</option>
+                            <option value="ova" {{ old('type', $series->type) == 'ova' ? 'selected' : '' }}>OVA</option>
+                            <option value="pv" {{ old('type', $series->type) == 'pv' ? 'selected' : '' }}>PV</option>
+                        </select>
+                        @error('type')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="status" class="form-control-label">Status</label>
+                        <select name="status" class="form-control @error('status') border border-danger rounded-3 @enderror">
+                            <option value="ongoing" {{ old('status', $series->status) == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                            <option value="complete" {{ old('status', $series->status) == 'complete' ? 'selected' : '' }}>Complete</option>
+                            <option value="dropped" {{ old('status', $series->status) == 'dropped' ? 'selected' : '' }}>Dropped</option>
+                        </select>
+                        @error('status')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="genres" class="form-control-label">Genres</label>
@@ -47,25 +89,11 @@
                         @enderror
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group has-validation">
-                        <label for="slug" class="form-control-label">Slug</label>
-                        <input class="form-control @error('slug') border border-danger rounded-3 @enderror" type="text" placeholder="slug-series" name="slug" value="{{ old('slug', $series->slug) }}">
-                        @error('slug')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="type" class="form-control-label">Tipe</label>
-                        <select name="type" class="form-control @error('type') border border-danger rounded-3 @enderror">
-                            <option value="episodes" {{ old('type', $series->type) == 'episodes' ? 'selected' : '' }}>Episodes</option>
-                            <option value="movie" {{ old('type', $series->type) == 'movie' ? 'selected' : '' }}>Movie</option>
-                        </select>
-                        @error('type')
+                        <label for="total_episodes" class="form-control-label">Total Episode</label>
+                        <input class="form-control @error('total_episodes') border border-danger rounded-3 @enderror" type="number" placeholder="12" name="total_episodes" value="{{ old('total_episodes', $series->total_episodes) }}">
+                        @error('total_episodes')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
@@ -103,14 +131,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group has-validation">
-                        <label for="thumbnail" class="form-control-label">Thumbnail</label>
-                        <input id="thumbnailInput" class="form-control @error('thumbnail') border border-danger rounded-3 @enderror" type="file" accept="image/*" name="thumbnail">
-                        @if($series->thumbnail)
-                            <img id="thumbPreview" src="{{ asset($series->thumbnail) }}" alt="thumb" style="display:block;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
-                        @else
-                            <img id="thumbPreview" alt="thumb" style="display:none;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
-                        @endif
-                        @error('thumbnail')
+                        <label for="aliases" class="form-control-label">Aliases</label>
+                        <input class="form-control @error('aliases') border border-danger rounded-3 @enderror" type="text" placeholder="Pisah dengan koma (,)" name="aliases" value="{{ old('aliases', $series->aliases ? implode(', ', $series->aliases) : '') }}" autofocus>
+                        @error('aliases')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
@@ -128,9 +151,14 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group has-validation">
-                        <label for="total_episodes" class="form-control-label">Total Episode</label>
-                        <input class="form-control @error('total_episodes') border border-danger rounded-3 @enderror" type="text" placeholder="12" name="total_episodes" value="{{ old('total_episodes', $series->total_episodes) }}">
-                        @error('total_episodes')
+                        <label for="thumbnail" class="form-control-label">Thumbnail</label>
+                        <input id="thumbnailInput" class="form-control @error('thumbnail') border border-danger rounded-3 @enderror" type="file" accept="image/*" name="thumbnail">
+                        @if($series->thumbnail)
+                            <img id="thumbPreview" src="{{ asset($series->thumbnail) }}" alt="thumb" style="display:block;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
+                        @else
+                            <img id="thumbPreview" alt="thumb" style="display:none;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
+                        @endif
+                        @error('thumbnail')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>

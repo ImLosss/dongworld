@@ -8,6 +8,10 @@ class Series extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'aliases' => 'array',
+    ];
+
     public function genres() {
         return $this->belongsToMany(Genre::class, 'genre_series', 'series_id', 'genre_id');
     }

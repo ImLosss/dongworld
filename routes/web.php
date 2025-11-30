@@ -34,6 +34,7 @@ Route::group([
     // routeSeries
     Route::get('series/datatable', [SeriesController::class, 'datatable'])->name('series.datatable');
     Route::resource('series', SeriesController::class)->names('series');
+    Route::post('series/fetch-mal', [SeriesController::class, 'fetchFromMal'])->name('series.fetch-mal');
     // endRoute
 
     // routeServer

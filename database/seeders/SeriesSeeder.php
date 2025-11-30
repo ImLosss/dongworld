@@ -22,7 +22,7 @@ class SeriesSeeder extends Seeder
             'rating' => 4.5,
             'total_episodes' => 200,
             'current_episode' => 21,
-            'type' => 'episodes',
+            'type' => 'tv',
         ]);
 
         Series::create([
@@ -34,7 +34,7 @@ class SeriesSeeder extends Seeder
             'rating' => 4.5,
             'total_episodes' => 200,
             'current_episode' => 50,
-            'type' => 'episodes',
+            'type' => 'tv',
         ]);
     }
 }

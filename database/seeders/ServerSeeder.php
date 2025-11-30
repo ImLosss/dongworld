@@ -16,5 +16,9 @@ class ServerSeeder extends Seeder
         Server::create([
             'name' => 'Dailymotion'
         ]);
+
+        Server::create([
+            'name' => 'Okru'
+        ]);
     }
 }
