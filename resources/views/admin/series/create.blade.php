@@ -246,6 +246,7 @@
                     },
                     success: (res) => {
                         res.data.forEach(item => {
+                            let year = item.aired && item.aired.from ? new Date(item.aired.from).getFullYear() : 'N/A';
                             resultsContainer.append(`
                                 <div class="card mb-2">
                                     <div class="card-body p-2">
@@ -258,6 +259,7 @@
                                                 <div>
                                                     <span class="badge badge-sm bg-gradient-info">${item.status}</span>
                                                     <span class="badge badge-sm bg-gradient-secondary">${item.episodes} eps</span>
+                                                    <span class="badge badge-sm bg-gradient-success">${year}</span>
                                                     <span class="badge badge-sm bg-gradient-warning">⭐ ${item.score}</span>
                                                 </div>
                                             </div>
