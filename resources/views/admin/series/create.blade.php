@@ -186,17 +186,20 @@
 <div class="modal fade modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Get Data From MyAnimeList</h5>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <input type="text" class="form-control" id="searchDonghua" placeholder="Type to Search Donghua/Anime">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Get Data From MyAnimeList</h5>
+        </div>
+        <div class="modal-body">
+            <div class="modal-search-bar">
+                <input type="text" class="form-control" id="searchDonghua" placeholder="Type to Search Donghua/Anime">
+            </div>
+            <div id="searchLoading" class="text-center py-3 d-none">
+                <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+                </div>
+            </div>
             <div id="searchResults" class="mt-2"></div>
-          </div>
-        </form>
-      </div>
+        </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
@@ -230,7 +233,7 @@
 
             // Tunggu 500ms setelah user berhenti mengetik
             searchTimeout = setTimeout(() => {
-                console.log('Searching for:', query);
+                $('#searchLoading').removeClass('d-none');
                 let resultsContainer = $('#searchResults');
                 resultsContainer.empty();
 
@@ -245,6 +248,14 @@
                         q: query
                     },
                     success: (res) => {
+                        if (!res.data.length) {
+                            resultsContainer.html(`
+                            <div class="alert alert-warning mb-0">
+                                Tidak ada hasil untuk "<strong>${query}</strong>".
+                            </div>
+                            `);
+                            return;
+                        }
                         res.data.forEach(item => {
                             let year = item.aired && item.aired.from ? new Date(item.aired.from).getFullYear() : 'N/A';
                             resultsContainer.append(`
@@ -343,7 +354,14 @@
                             $('#exampleModal button[data-dismiss="modal"]').trigger('click');
                         });
                     },
-                    error: (err) => console.error(err)
+                    error: (err) => {
+                        $('#searchResults').html(`
+                            <div class="alert alert-danger mb-0">
+                            Terjadi kesalahan saat mengambil data. Silakan coba lagi nanti.
+                            </div>
+                        `);
+                    },
+                    complete: () => $('#searchLoading').addClass('d-none')
                 });
             }, 500);
         });

@@ -3645,6 +3645,14 @@ textarea.form-control.is-invalid {
   transition: all 0.15s ease-in;
 }
 
+.modal-search-bar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #fff;
+    padding-bottom: 8px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;
