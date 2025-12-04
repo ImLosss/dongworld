@@ -4,7 +4,7 @@ import { useEffect } from "react";
 export default function SmartlinkAd() {
     useEffect(() => {
         const url = "https://www.effectivegatecpm.com/r78gx5zh?key=ddf94cbeb9a2045ab67820c3959ee7af";
-        const delay = 30 * 1000; // 30 detik
+        const delay = 60 * 1000; // 60 detik
 
         function isCooldown() {
             const lastClick = localStorage.getItem("smartlink_last_click");
