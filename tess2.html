@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload ke n8n dengan Progress</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; text-align: center; }
+    input, button { margin: 10px 0; width: 100%; padding: 10px; }
+    .progress-container {
+      background: #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 20px;
+      margin-top: 10px;
+    }
+    .progress-bar {
+      background: linear-gradient(90deg, #007bff, #00b4d8);
+      height: 100%;
+      width: 0%;
+      color: #fff;
+      text-align: center;
+      font-size: 12px;
+      line-height: 20px;
+      transition: width 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+  <h3>Upload File ke n8n Webhook</h3>
+  <input type="file" id="fileInput" />
+  <button id="uploadBtn">Mulai Upload</button>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar">0%</div>
+  </div>
+
+  <p id="status"></p>
+
+  <script>
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("fileInput");
+    const progressBar = document.getElementById("progressBar");
+    const statusEl = document.getElementById("status");
+
+    uploadBtn.onclick = () => {
+      const file = fileInput.files[0];
+      if (!file) return alert("Pilih file terlebih dahulu!");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://app.websiteku.space/webhook-test/upload", true);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = (e.loaded / e.total) * 100;
+          const uploadedMB = (e.loaded / 1024 / 1024).toFixed(2);
+          const totalMB = (e.total / 1024 / 1024).toFixed(2);
+          progressBar.style.width = percent + "%";
+          progressBar.textContent = `${uploadedMB} / ${totalMB} MB (${percent.toFixed(1)}%)`;
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          statusEl.textContent = "✅ Upload berhasil!";
+          progressBar.style.background = "#28a745";
+        } else {
+          statusEl.textContent = `❌ Upload gagal (${xhr.status})`;
+          progressBar.style.background = "#dc3545";
+        }
+      };
+
+      xhr.onerror = () => {
+        statusEl.textContent = "❌ Koneksi gagal";
+      };
+
+      xhr.send(formData);
+      statusEl.textContent = "⏳ Mengupload...";
+    };
+  </script>
+</body>
+</html>

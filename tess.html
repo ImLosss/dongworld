@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episode Container dengan Scroll</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 16px;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .dl-mobile-episodes {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+        
+        .dl-episode-header {
+            padding: 16px;
+            background-color: #6c5ce7;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .dl-episode-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .dl-mobile-episode-list-container {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Animasi Loading */
+        .dl-episode-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 10;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            position: relative;
+        }
+        
+        .spinner:before, .spinner:after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #6c5ce7;
+            animation: spin 1.5s linear infinite;
+        }
+        
+        .spinner:before {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        
+        .spinner:after {
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border-top-color: #a29bfe;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Daftar Episode dengan Scroll */
+        .dl-mobile-episode-list {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+            -webkit-overflow-scrolling: touch; /* Untuk scroll halus di iOS */
+        }
+        
+        /* Styling scrollbar */
+        .dl-mobile-episode-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .dl-mobile-episode-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .dl-mobile-episode-list::-webkit-scrollbar-thumb {
+            background: #c4c4c4;
+            border-radius: 10px;
+        }
+        
+        .dl-mobile-episode-list::-webkit-scrollbar-thumb:hover {
+            background: #a5a5a5;
+        }
+        
+        .dl-mobile-episode-item {
+            display: block;
+            padding: 14px 16px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+        
+        .dl-mobile-episode-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Pagination */
+        .dl-episode-pagination {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        
+        .dl-btn-secondary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .dl-btn-secondary:hover:not(:disabled) {
+            background-color: #5649c0;
+        }
+        
+        .dl-btn-secondary:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        /* Skeleton Loading (Alternatif) */
+        .skeleton-loading {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <section class="dl-mobile-episodes">
+        <div class="dl-episode-header">
+            <h2>Daftar Episode</h2>
+        </div>
+        <div class="dl-mobile-episode-list-container">
+            <!-- Animasi Loading -->
+            <div class="dl-episode-loading">
+                <div class="spinner"></div>
+            </div>
+            
+            <!-- Daftar Episode (scrollable) -->
+            <div class="dl-mobile-episode-list">
+                <a href="#" class="dl-mobile-episode-item">Episode 1 - Pembukaan</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 2 - Pertemuan Pertama</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 3 - Konflik</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 4 - Perkembangan</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 5 - Klimaks</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 6 - Penyelesaian</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 7 - Cerita Baru</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 8 - Karakter Baru</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 9 - Plot Twist</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 10 - Akhir Season</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 11 - Awal Season Baru</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 12 - Pengembangan</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 13 - Konflik Baru</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 14 - Resolusi</a>
+                <a href="#" class="dl-mobile-episode-item">Episode 15 - Persiapan Final</a>
+            </div>
+        </div>
+        <div class="dl-episode-pagination">
+            <button class="dl-btn-secondary" disabled>
+                <i class="fas fa-chevron-left"></i> Sebelumnya
+            </button>
+            <button class="dl-btn-secondary">
+                Selanjutnya <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <script>
+        // Simulasi loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingElement = document.querySelector('.dl-episode-loading');
+            const episodeList = document.querySelector('.dl-mobile-episode-list');
+            
+            // Tampilkan loading
+            loadingElement.style.display = 'flex';
+            episodeList.style.opacity = '0.5';
+            
+            // Simulasi loading selama 2 detik
+            setTimeout(function() {
+                loadingElement.style.display = 'none';
+                episodeList.style.opacity = '1';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
