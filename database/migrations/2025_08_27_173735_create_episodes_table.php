@@ -18,9 +18,7 @@ return new class extends Migration
             $table->enum('status', ['private', 'published'])->default('private');
             $table->json('download_links')->nullable();
             $table->string('slug')->unique();
-            $table->unsignedBigInteger('user_id')->onDelete('SET NULL')->nullable();
-            $table->string('message_id')->nullable();
-            $table->string('file_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable()->onDelete('SET NULL');
             $table->timestamps();
         });
     }

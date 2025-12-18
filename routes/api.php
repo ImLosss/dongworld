@@ -32,5 +32,6 @@ Route::group(
 
         // telegramEndpoints
         Route::post('telegram/episode/new', [\App\Http\Controllers\api\telegram\EpisodeController::class, 'newEpisode']);
+        Route::get('telegram/series/{id}', [\App\Http\Controllers\api\telegram\SeriesController::class, 'getSeriesDetail']);
     }
 );

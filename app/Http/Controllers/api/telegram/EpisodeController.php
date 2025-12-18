@@ -20,9 +20,7 @@ class EpisodeController extends Controller
                 Rule::unique('episodes', 'episode_number')
                     ->where(fn ($q) => $q->where('series_id', $request->input('series_id'))),
             ],
-            'link_drive' => 'nullable|string',
-            'message_id' => 'required|string',
-            'file_id' => 'required|string',
+            'link_drive' => 'nullable|string'
         ]);
 
         $series = Series::findOrFail($request->input('series_id'));
@@ -41,9 +39,7 @@ class EpisodeController extends Controller
                 'drive' => $request->input('link_drive'),
             ]),
             'slug' => $series->slug . '-' . $request->input('episode_number'),
-            'user_id' => null,
-            'message_id' => $request->input('message_id'),
-            'file_id' => $request->input('file_id'),
+            'user_id' => null
         ]);
 
         return response()->json([
