@@ -8,6 +8,7 @@ use App\Models\Series;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class EpisodeController extends Controller
@@ -37,7 +38,12 @@ class EpisodeController extends Controller
     public function store(Request $request, Series $series)
     {
         $validated = $request->validate([
-            'episode_number' => 'integer|unique:episodes,episode_number'
+            'episode_number' => [
+                'required',
+                'integer',
+                Rule::unique('episodes', 'episode_number')
+                    ->where(fn ($q) => $q->where('series_id', $series->id)),
+            ],
         ]);
 
         // slug logic
@@ -99,25 +105,31 @@ class EpisodeController extends Controller
      */
     public function update(Request $request, Series $series, Episode $episode)
     {
-        $validated = $request->validate([
-            'episode_number' => 'integer|unique:episodes,episode_number,' . $episode->id,
-        ]);
+        $rules = [];
 
         // slug logic
         $seriesNameSlug = Str::slug($series->name);
         if ($series->type === 'movie') {
             $slug = $seriesNameSlug . '-movie';
-            $validated['episode_number'] = null;
+            $rules['episode_number'] = ['nullable'];
         } else {
-            $episodeNo = (int) ($request->input('episode_number') ?? $episode->episode_number ?? 1);
-            $slug = $seriesNameSlug . '-' . $episodeNo;
-            $validated['episode_number'] = $episodeNo;
+            $slug = $seriesNameSlug . '-' . $request->episode_number;
+            $rules['episode_number'] = [
+                'required',
+                'integer',
+                Rule::unique('episodes', 'episode_number')
+                    ->where(fn ($q) => $q->where('series_id', $series->id))
+                    ->ignore($episode->id),
+            ];
         }
+
+        $validated = $request->validate($rules);
 
         $episode->update([
             'episode_number' => $validated['episode_number'] ?? null,
             'slug' => $slug,
             'user_id' => $request->user()->id,
+            'status' => $request->status
         ]);
 
         // update/create links per server (optional)
@@ -156,6 +168,14 @@ class EpisodeController extends Controller
         return redirect()->route('episode.index', $series->id)
             ->with('alert', 'success')
             ->with('message', 'Episode berhasil dihapus');
+    }
+
+    public function sendNotif($episodeId)
+    {
+        $episode = Episode::with('series')->findOrFail($episodeId);
+        $episode->update(['status' => 'published']);
+        $episode->series->timestamps = false;
+        $episode->series->update(['updated_at' => now()]);
     }
 
     /**

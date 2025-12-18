@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('synopsis')->nullable();
             $table->integer('duration')->nullable();
-            $table->integer('current_episode')->default(0);
             $table->integer('total_episodes')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('studios')->nullable();

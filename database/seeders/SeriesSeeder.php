@@ -21,7 +21,6 @@ class SeriesSeeder extends Seeder
             'release_date' => '2020-08-27',
             'rating' => 4.5,
             'total_episodes' => 200,
-            'current_episode' => 21,
             'type' => 'tv',
         ]);
 
@@ -33,7 +32,6 @@ class SeriesSeeder extends Seeder
             'release_date' => '2020-08-27',
             'rating' => 4.5,
             'total_episodes' => 200,
-            'current_episode' => 50,
             'type' => 'tv',
         ]);
     }

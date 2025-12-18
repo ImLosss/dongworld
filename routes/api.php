@@ -29,5 +29,8 @@ Route::group(
         Route::get('/watch/{slug}', [WatchController::class, 'watch']);
         Route::get('/recommendations', [SeriesController::class, 'getRecomendation']);
         Route::post('/view-series/{slug}', [SeriesController::class, 'incrementViewCount']);
+
+        // telegramEndpoints
+        Route::post('telegram/episode/new', [\App\Http\Controllers\api\telegram\EpisodeController::class, 'newEpisode']);
     }
 );

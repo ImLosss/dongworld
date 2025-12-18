@@ -15,8 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('series_id')->onDelete('cascade');
             $table->integer('episode_number')->nullable();
+            $table->enum('status', ['private', 'published'])->default('private');
+            $table->json('download_links')->nullable();
             $table->string('slug')->unique();
             $table->unsignedBigInteger('user_id')->onDelete('SET NULL')->nullable();
+            $table->string('message_id')->nullable();
+            $table->string('file_id')->nullable();
             $table->timestamps();
         });
     }

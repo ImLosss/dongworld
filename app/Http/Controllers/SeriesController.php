@@ -25,7 +25,7 @@ class SeriesController extends Controller
      */
     public function datatable(Request $request)
     {
-    $query = Series::with('genres');
+        $query = Series::with('genres', 'latestEpisode');
         $user = $request->user();
 
         return DataTables::of($query)
@@ -33,7 +33,7 @@ class SeriesController extends Controller
             ->addColumn('thumbnail', fn (Series $s) => $s->thumbnail ? '<img src="' . asset($s->thumbnail) . '" alt="thumb" style="height:40px;width:auto;border-radius:6px;object-fit:cover;">' : '-')
             ->addColumn('type', fn (Series $s) => $s->type)
             ->addColumn('rating', fn (Series $s) => $s->rating)
-            ->addColumn('total_episodes', fn (Series $s) =>   $s->current_episode . '/' . $s->total_episodes)
+            ->addColumn('total_episodes', fn (Series $s) =>   ($s->latestEpisode->episode_number ?? 0) . '/' . $s->total_episodes)
             ->addColumn('release_date', fn (Series $s) => $s->release_date)
             ->addColumn('genres', fn (Series $s) => $s->genres->pluck('name')->implode(', '))
             ->addColumn('action', function (Series $data) use ($user) {

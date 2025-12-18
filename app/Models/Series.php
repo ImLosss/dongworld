@@ -19,4 +19,9 @@ class Series extends Model
     public function episodes() {
         return $this->hasMany(Episode::class);
     }
+
+    public function latestEpisode()
+    {
+        return $this->hasOne(Episode::class)->ofMany('episode_number', 'max');
+    }
 }
