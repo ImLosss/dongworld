@@ -98,7 +98,7 @@ class SeriesController extends Controller
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
         ]);
-        $validated['aliases'] = array_filter(array_map('trim', explode(',', $request->aliases)));
+        $validated['aliases'] = array_filter(array_map('trim', explode(';', $request->aliases)));
 
         // dd($validated);
 
@@ -174,7 +174,7 @@ class SeriesController extends Controller
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
         ]);
-        $validated['aliases'] = array_filter(array_map('trim', explode(',', $request->aliases)));
+        $validated['aliases'] = array_filter(array_map('trim', explode(';', $request->aliases)));
 
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name']);

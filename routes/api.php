@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\HomeController;
+use App\Http\Controllers\api\SearchController;
 use App\Http\Controllers\api\SeriesController;
 use App\Http\Controllers\api\WatchController;
 use Illuminate\Http\Request;
@@ -26,6 +27,8 @@ Route::group(
 
         Route::get('/all-series', [HomeController::class, 'getSeries']);
         Route::get('/series/{slug}', [SeriesController::class, 'getSeriesDetail']);
+        Route::get('/series', [SearchController::class, 'search']);
+        Route::get('/genres', [SearchController::class, 'getFilters']);
         Route::get('/watch/{slug}', [WatchController::class, 'watch']);
         Route::get('/recommendations', [SeriesController::class, 'getRecomendation']);
         Route::post('/view-series/{slug}', [SeriesController::class, 'incrementViewCount']);

@@ -134,7 +134,7 @@
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="aliases" class="form-control-label">Aliases</label>
-                        <input class="form-control @error('aliases') border border-danger rounded-3 @enderror" type="text" placeholder="Pisah dengan koma (,)" name="aliases" value="{{ old('aliases') }}" autofocus>
+                        <input class="form-control @error('aliases') border border-danger rounded-3 @enderror" type="text" placeholder="Pisah dengan koma (;)" name="aliases" value="{{ old('aliases') }}" autofocus>
                         @error('aliases')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
@@ -281,7 +281,7 @@
                                                         data-episodes="${item.episodes}"
                                                         data-rating="${item.score}"
                                                         data-synopsis="${item.synopsis}"
-                                                        data-aliases="${item.titles.map(t => t.title).join(', ')}"
+                                                        data-aliases="${item.titles.map(t => t.title).join('; ')}"
                                                         data-thumbnail="${item.images.webp.image_url}"
                                                         data-studios="${item.studios.map(s => s.name).join(', ')}"
                                                         data-status="${item.status == "Finished Airing" ? "complete" : "ongoing"}"

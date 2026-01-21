@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Genre;
 use App\Models\Series;
 use Illuminate\Http\Request;
 
