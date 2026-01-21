@@ -1,9 +1,24 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Sidebar() {
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const btn = document.querySelector(".dl-sidebar-toggle");
+    if (!btn) return;
+
+    const onClick = () => setActive((v) => !v);
+    btn.addEventListener("click", onClick);
+
+    return () => btn.removeEventListener("click", onClick);
+  }, []);
+
   return (
-    <div className="dl-mobile-menu active">
-      <Link href="#home" className="dl-active">
+    <div className={`dl-mobile-menu ${active ? "dl-active" : ""}`}>
+      <Link href="#home">
         <i className="fas fa-home"></i> Beranda
       </Link>
       <Link href="#top">

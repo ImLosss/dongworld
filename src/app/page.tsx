@@ -1,8 +1,17 @@
 import Image from "next/image";
 import SeriesList from "@/components/home/SeriesList";
-import Script from "next/script";
+import HeroSection from "@/components/home/HeroSection";
+
+type Slide = {
+  name: string;
+  synopsis: string;
+  thumbnail: string;
+  slug: string;
+};
 
 export default async function Home() {
+  let heroSlides: Slide[] = [];
+
   const response = await fetch(`${process.env.BASE_URL_BACKEND}api/all-series`, {
     headers: {
       'X-API-KEY': process.env.APIKEY_BACKEND as string,
@@ -10,56 +19,11 @@ export default async function Home() {
     cache: 'no-store'
   });
   const data = await response.json();
+  heroSlides = data?.heroSlides ?? data?.data ?? [];
   return (
     <>
       {/* Hero Section */}
-      <section id="home" className="dl-hero-section">
-        <div className="dl-hero-slider">
-          {/* Slide 1 */}
-          <div className="dl-hero-slide" style={{ backgroundImage: "url('https://anichin.club/wp-content/uploads/2023/12/Supreme-Alchemy.webp')" }}>
-            <div className="dl-hero-content">
-              <div className="dl-hero-info">
-                <h1 className="dl-hero-title">Soul Land</h1>
-                <p className="dl-hero-synopsis">Tang San, seorang jenius dalam senjata tersembunyi, bereinkarnasi di dunia Douluo Dalu di mana setiap orang memiliki semangat mereka sendiri.</p>
-                <a href="#soul-land" className="dl-btn-primary dl-hero-watch-btn">Mulai Nonton</a>
-              </div>
-            </div>
-          </div>
-
-          {/* Slide 2 */}
-          <div className="dl-hero-slide" style={{ backgroundImage: "url('images/image2.jpg')" }}>
-            <div className="dl-hero-content">
-              <div className="dl-hero-info">
-                <h1 className="dl-hero-title">Battle Through the Heavens</h1>
-                <p className="dl-hero-synopsis">Xiao Yan, seorang pemuda berbakat yang kehilangan semua kekuatannya, memulai perjalanan untuk mendapatkan kembali kekuatannya.</p>
-                <a href="#battle-through-the-heavens" className="dl-btn-primary dl-hero-watch-btn">Mulai Nonton</a>
-              </div>
-            </div>
-          </div>
-
-          {/* Slide 3 */}
-          <div className="dl-hero-slide" style={{ backgroundImage: "url('images/image3.jpg')" }}>
-            <div className="dl-hero-content">
-              <div className="dl-hero-info">
-                <h1 className="dl-hero-title">The Grandmaster of Demonic Cultivation</h1>
-                <p className="dl-hero-synopsis">Wei Wuxian, seorang kultivator yang menggunakan jalan iblis, dibangkitkan setelah 13 tahun kematiannya.</p>
-                <a href="#mo-dao-zu-shi" className="dl-btn-primary dl-hero-watch-btn">Mulai Nonton</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation Buttons */}
-        <button className="dl-hero-prev"><i className="fas fa-chevron-left"></i></button>
-        <button className="dl-hero-next"><i className="fas fa-chevron-right"></i></button>
-
-        {/* Pagination */}
-        <div className="dl-hero-pagination">
-          <span className="dl-hero-pagination-bullet active"></span>
-          <span className="dl-hero-pagination-bullet"></span>
-          <span className="dl-hero-pagination-bullet"></span>
-        </div>
-      </section>
+      <HeroSection slides={heroSlides} />
       <div className="row">
         <div className="col-12 col-md-9">
           {/* Rilis Section */}
@@ -80,7 +44,7 @@ export default async function Home() {
                     <div className="dl-card-content">
                         <h3 className="dl-card-title">{series.name}</h3>
                         <div className="dl-card-meta">
-                            <span>{series.current_episode}/{series.total_episodes} eps</span>
+                            <span>{series.episodes_max_episode_number || 0}/{series.total_episodes} eps</span>
                             <span className="dl-card-rating"><i className="fas fa-star"></i>{series.rating}</span>
                         </div>
                     </div>
@@ -150,7 +114,6 @@ export default async function Home() {
           </section>
         </div>
       </div>
-      <Script src="/js/script.js" strategy="afterInteractive" />
     </>
   );
 }
