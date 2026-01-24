@@ -615,14 +615,29 @@ button {
 .dl-history-container {
     background-color: var(--secondary-color);
     border-radius: 10px;
-    padding: 20px;
+    padding: 0px;
     min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.dl-history-header {
+    flex: 0 0 auto;
+    padding: 20px;
+}
+
+.dl-history-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 6px;
 }
 
 .dl-history-item {
     display: flex;
     gap: 20px;
-    padding: 15px 0;
+    padding: 15px;
     border-bottom: 1px solid var(--dark-color);
 }
 
@@ -672,6 +687,21 @@ button {
     height: 100%;
     background-color: var(--primary-color);
     width: 70%;
+}
+
+/* Custom scrollbar */
+.dl-history-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dl-history-list::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+    border-radius: 3px;
+}
+
+.dl-history-list::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
 }
 
 /* Simple side cards */

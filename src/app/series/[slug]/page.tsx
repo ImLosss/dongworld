@@ -7,6 +7,7 @@ import EpisodeSectionMobile from "@/components/series/EpisodeSectionMobile";
 import EpisodeSectionDesktop from "@/components/series/EpisodeSectionDesktop";
 import RecommendationSection from "@/components/series/RecommendationSection";
 import CommentSection from "@/components/series/CommentSection";
+import HistorySection from "@/components/home/HistorySection";
 
 interface Params {
   params: { slug: string };
@@ -93,23 +94,7 @@ export default async function SeriesDetail({ params }: Params) {
           </div>
 
           {/* Watch History Section */}
-          <section id="history" className="dl-section">
-            <div className="dl-history-container">
-              {/* History items will be populated by JavaScript */}
-              <div className="dl-history-item">
-                <div className="dl-history-content">
-                  <h2 className="dl-history-title">Riwayat Nonton</h2>
-                  <button id="dl-clear-history" className="dl-btn-clear" style={{ marginTop: "-25px" }}>Bersihkan Riwayat</button>
-                  {/* Empty state or history list will be here */}
-                  <div className="dl-empty-state" style={{ marginTop: "24px" }}>
-                    <i className="fas fa-history"></i>
-                    <p>Riwayat nontonmu masih kosong</p>
-                    <a href="#trending" className="dl-btn-primary">Mulai Menonton</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <HistorySection />
 
           {/* Community Card */}
           <section id="community" className="dl-section">

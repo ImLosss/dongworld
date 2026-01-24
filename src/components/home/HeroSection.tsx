@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 export type Slide = {
@@ -63,9 +64,9 @@ export default function HeroSection({ slides }: { slides: Slide[] }) {
               <div className="dl-hero-info">
                 <h1 className="dl-hero-title">{s.name}</h1>
                 <p className="dl-hero-synopsis">{s.synopsis}</p>
-                <a href={`/series/${s.slug}`} className="dl-btn-primary dl-hero-watch-btn">
+                <Link href={`/series/${s.slug}`} className="dl-btn-primary dl-hero-watch-btn" style={{ textDecoration: "none", color: "white" }}>
                   Mulai Nonton
-                </a>
+                </Link>
               </div>
             </div>
           </div>

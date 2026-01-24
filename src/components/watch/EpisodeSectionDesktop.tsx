@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 
-export default function EpisodeSectionDesktop({ slug, initialEpisodes, selectedEpisode }: { slug: string, initialEpisodes: any, selectedEpisode: any }) {
+export default function EpisodeSectionDesktop({ slug, slugSeries, initialEpisodes, selectedEpisode }: { slug: string, slugSeries: string, initialEpisodes: any, selectedEpisode: any }) {
     const calculatePageFromEpisode = (episodeNumber: number, perPage: number = initialEpisodes.per_page) => {
         return Math.ceil(episodeNumber / perPage);
     };
@@ -18,7 +18,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes, selectedE
         if (page === episodes.current_page) return;
         
         setLoading(true);
-        
+        localStorage.setItem(`episode_page_${slugSeries}`, page.toString());
         fetch(`/api/watch/${slug}?page=${page}`)
             .then(res => res.json())
             .then(data => setEpisodes(data.episodes))

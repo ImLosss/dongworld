@@ -2,6 +2,7 @@ import Image from "next/image";
 import SeriesList from "@/components/home/SeriesList";
 import HeroSection from "@/components/home/HeroSection";
 import Link from "next/link";
+import HistorySection from "@/components/home/HistorySection";
 
 type Slide = {
   name: string;
@@ -80,23 +81,7 @@ export default async function Home() {
         </div>
         <div className="col-12 col-md-3">
           {/* Watch History Section */}
-          <section id="history" className="dl-section">
-            <div className="dl-history-container">
-              {/* History items will be populated by JavaScript */}
-              <div className="dl-history-item">
-                <div className="dl-history-content">
-                  <h2 className="dl-history-title">Riwayat Nonton</h2>
-                  <button id="dl-clear-history" className="dl-btn-clear" style={{ marginTop: "-25px" }}>Bersihkan Riwayat</button>
-                  {/* Empty state or history list will be here */}
-                  <div className="dl-empty-state" style={{ marginTop: "24px" }}>
-                    <i className="fas fa-history"></i>
-                    <p>Riwayat nontonmu masih kosong</p>
-                    <a href="#trending" className="dl-btn-primary">Mulai Menonton</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <HistorySection />
 
           {/* Community Card */}
           <section id="community" className="dl-section">

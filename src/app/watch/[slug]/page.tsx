@@ -6,6 +6,8 @@ import StreamPlayer from "@/components/watch/StreamPlayer";
 import EpisodeSectionDesktop from "@/components/watch/EpisodeSectionDesktop";
 import EpisodeSectionMobile from "@/components/watch/EpisodeSectionMobile";
 import CommentSection from "@/components/watch/CommentSection";
+import WatchHistorySaver from "@/components/watch/WatchHistorySaver";
+import HistorySection from "@/components/home/HistorySection";
 
 interface Params {
   params: { slug: string };
@@ -19,6 +21,7 @@ export default async function StreamPage({ params } : Params) {
         },
         cache: 'no-store'
     });
+
     if (!res.ok) return notFound();
     const data = await res.json();
     const episodes = data.episodes;
@@ -66,7 +69,7 @@ export default async function StreamPage({ params } : Params) {
                             </div>
                         </div>
                     </section>
-                    <EpisodeSectionMobile slug={slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
+                    <EpisodeSectionMobile slug={slug} slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     {/* Comments Section */}
                     <CommentSection />
 
@@ -95,25 +98,11 @@ export default async function StreamPage({ params } : Params) {
                 
                 <div className="col-12 col-lg-4">
                     <div className="dl-episode-sidebar d-none d-lg-block">
-                        <EpisodeSectionDesktop slug={slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
+                        <EpisodeSectionDesktop slug={slug} slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     </div>
 
                     {/* Watch History Section */}
-                    <section id="history" className="dl-section">
-                        <div className="dl-history-container">
-                            <div className="dl-history-item">
-                                <div className="dl-history-content">
-                                    <h2 className="dl-history-title">Riwayat Nonton</h2>
-                                    <button id="dl-clear-history" className="dl-btn-clear">Bersihkan Riwayat</button>
-                                    <div className="dl-empty-state">
-                                        <i className="fas fa-history"></i>
-                                        <p>Riwayat nontonmu masih kosong</p>
-                                        <a href="#" className="dl-btn-primary">Mulai Menonton</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                    <HistorySection />
 
                     {/* Community Card */}
                     <section id="community" className="dl-section">

@@ -8,9 +8,37 @@ interface StreamPlayerProps {
 
 export default function StreamPlayer({ detail }: StreamPlayerProps) {
     const [selectedServer, setSelectedServer] = useState(detail.links?.[0]?.url || "");
+    const [saved, setSaved] = useState(false);
 
     const handleServerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedServer(e.target.value);
+    };
+    
+    const saveHistory = () => {
+        console.log("Saving history...");
+        if (saved) return;
+        setSaved(true);
+
+        const key = "history";
+        const raw = localStorage.getItem(key);
+        const history = raw ? JSON.parse(raw) : {};
+
+        const seriesSlug = detail.series?.slug || detail.slug;
+
+        history[seriesSlug] = {
+            slugEpisode: detail.slug,
+            episodeNumber: detail.episode_number,
+            title: `${detail.series?.name}`,
+            watchedAt: new Date().toISOString(),
+        };
+
+        const pruned = Object.entries(history)
+            .sort((a, b) => new Date(b[1].watchedAt).getTime() - new Date(a[1].watchedAt).getTime())
+            .slice(0, 20);
+
+        const limitedHistory = Object.fromEntries(pruned);
+
+        localStorage.setItem(key, JSON.stringify(limitedHistory));
     };
 
     return (
@@ -39,9 +67,9 @@ export default function StreamPlayer({ detail }: StreamPlayerProps) {
                 </div>
 
                 {/* Embedded Player */}
-                <div className="dl-video-container">
+                <div className="dl-video-container" onLoad={saveHistory}>
                     <iframe 
-                        src={selectedServer || "https://www.dailymotion.com/embed/video/x9n9ixe"} 
+                        src={selectedServer ||  "https://geo.dailymotion.com/player.html?video=x9yei3c"} 
                         frameBorder="0" 
                         allowFullScreen
                         title="Video Player"
