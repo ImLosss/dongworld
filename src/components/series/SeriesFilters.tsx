@@ -73,7 +73,7 @@ export default function SeriesFilters({ dataFilters }: { dataFilters: DataFilter
             </select>
 
             {/* Chips filter aktif */}
-            <div style={{ width: "100%", marginTop: "10px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <div className="dl-filter-chips">
                 {activeFilters.map((f) => (
                     <div key={f.key} style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "6px 10px", border: "1px solid #444", borderRadius: "6px" }}>
                         <span>{f.label}</span>

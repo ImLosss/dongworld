@@ -1,6 +1,7 @@
 import Image from "next/image";
 import SeriesList from "@/components/home/SeriesList";
 import HeroSection from "@/components/home/HeroSection";
+import Link from "next/link";
 
 type Slide = {
   name: string;
@@ -30,7 +31,7 @@ export default async function Home() {
           <section id="trending" className="dl-section">
             <div className="dl-section-header">
               <h2>Rilisan Terbaru</h2>
-              <a href="all-series.html#all-series" className="dl-see-all">Lihat Semua</a>
+              <Link href="/series" className="dl-see-all">Lihat Semua</Link>
             </div>
 
             <div className="dl-card-container">

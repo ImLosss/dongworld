@@ -169,7 +169,7 @@
 }
 
 /* Small Mobile Devices */
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .dl-navbar {
         padding: 8px 0;
     }
@@ -224,5 +224,36 @@
         height: 220px;
     }
 
-    
+    .dl-paginate {
+        /* flex-wrap: nowrap; */
+        /* overflow-x: auto; */
+        justify-content: center;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+    }
+
+    .dl-paginate .dl-btn-secondary {
+        flex: 0 0 auto;
+        padding: 6px 10px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .dl-filter-options {
+        align-items: stretch;
+        margin-bottom: 10px;
+    }
+
+    .dl-filter-options > select {
+        min-width: 0;
+        font-size: 12px;
+    }
+
+    .dl-filter-options > div {
+        width: 100%;
+    }
+
+    .dl-filter-chips {
+        font-size: 12px;
+    }
 }

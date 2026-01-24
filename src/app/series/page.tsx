@@ -3,8 +3,9 @@ import SeriesList from "@/components/home/SeriesList";
 import Script from "next/script";
 import Link from "next/link";
 import SeriesFilters from "@/components/series/SeriesFilters";
+import { notFound } from "next/navigation";
 
-export default async function Series({searchParams}: { searchParams: Promise<{ search?: string; type?: string; genre?: string; status?: string }>; }) {
+export default async function Series({ searchParams }: { searchParams: Promise<{ search?: string; type?: string; genre?: string; status?: string, page?: string }>; }) {
     const params = await searchParams;
 
     const qs = new URLSearchParams();
@@ -12,7 +13,8 @@ export default async function Series({searchParams}: { searchParams: Promise<{ s
     if (params.type) qs.set("type", params.type);
     if (params.genre) qs.set("genre", params.genre);
     if (params.status) qs.set("status", params.status);
-    
+    if (params.page) qs.set("page", params.page);
+
     const response = await fetch(`${process.env.BASE_URL_BACKEND}api/series?${qs.toString()}`, {
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
@@ -28,6 +30,34 @@ export default async function Series({searchParams}: { searchParams: Promise<{ s
         cache: 'no-store'
     });
     const dataFilters = await responseGenres.json();
+
+    const buildPageLink = (page: number) => {
+        const next = new URLSearchParams(qs.toString());
+        next.set("page", page.toString());
+        return `/series?${next.toString()}`;
+    };
+
+    const getPageItems = (current: number, last: number) => {
+        if (current > last) return notFound();
+        const items: (number | "...")[] = [];
+        const delta = 1;
+
+        const range: number[] = [];
+        const start = Math.max(2, current - delta);
+        const end = Math.min(last - 1, current + delta);
+
+        range.push(1);
+        for (let i = start; i <= end; i++) range.push(i);
+        if (last > 1) range.push(last);
+
+        let prev: number | null = null;
+        for (const num of range) {
+            if (prev && num - prev > 1) items.push("...");
+            items.push(num);
+            prev = num;
+        }
+        return items;
+    };
 
     return (
         <>
@@ -48,23 +78,23 @@ export default async function Series({searchParams}: { searchParams: Promise<{ s
                         </div>
                         <SeriesFilters dataFilters={dataFilters} />
                         {data.data.data.length === 0 && (
-                        <section id="dl-search-results" className="dl-section">                            
-                            <div className="dl-search-results-container">
-                                <div className="dl-empty-state">
-                                    <i className="fas fa-search"></i>
-                                    {(() => {
-                                        const hasFilters = !!(params.type || params.genre || params.status);
-                                        if (params.search && hasFilters) {
-                                            return <p>Tidak ada hasil untuk "{params.search}" dengan filter yang dipilih</p>;
-                                        } else if (params.search && !hasFilters) {
-                                            return <p>Tidak ada hasil untuk “{params.search}”</p>;
-                                        } else if (hasFilters) {
-                                            return <p>Tidak ada hasil dengan filter yang dipilih</p>;
-                                        }
-                                    })()}
+                            <section id="dl-search-results" className="dl-section">
+                                <div className="dl-search-results-container">
+                                    <div className="dl-empty-state">
+                                        <i className="fas fa-search"></i>
+                                        {(() => {
+                                            const hasFilters = !!(params.type || params.genre || params.status);
+                                            if (params.search && hasFilters) {
+                                                return <p>Tidak ada hasil untuk "{params.search}" dengan filter yang dipilih</p>;
+                                            } else if (params.search && !hasFilters) {
+                                                return <p>Tidak ada hasil untuk “{params.search}”</p>;
+                                            } else if (hasFilters) {
+                                                return <p>Tidak ada hasil dengan filter yang dipilih</p>;
+                                            }
+                                        })()}
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
+                            </section>
                         )}
                         <div className="dl-card-container">
                             {data.data.data.map((series: any) => {
@@ -72,7 +102,7 @@ export default async function Series({searchParams}: { searchParams: Promise<{ s
                                     <SeriesList key={series.id} href={`/series/${series.slug}`}>
                                         <div className="dl-card-img">
                                             <Image src={process.env.NEXT_PUBLIC_BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt="alchemy" fill />
-                                            <div className="dl-card-badge">NEW</div>
+                                            {/* <div className="dl-card-badge">NEW</div> */}
                                         </div>
                                         <div className="dl-card-content">
                                             <h3 className="dl-card-title">{series.name}</h3>
@@ -85,6 +115,40 @@ export default async function Series({searchParams}: { searchParams: Promise<{ s
                                 )
                             })}
                         </div>
+                        {/* Pagination (Laravel paginate) */}
+                        {data.data?.last_page > 1 && (
+                            <div className="dl-paginate">
+                                {/* <Link
+                                    className="dl-btn-secondary"
+                                    href={buildPageLink(Math.max(1, data.data.current_page - 1))}
+                                    aria-disabled={data.data.current_page === 1}
+                                >
+                                    <i className="fas fa-chevron-left"></i> Prev
+                                </Link> */}
+
+                                {getPageItems(data.data.current_page, data.data.last_page).map((item, idx) =>
+                                    item === "..." ? (
+                                        <span key={`dots-${idx}`} className="dl-btn-secondary" aria-disabled="true">...</span>
+                                    ) : (
+                                        <Link
+                                            key={item}
+                                            className={`dl-btn-secondary ${item === data.data.current_page ? "dl-btn-primary" : ""}`}
+                                            href={buildPageLink(item)}
+                                        >
+                                            {item}
+                                        </Link>
+                                    )
+                                )}
+
+                                {/* <Link
+                                    className="dl-btn-secondary"
+                                    href={buildPageLink(Math.min(data.data.last_page, data.data.current_page + 1))}
+                                    aria-disabled={data.data.current_page === data.data.last_page}
+                                >
+                                    Next <i className="fas fa-chevron-right"></i>
+                                </Link> */}
+                            </div>
+                        )}
                     </section>
                 </div>
                 <div className="col-12 col-md-3">

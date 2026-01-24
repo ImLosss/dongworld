@@ -2,9 +2,10 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
 export default function Navbar() {
+    const [active, setActive] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -12,7 +13,7 @@ export default function Navbar() {
         e.preventDefault();
 
         const form = e.currentTarget;
-        const input = form.querySelector<HTMLInputElement>('input[name="search"]');
+        const input = form.querySelector<HTMLInputElement>('input[name="search"], input[name="search-mobile"]');
         const value = (input?.value ?? "").trim();
 
         // hanya preserve params kalau sedang di halaman /series
@@ -22,6 +23,8 @@ export default function Navbar() {
         else params.delete("search");
 
         const qs = params.toString();
+
+        if(active) setActive(false);
         router.push(qs ? `/series?${qs}` : "/series");
     };
     return (
@@ -48,15 +51,15 @@ export default function Navbar() {
                 </div>
 
                 {/* Mobile Search Toggle */}
-                <div className="dl-mobile-search-toggle">
+                <div className="dl-mobile-search-toggle" onClick={() => setActive(!active)}>
                     <i className="fas fa-search"></i>
                 </div>
             </div>
 
             {/* Mobile Search (Hidden by default) */}
-            <div className="dl-mobile-search-container">
-                <form id="dl-mobile-search-form" action="/search">
-                    <input type="text" id="dl-mobile-search-input" placeholder="Cari donghua..." />
+            <div className={`dl-mobile-search-container ${active ? "dl-active" : ""}`}>
+                <form id="dl-mobile-search-form" onSubmit={onSearchSubmit}>
+                    <input type="text" name="search-mobile" id="dl-mobile-search-input" placeholder="Cari donghua..." />
                     <button type="submit">
                         <i className="fas fa-search"></i>
                     </button>

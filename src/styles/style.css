@@ -888,3 +888,49 @@ button {
     color: #495057;
     margin-bottom: 0.5rem;
 }
+
+.dl-paginate {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.dl-paginate .dl-btn-secondary {
+    padding: 6px 12px;
+    border-radius: 6px;
+    min-width: 40px;
+    text-align: center;
+}
+
+.dl-paginate .dl-btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+.dl-paginate .dl-btn-secondary[aria-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.dl-filter-options {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dl-filter-options > select {
+    min-width: 100px;
+    height: 30px;
+}
+
+.dl-filter-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+}
