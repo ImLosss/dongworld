@@ -19,6 +19,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        console.log(page, episodes.current_page);
         if (page === episodes.current_page) return;
 
         console.log(page);
