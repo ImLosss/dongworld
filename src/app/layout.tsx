@@ -8,6 +8,7 @@ import Footer from "@/components/footer";
 import Script from "next/script";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,19 +43,21 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="keywords" content="donghua, anime china, streaming donghua, watch donghua online" />
         <meta name="author" content="DongWorld Team" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous" />
         {/* <Script src="//pl28153160.effectivegatecpm.com/9a/6b/7f/9a6b7f078134c58d46071005022176d6.js" strategy="afterInteractive" /> */}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {/* <SmartlinkAd />     */}
         <div id="dl-root">
           <main className="dl-main-content">
-          <Navbar />
-          <Sidebar />
-          {children}
-          <Footer />
-          <Script src="/js/search.js" strategy="afterInteractive" />
+            <Suspense fallback={null}>
+              <Navbar />
+            </Suspense>
+            <Sidebar />
+            {children}
+            <Footer />
+            <Script src="/js/search.js" strategy="afterInteractive" />
           </main>
         </div>
       </body>
