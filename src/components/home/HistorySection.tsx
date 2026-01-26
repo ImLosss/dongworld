@@ -40,7 +40,8 @@ export default function HistorySection() {
     }, []);
 
     const clearHistory = () => {
-        localStorage.removeItem("history");
+        // localStorage.removeItem("history");
+        localStorage.clear();
         setHistory({});
     };
 
