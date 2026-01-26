@@ -155,6 +155,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             className="dl-comment-name-input"
+                            maxLength={30}
                             required
                         />
                         <textarea
