@@ -4,6 +4,7 @@ import Link from "next/link";
 import SeriesFilters from "@/components/series/SeriesFilters";
 import { notFound } from "next/navigation";
 import HistorySection from "@/components/home/HistorySection";
+import { Suspense } from "react";
 
 export default async function Series({ searchParams }: { searchParams: Promise<{ search?: string; type?: string; genre?: string; status?: string, page?: string }>; }) {
     const params = await searchParams;
@@ -76,7 +77,9 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
                         <div className="dl-section-header">
                             <h2>Semua Donghua</h2>
                         </div>
-                        <SeriesFilters dataFilters={dataFilters} />
+                        <Suspense fallback={null}>
+                            <SeriesFilters dataFilters={dataFilters} />
+                        </Suspense>
                         {data.data.data.length === 0 && (
                             <section id="dl-search-results" className="dl-section">
                                 <div className="dl-search-results-container">
