@@ -23,7 +23,7 @@ export default function EpisodeSectionDesktop({ slug, slugSeries, initialEpisode
             .then(res => res.json())
             .then(data => setEpisodes(data.episodes))
             .finally(() => setLoading(false));
-    }, [page, slug, episodes.current_page]);
+    }, [page, slug, episodes.current_page, slugSeries]);
 
     return (
         <div className="dl-episode-container">
