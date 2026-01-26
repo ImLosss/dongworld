@@ -25,6 +25,7 @@ export default async function StreamPage({ params } : Params) {
     if (!res.ok) return notFound();
     const data = await res.json();
     const episodes = data.episodes;
+    const comments = data.comments;
     const detail = data['detail-episode'];
 
     fetch(`${process.env.BASE_URL_BACKEND}api/view-series/${detail.series.slug}`, {
@@ -71,7 +72,7 @@ export default async function StreamPage({ params } : Params) {
                     </section>
                     <EpisodeSectionMobile slug={slug} slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     {/* Comments Section */}
-                    <CommentSection />
+                    <CommentSection comments={comments} slug={slug} />
 
                     {/* Recommendation Section */}
                     <section id="recommendation" className="dl-section">

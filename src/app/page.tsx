@@ -31,7 +31,7 @@ export default async function Home() {
           {/* Rilis Section */}
           <section id="trending" className="dl-section">
             <div className="dl-section-header">
-              <h2>Rilisan Terbaru</h2>
+              <h2>Baru ditambahkan</h2>
               <Link href="/series" className="dl-see-all">Lihat Semua</Link>
             </div>
 

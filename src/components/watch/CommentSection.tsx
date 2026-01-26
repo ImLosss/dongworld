@@ -1,34 +1,45 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react"
 
-// Data 20 komentar simulasi
-const MOCK_COMMENTS = [
-    { id: 1, author: "Ahmad Rizki", avatar: "AR", text: "Donghua ini keren banget! Animasi dan ceritanya sangat memukau.", likes: 12, date: "2 jam lalu" },
-    { id: 2, author: "Siti Nurhaliza", avatar: "SN", text: "Episode ini bikin nangis, sedih banget pas bagian itu 😭", likes: 8, date: "5 jam lalu" },
-    { id: 3, author: "Budi Santoso", avatar: "BS", text: "Karakter utamanya sangat inspiratif, kerja keras mengalahkan bakat!", likes: 15, date: "1 hari lalu" },
-    { id: 4, author: "Dewi Lestari", avatar: "DL", text: "CGI nya makin bagus tiap episode, studio nya kerja keras banget", likes: 6, date: "1 hari lalu" },
-    { id: 5, author: "Eko Prasetyo", avatar: "EP", text: "Musik background nya bikin merinding, cocok banget sama suasananya", likes: 10, date: "2 hari lalu" },
-    { id: 6, author: "Fitri Handayani", avatar: "FH", text: "Pengen nonton terus tapi harus nunggu seminggu lagi 😤", likes: 20, date: "2 hari lalu" },
-    { id: 7, author: "Gunawan Wijaya", avatar: "GW", text: "Plot twist nya gak ketebak sama sekali, penulis cerita nya jenius!", likes: 18, date: "3 hari lalu" },
-    { id: 8, author: "Hani Putri", avatar: "HP", text: "Dari semua donghua yang pernah ditonton, ini masuk top 3", likes: 14, date: "3 hari lalu" },
-    { id: 9, author: "Irfan Hakim", avatar: "IH", text: "Voice actor nya keren, dubbing nya sangat menghayati karakter", likes: 9, date: "4 hari lalu" },
-    { id: 10, author: "Jasmine Tan", avatar: "JT", text: "Adegan pertarungannya epic banget! Smooth animation nya juara", likes: 22, date: "4 hari lalu" },
-    { id: 11, author: "Kevin Anggara", avatar: "KA", text: "Karakternya berkembang dengan natural, bukan power up tiba-tiba", likes: 11, date: "5 hari lalu" },
-    { id: 12, author: "Lia Amelia", avatar: "LA", text: "Worldbuilding nya detail banget, kerasa hidup dunianya", likes: 16, date: "5 hari lalu" },
-    { id: 13, author: "Muhammad Fadil", avatar: "MF", text: "Episode ini bikin deg-degan dari awal sampai akhir!", likes: 13, date: "6 hari lalu" },
-    { id: 14, author: "Nadia Putri", avatar: "NP", text: "Hubungan antar karakternya natural, bukan forced relationship", likes: 7, date: "6 hari lalu" },
-    { id: 15, author: "Omar Bakri", avatar: "OB", text: "Kualitas produksi nya konsisten, jarang ada studio sekonsisten ini", likes: 19, date: "1 minggu lalu" },
-    { id: 16, author: "Putri Maharani", avatar: "PM", text: "Ceritanya lebih kompleks dari yang dikira, ada banyak layer", likes: 12, date: "1 minggu lalu" },
-    { id: 17, author: "Qori Sandika", avatar: "QS", text: "Tidak sabar nunggu season depan, semoga cepat rilis!", likes: 25, date: "1 minggu lalu" },
-    { id: 18, author: "Rina Susanti", avatar: "RS", text: "Donghua ini bikin ketagihan, udah nonton 3x masih seru", likes: 8, date: "2 minggu lalu" },
-    { id: 19, author: "Surya Kusuma", avatar: "SK", text: "Dari sini keliatan budget produksi nya gede, worth it!", likes: 14, date: "2 minggu lalu" },
-    { id: 20, author: "Tania Wijaya", avatar: "TW", text: "Donghua terbaik tahun ini! Semua aspeknya hampir sempurna", likes: 30, date: "2 minggu lalu" },
-];
+function formatRelativeTime(date: string) {
+    const now = Date.now();
+    const then = new Date(date).getTime();
+    const diff = now - then;
 
-export default function CommentSection() {
-    const [name, setName] = useState("");
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    const weeks = Math.floor(diff / 604800000);
+
+    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+    if (minutes < 1) return rtf.format(-1, "minute");
+    if (minutes < 60) return rtf.format(-minutes, "minute");
+    if (hours < 24) return rtf.format(-hours, "hour");
+    if (days < 7) return rtf.format(-days, "day");
+    return rtf.format(-weeks, "week");
+}
+
+type Comment = {
+    id: number;
+    name: string;
+    content: string;
+    is_admin: boolean;
+    created_at: string;
+};
+
+export default function CommentSection({ comments, slug }: { comments: Comment[], slug: string }) {
+    const getCommenterName = () => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem(`commenterName`);
+            return saved ? saved : "";
+        }
+        return "";
+    };
+    
+    const [name, setName] = useState(getCommenterName());
     const [commentText, setCommentText] = useState("");
-    const [displayedComments, setDisplayedComments] = useState<typeof MOCK_COMMENTS>([]);
+    const [displayedComments, setDisplayedComments] = useState<Comment[]>([]);
     const [currentIndex, setCurrentIndex] = useState(10);
     const [loading, setLoading] = useState(false);
     const commentsEndRef = useRef<HTMLDivElement>(null);
@@ -36,7 +47,7 @@ export default function CommentSection() {
 
     // Load 10 komentar pertama saat mount
     useEffect(() => {
-        setDisplayedComments(MOCK_COMMENTS.slice(0, 10));
+        setDisplayedComments(comments.slice(0, 10));
     }, []);
 
     // Infinite scroll handler
@@ -46,9 +57,18 @@ export default function CommentSection() {
         const { scrollTop, scrollHeight, clientHeight } = listRef.current;
         
         // Jika scroll hampir sampai bawah (90%)
-        if (scrollTop + clientHeight >= scrollHeight * 0.9 && !loading && currentIndex < MOCK_COMMENTS.length) {
+        if (scrollTop + clientHeight >= scrollHeight * 0.9 && !loading && currentIndex < comments.length) {
             loadMoreComments();
         }
+    };
+
+    const getInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map(word => word[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
     };
 
     const loadMoreComments = () => {
@@ -56,50 +76,55 @@ export default function CommentSection() {
         
         // Simulasi loading
         setTimeout(() => {
-            const nextComments = MOCK_COMMENTS.slice(currentIndex, currentIndex + 5);
+            const nextComments = comments.slice(currentIndex, currentIndex + 5);
             setDisplayedComments(prev => [...prev, ...nextComments]);
             setCurrentIndex(prev => prev + 5);
             setLoading(false);
         }, 1000);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
-        // Buat avatar dari initial nama
-        const getInitials = (name: string) => {
-            return name
-                .split(' ')
-                .map(word => word[0])
-                .join('')
-                .toUpperCase()
-                .slice(0, 2);
-        };
-        
-        // Buat komentar baru
-        const newComment = {
-            id: Date.now(), // ID unik menggunakan timestamp
-            author: name,
-            avatar: getInitials(name),
-            text: commentText,
-            likes: 0,
-            date: "Baru saja"
-        };
-        
-        // ✅ Tambahkan komentar baru di paling atas
-        setDisplayedComments(prev => [newComment, ...prev]);
-        
-        // Reset form
-        setName("");
-        setCommentText("");
-        
-        // Optional: Scroll ke atas untuk lihat komentar baru
-        if (listRef.current) {
-            listRef.current.scrollTop = 0;
+
+        localStorage.setItem("commenterName", name);
+        const lastCommentDate = localStorage.getItem("lastCommentDate") || null;
+
+        // block komentar jika terlalu sering
+        if (lastCommentDate) {
+            const lastDate = new Date(lastCommentDate);
+            const now = new Date();
+            const diff = now.getTime() - lastDate.getTime();
+            if (diff < 60000) {
+                alert("Tolong tunggu beberapa saat sebelum mengirim komentar lagi.");
+                return;
+            }
         }
-        
-        // Optional: Tampilkan notifikasi sukses
-        alert("Komentar berhasil ditambahkan!");
+
+        try {
+            const res = await fetch("/api/comments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name,
+                    comment: commentText,
+                    slug,
+                }),
+            });
+
+            if (!res.ok) throw new Error("Gagal kirim komentar");
+
+            localStorage.setItem("lastCommentDate", new Date().toISOString());
+
+            const newComment: Comment = (await res.json()).comment;
+
+            setDisplayedComments(prev => [newComment, ...prev]);
+            setCommentText("");
+
+            if (listRef.current) listRef.current.scrollTop = 0;
+
+        } catch (err) {
+            alert("Komentar gagal ditambahkan!");
+        }
     };
 
     const handleReply = (author: string) => {
@@ -113,7 +138,7 @@ export default function CommentSection() {
             <div className="dl-comments-header-form">
                 <div className="dl-comments-header">
                     <h2>Komentar</h2>
-                    <span className="dl-comments-count">{MOCK_COMMENTS.length} Komentar</span>
+                    <span className="dl-comments-count">{comments.length} Komentar</span>
                 </div>
 
                 <div className="dl-comment-form">
@@ -135,6 +160,7 @@ export default function CommentSection() {
                             placeholder="Tulis komentarmu di sini..."
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}
+                            maxLength={250}
                             required
                         ></textarea>
                         <button type="submit" className="dl-btn-primary">Kirim</button>
@@ -150,21 +176,26 @@ export default function CommentSection() {
                     {displayedComments.map((comment) => (
                         <div key={comment.id} className="dl-comment">
                             <div className="dl-comment-avatar">
-                                <div className="dl-avatar-placeholder">{comment.avatar}</div>
+                                <div className="dl-avatar-placeholder">{getInitials(comment.name)}</div>
                             </div>
                             <div className="dl-comment-content">
                                 <div className="dl-comment-header">
-                                    <span className="dl-comment-author">{comment.author}</span>
-                                    <span className="dl-comment-date">{comment.date}</span>
+                                    <span className="dl-comment-author">
+                                        {comment.name}
+                                        {comment.is_admin && (
+                                            <i className="fas fa-crown" style={{ marginLeft: "5px", color: "gold" }}></i>
+                                        )}
+                                    </span>
+                                    <span className="dl-comment-date">{formatRelativeTime(comment.created_at)}</span>
                                 </div>
                                 <div className="dl-comment-text">
-                                    {comment.text}
+                                    {comment.content}
                                 </div>
                                 <div className="dl-comment-actions">
-                                    <button className="dl-comment-like">
+                                    {/* <button className="dl-comment-like">
                                         <i className="fas fa-thumbs-up"></i> {comment.likes}
-                                    </button>
-                                    <button className="dl-comment-reply" onClick={handleReply(comment.author)}>Balas</button>
+                                    </button> */}
+                                    <button className="dl-comment-reply" onClick={handleReply(comment.name)}>Balas</button>
                                 </div>
                             </div>
                         </div>
@@ -177,10 +208,10 @@ export default function CommentSection() {
                         </div>
                     )}
                     
-                    {currentIndex >= MOCK_COMMENTS.length && (
+                    {currentIndex >= comments.length && (
                         <div className="dl-comments-end">
                             {/* <i className="fas fa-check-circle"></i> */}
-                            <span>{MOCK_COMMENTS.length === 0 ? "Belum ada komentar" : "Tidak ada komentar lagi"}</span>
+                            <span>{comments.length === 0 ? "Belum ada komentar" : "Tidak ada komentar lagi"}</span>
                         </div>
                     )}
                     

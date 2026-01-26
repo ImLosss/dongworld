@@ -35,6 +35,7 @@ export default async function SeriesDetail({ params }: Params) {
   const series = data.series;
 
   const recommendationsData = await recommendations.json();
+  const comments = data.comments;
 
   return (
     <>
@@ -82,7 +83,7 @@ export default async function SeriesDetail({ params }: Params) {
           </section>
           <EpisodeSectionMobile slug={slug} initialEpisodes={episodes} />
           {/* Comments Section */}
-          <CommentSection />
+          <CommentSection comments={comments} slug={slug} />
 
           {/* Recommendation Section */}
           <RecommendationSection series={recommendationsData.series} />
