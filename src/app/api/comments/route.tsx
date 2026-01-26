@@ -15,8 +15,6 @@ export async function POST(request: NextRequest) {
 
   const data = await backendRes.json();
 
-  console.log(data);
-
   return new Response(JSON.stringify(data), {
     status: backendRes.status,
     headers: { "Content-Type": "application/json" },
