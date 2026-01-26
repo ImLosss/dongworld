@@ -94,7 +94,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
             const lastDate = new Date(lastCommentDate);
             const now = new Date();
             const diff = now.getTime() - lastDate.getTime();
-            if (diff < 60000) {
+            if (diff < 10000) {
                 alert("Tolong tunggu beberapa saat sebelum mengirim komentar lagi.");
                 return;
             }
