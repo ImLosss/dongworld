@@ -12,13 +12,16 @@ export default function EpisodeSection({ slug, slugSeries, initialEpisodes, sele
     
   
   const [episodes, setEpisodes] = useState(initialEpisodes);
-  const [page, setPage] = useState(getSavedPage());
+  let [page, setPage] = useState(getSavedPage());
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (page === episodes.current_page) return;
     setLoading(true);
-    localStorage.setItem(`episode_page_${slugSeries}`, page.toString());
+    if(page > episodes.last_page || page < 1) {
+      page = episodes.last_page;
+      localStorage.setItem(`episode_page_${slug}`, episodes.last_page.toString());
+    } else localStorage.setItem(`episode_page_${slug}`, page.toString());
     fetch(`/api/watch/${slug}?page=${page}`)
       .then(res => res.json())
       .then(data => setEpisodes(data.episodes))
