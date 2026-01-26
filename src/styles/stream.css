@@ -51,6 +51,17 @@
 .dl-server-selection {
     padding: 15px;
     background-color: var(--darker-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+.dl-server-left {
+    flex: 1;
+}
+
+.dl-server-right {
+    display: flex;
+    gap: 8px;
 }
 
 .dl-server-selection select {
@@ -59,6 +70,29 @@
     background-color: var(--secondary-color);
     color: var(--light-color);
     border: none;
+}
+
+.dl-server-nav {
+    padding: 8px 15px;
+    margin:5px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    background-color: var(--darker-color);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--light-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.dl-server-selection a,
+.dl-server-selection a:hover,
+.dl-server-selection a:focus,
+.dl-server-selection a:visited {
+    text-decoration: none;
+    /* color: var(--light-color); */
 }
 
 /* Breadcrumb */
@@ -79,6 +113,7 @@
     margin: 10px 15px 0; /* sejajar padding dl-stream-info */
     font-size: 0.9rem;
 }
+
 .dl-breadcrumb ol {
     display: flex;
     flex-wrap: wrap;
@@ -721,6 +756,55 @@
     width: 180px;
 }
 
+/* download section */
+.dl-download-section {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px;
+    margin-bottom: 20px;
+}
+
+.dl-download-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.dl-download-header h2 {
+    font-size: 1.1rem;
+}
+
+.dl-download-meta {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+}
+
+.dl-download-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.dl-download-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background-color: var(--darker-color);
+    color: var(--light-color);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.dl-download-item:hover {
+    background-color: rgba(255,255,255,0.05);
+    color: var(--primary-color);
+}
+
 /* Responsive Adjustments */
 @media (max-width: 992px) {
     .dl-episode-sidebar {
@@ -749,7 +833,7 @@
 
 @media (max-width: 768px) {
     .dl-stream-title {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
 
     .dl-stream-meta {
@@ -782,6 +866,10 @@
     
     .dl-mobile-episode-list {
         grid-template-columns: 1fr;
+    }
+
+    .dl-breadcrumb {
+        font-size: 0.8rem;
     }
 }
 

@@ -624,8 +624,20 @@ button {
 }
 
 .dl-history-header {
+    position: relative;
     flex: 0 0 auto;
     padding: 20px;
+    border-bottom: none;
+}
+
+.dl-history-header::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 0;
+    height: 1px;
+    background: var(--dark-color);
 }
 
 .dl-history-list {
@@ -635,14 +647,24 @@ button {
 }
 
 .dl-history-item {
+    position: relative;
     display: flex;
-    gap: 20px;
     padding: 15px;
-    border-bottom: 1px solid var(--dark-color);
+    border-bottom: none;
 }
 
-.dl-history-item:last-child {
-    border-bottom: none;
+.dl-history-item::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 0;
+    height: 1px;
+    background: var(--dark-color);
+}
+
+.dl-history-list > a:last-child .dl-history-item::after {
+    display: none;
 }
 
 .dl-history-img {
@@ -668,10 +690,9 @@ button {
 
 .dl-history-meta {
     display: flex;
-    gap: 15px;
+    gap: 10px;
     font-size: 0.8rem;
     color: var(--gray-color);
-    margin-bottom: 5px;
 }
 
 .dl-history-progress {

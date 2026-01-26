@@ -71,7 +71,7 @@ export default async function SeriesDetail({ params }: Params) {
                   <span><i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}</span>
                   <span><i className="fas fa-tags"></i>{series.genres_string ? series.genres_string : "Unknown"}</span>
                   <span><i className="fas fa-calendar"></i>{series.release_date ? series.release_date : "Unknown"}</span>
-                  <span><i className="fas fa-video"></i>{series.current_episode}/{series.total_episodes} Episode</span>
+                  <span><i className="fas fa-video"></i>{series.current_episode ? series.current_episode : "0"}/{series.total_episodes ? series.total_episodes : "?"} Episode</span>
                   <span><i className="fas fa-eye"></i>{series.views}</span>
                 </div>
                 <div className="dl-details-synopsis">
@@ -101,7 +101,7 @@ export default async function SeriesDetail({ params }: Params) {
           <section id="community" className="dl-section">
             <div className="dl-side-card">
               <h2>Komunitas</h2>
-              <a href="https://t.me/dongworld"><i className="fab fa-telegram"></i></a>
+              <a href="https://t.me/dongworld" target="_blank"><i className="fab fa-telegram"></i></a>
             </div>
           </section>
 
@@ -109,7 +109,7 @@ export default async function SeriesDetail({ params }: Params) {
           <section id="donation" className="dl-section">
             <div className="dl-side-card">
               <h2>Donasi</h2>
-              <a href="https://t.me/dongworld"><i className="fas fa-donate"></i></a>
+              <a href="https://sociabuzz.com/dongworld/tribe" target="_blank"><i className="fas fa-donate"></i></a>
             </div>
           </section>
         </div>

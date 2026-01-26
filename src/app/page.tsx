@@ -40,14 +40,14 @@ export default async function Home() {
                 return (
                   <SeriesList key={series.id} href={`/series/${series.slug}`}>
                     <div className="dl-card-img">
-                      <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt="alchemy" fill />
+                      <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt={series.name} fill />
                       <div className="dl-card-badge">NEW</div>
                     </div>
                     <div className="dl-card-content">
                         <h3 className="dl-card-title">{series.name}</h3>
                         <div className="dl-card-meta">
-                            <span>{series.episodes_max_episode_number || 0}/{series.total_episodes} eps</span>
-                            <span className="dl-card-rating"><i className="fas fa-star"></i>{series.rating}</span>
+                            <span>{series.episodes_max_episode_number || 0}/{series.total_episodes ? series.total_episodes : "?"} eps</span>
+                            <span className="dl-card-rating"><i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}</span>
                         </div>
                     </div>
                   </SeriesList>
@@ -87,7 +87,7 @@ export default async function Home() {
           <section id="community" className="dl-section">
             <div className="dl-side-card">
               <h2>Komunitas</h2>
-              <a href="https://t.me/dongworld"><i className="fab fa-telegram"></i></a>
+              <a href="https://t.me/dongworld" target="_blank"><i className="fab fa-telegram"></i></a>
             </div>
           </section>
 
@@ -95,7 +95,7 @@ export default async function Home() {
           <section id="donation" className="dl-section">
             <div className="dl-side-card">
               <h2>Donasi</h2>
-              <a href="https://t.me/dongworld"><i className="fas fa-donate"></i></a>
+              <a href="https://sociabuzz.com/dongworld/tribe" target="_blank"><i className="fas fa-donate"></i></a>
             </div>
           </section>
         </div>

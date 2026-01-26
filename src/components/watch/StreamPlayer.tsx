@@ -1,4 +1,5 @@
 "use client";
+import next from "next";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -15,14 +16,14 @@ type HistoryItem = {
 
 type HistoryMap = Record<string, HistoryItem>;
 
-export default function StreamPlayer({ detail }: StreamPlayerProps) {
+export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
     const [selectedServer, setSelectedServer] = useState(detail.links?.[0]?.url || "");
     const [saved, setSaved] = useState(false);
 
     const handleServerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedServer(e.target.value);
     };
-    
+
     const saveHistory = () => {
         console.log("Saving history...");
         if (saved) return;
@@ -69,7 +70,7 @@ export default function StreamPlayer({ detail }: StreamPlayerProps) {
                     <h1 className="dl-stream-title">{detail.series.name} Episode {detail.episode_number} Subtitle Indonesia</h1>
                     <div className="dl-stream-meta">
                         <span>
-                            Diposting oleh <b>{detail.uploader || 'Admin'}</b> pada {new Date(detail.created_at).toLocaleDateString('id-ID')} | 
+                            Diposting oleh <b>{detail.uploader || 'Admin'}</b> pada {new Date(detail.created_at).toLocaleDateString('id-ID')} |
                             Series <b><a href={`/series/${detail.series.slug}`}>{detail.series.name}</a></b>
                         </span>
                     </div>
@@ -77,9 +78,9 @@ export default function StreamPlayer({ detail }: StreamPlayerProps) {
 
                 {/* Embedded Player */}
                 <div className="dl-video-container" onLoad={saveHistory}>
-                    <iframe 
-                        src={selectedServer ||  "https://geo.dailymotion.com/player.html?video=x9yei3c"} 
-                        frameBorder="0" 
+                    <iframe
+                        src={selectedServer || "https://geo.dailymotion.com/player.html?video=x9yei3c"}
+                        frameBorder="0"
                         allowFullScreen
                         title="Video Player"
                     ></iframe>
@@ -87,17 +88,29 @@ export default function StreamPlayer({ detail }: StreamPlayerProps) {
 
                 {/* Server Selection */}
                 <div className="dl-server-selection">
-                    <select 
-                        id="server-select"
-                        value={selectedServer}
-                        onChange={handleServerChange}
-                    >
-                        {detail.links?.map((link: any) => (
-                            <option key={link.id} value={link.url}>
-                                {link.server.name}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="dl-server-left">
+                        <select
+                            id="server-select"
+                            value={selectedServer}
+                            onChange={handleServerChange}
+                        >
+                            {detail.links?.map((link: any) => (
+                                <option key={link.id} value={link.url}>
+                                    {link.server.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="dl-server-right">
+                        {prevEpisodeSlug && (
+                            <Link href={prevEpisodeSlug ? `/watch/${prevEpisodeSlug}` : "#"}className="dl-server-nav"><i className="fas fa-chevron-left"></i>{detail.episode_number - 1}</Link>
+                        )}
+
+                        {nextEpisodeSlug && (
+                            <Link href={`/watch/${nextEpisodeSlug}`} className="dl-server-nav">{detail.episode_number + 1} <i className="fas fa-chevron-right"></i></Link>
+                        )}
+                    </div>
                 </div>
             </div>
         </section>

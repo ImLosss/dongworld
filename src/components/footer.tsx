@@ -12,7 +12,7 @@ export default function Footer() {
           <p>
             Platform streaming donghua terbaik dengan koleksi terlengkap dan kualitas HD
           </p>
-          <div className="dl-social-links">
+          {/* <div className="dl-social-links">
             <a href="#" aria-label="Facebook">
               <i className="fab fa-facebook"></i>
             </a>
@@ -25,7 +25,7 @@ export default function Footer() {
             <a href="#" aria-label="Discord">
               <i className="fab fa-discord"></i>
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
 

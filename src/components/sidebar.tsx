@@ -18,10 +18,10 @@ export default function Sidebar() {
 
   return (
     <div className={`dl-mobile-menu ${active ? "dl-active" : ""}`}>
-      <Link href="#home">
+      <Link href="/">
         <i className="fas fa-home"></i> Beranda
       </Link>
-      <Link href="#top">
+      {/* <Link href="#top">
         <i className="fas fa-crown"></i> Top Donghua
       </Link>
       <Link href="#history">
@@ -29,7 +29,7 @@ export default function Sidebar() {
       </Link>
       <Link href="#movies">
         <i className="fas fa-film"></i> Movie
-      </Link>
+      </Link> */}
     </div>
   );
 }

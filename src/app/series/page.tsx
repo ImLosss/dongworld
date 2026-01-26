@@ -160,18 +160,18 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
 
                     {/* Community Card */}
                     <section id="community" className="dl-section">
-                        <div className="dl-side-card">
-                            <h2>Komunitas</h2>
-                            <a href="https://t.me/dongworld"><i className="fab fa-telegram"></i></a>
-                        </div>
+                    <div className="dl-side-card">
+                        <h2>Komunitas</h2>
+                        <a href="https://t.me/dongworld" target="_blank"><i className="fab fa-telegram"></i></a>
+                    </div>
                     </section>
 
                     {/* Donation Card */}
                     <section id="donation" className="dl-section">
-                        <div className="dl-side-card">
-                            <h2>Donasi</h2>
-                            <a href="https://t.me/dongworld"><i className="fas fa-donate"></i></a>
-                        </div>
+                    <div className="dl-side-card">
+                        <h2>Donasi</h2>
+                        <a href="https://sociabuzz.com/dongworld/tribe" target="_blank"><i className="fas fa-donate"></i></a>
+                    </div>
                     </section>
                 </div>
             </div>

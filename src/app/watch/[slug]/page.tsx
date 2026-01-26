@@ -7,6 +7,7 @@ import EpisodeSectionDesktop from "@/components/watch/EpisodeSectionDesktop";
 import EpisodeSectionMobile from "@/components/watch/EpisodeSectionMobile";
 import CommentSection from "@/components/watch/CommentSection";
 import HistorySection from "@/components/home/HistorySection";
+import RecommendationSection from "@/components/series/RecommendationSection";
 
 interface Params {
   params: { slug: string };
@@ -21,17 +22,35 @@ export default async function StreamPage({ params } : Params) {
         cache: 'no-store'
     });
 
+    const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}api/recommendations`, {
+        headers: {
+        'X-API-KEY': process.env.APIKEY_BACKEND as string,
+        },
+        cache: 'no-store'
+    });
+
     if (!res.ok) return notFound();
     const data = await res.json();
     const episodes = data.episodes;
     const comments = data.comments;
     const detail = data['detail-episode'];
+    const recommendationsData = await recommendations.json();
+    const nextEpisodeSlug = data.nextEpisodeSlug;
+    const prevEpisodeSlug = data.prevEpisodeSlug;
+
+    const downloadLinks: string[] = Array.isArray(detail.download_links)
+    ? detail.download_links
+    : detail.download_links
+        ? JSON.parse(detail.download_links)
+        : [];
 
     fetch(`${process.env.BASE_URL_BACKEND}api/view-series/${detail.series.slug}`, {
         method: 'POST',
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
+            'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ episode_id: detail.id }),
         cache: 'no-store'
     })
     return (
@@ -46,7 +65,7 @@ export default async function StreamPage({ params } : Params) {
             <div className="row">
                 <div className="col-12 col-lg-8">
                     {/* Stream Player Section */}
-                    <StreamPlayer detail={detail} />
+                    <StreamPlayer detail={detail} nextEpisodeSlug={nextEpisodeSlug} prevEpisodeSlug={prevEpisodeSlug} />
                     {/* Donghua Details */}
                     <section className="dl-donghua-details">
                         <div className="dl-details-content">
@@ -56,11 +75,11 @@ export default async function StreamPage({ params } : Params) {
                             <div className="dl-details-info">
                                 <h1 className="dl-details-title">{detail.series.name}</h1>
                                 <div className="dl-details-meta">
-                                    <span><i className="fas fa-star"></i> {detail.series.rating}/5</span>
-                                    <span><i className="fas fa-tags"></i> {detail.series.genres_string}</span>
-                                    <span><i className="fas fa-building"></i> {detail.series.studios}</span>
-                                    <span><i className="fas fa-flag"></i> China</span>
-                                    <span><i className="fas fa-calendar"></i> {detail.series.release_date}</span>
+                                    <span><i className="fas fa-star"></i>{detail.series.rating ? detail.series.rating : "N/A"}</span>
+                                    <span><i className="fas fa-tags"></i>{detail.series.genres_string ? detail.series.genres_string : "Unknown"}</span>
+                                    <span><i className="fas fa-calendar"></i>{detail.series.release_date ? detail.series.release_date : "Unknown"}</span>
+                                    <span><i className="fas fa-video"></i>{detail.series.current_episode ? detail.series.current_episode : "0"}/{detail.series.total_episodes ? detail.series.total_episodes : "?"} Episode</span>
+                                    <span><i className="fas fa-eye"></i>{detail.series.views}</span>
                                 </div>
                                 <div className="dl-details-synopsis">
                                     <h3>Sinopsis</h3>
@@ -69,31 +88,36 @@ export default async function StreamPage({ params } : Params) {
                             </div>
                         </div>
                     </section>
+                    {/* Download Section */}
+                    {downloadLinks.length > 0 && (
+                        <section className="dl-download-section">
+                            <div className="dl-download-header">
+                                <h2>Download</h2>
+                                <span className="dl-download-meta">
+                                    Episode {detail.episode_number}
+                                </span>
+                            </div>
+                            <div className="dl-download-list">
+                                {downloadLinks.map((link: string, idx: number) => (
+                                    <a
+                                        key={idx}
+                                        href={link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="dl-download-item"
+                                    >
+                                        <i className="fas fa-download"></i>
+                                        <span>Link {idx + 1}</span>
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                     <EpisodeSectionMobile slug={slug} slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     {/* Comments Section */}
                     <CommentSection comments={comments} slug={slug} />
 
-                    {/* Recommendation Section */}
-                    <section id="recommendation" className="dl-section">
-                        <div className="dl-section-header">
-                            <h2>Rekomendasi</h2>
-                        </div>
-                        <div className="dl-recommendation-container">
-                            <div className="dl-card">
-                                <div className="dl-card-img">
-                                    <Image src="/images/image2.jpg" alt="asd" width={100} height={100} />
-                                    <div className="dl-card-badge">NEW</div>
-                                </div>
-                                <div className="dl-card-content">
-                                    <h3 className="dl-card-title">Soul Land</h3>
-                                    <div className="dl-card-meta">
-                                        <span>21 eps</span>
-                                        <span className="dl-card-rating"><i className="fas fa-star"></i> 3.5</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                    <RecommendationSection series={recommendationsData.series} />
                 </div>
                 
                 <div className="col-12 col-lg-4">
@@ -107,16 +131,16 @@ export default async function StreamPage({ params } : Params) {
                     {/* Community Card */}
                     <section id="community" className="dl-section">
                         <div className="dl-side-card">
-                            <h2>Komunitas</h2>
-                            <a href="https://t.me/dongworld"><i className="fab fa-telegram"></i></a>
+                        <h2>Komunitas</h2>
+                        <a href="https://t.me/dongworld" target="_blank"><i className="fab fa-telegram"></i></a>
                         </div>
                     </section>
 
                     {/* Donation Card */}
                     <section id="donation" className="dl-section">
                         <div className="dl-side-card">
-                            <h2>Donasi</h2>
-                            <a href="https://t.me/dongworld"><i className="fas fa-donate"></i></a>
+                        <h2>Donasi</h2>
+                        <a href="https://sociabuzz.com/dongworld/tribe" target="_blank"><i className="fas fa-donate"></i></a>
                         </div>
                     </section>
                 </div>

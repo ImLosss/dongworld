@@ -107,6 +107,14 @@
         align-items: flex-start;
         gap: 10px;
     }
+
+    .dl-section-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .dl-see-all {
+        font-size: 0.8rem;
+    }
     
     .dl-filter-options {
         flex-wrap: wrap;
