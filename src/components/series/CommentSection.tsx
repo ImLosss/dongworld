@@ -48,7 +48,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
     // Load 10 komentar pertama saat mount
     useEffect(() => {
         setDisplayedComments(comments.slice(0, 10));
-    }, []);
+    }, [comments]);
 
     // Infinite scroll handler
     const handleScroll = () => {
@@ -123,6 +123,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
             if (listRef.current) listRef.current.scrollTop = 0;
 
         } catch (err) {
+            console.error(err);
             alert("Komentar gagal ditambahkan!");
         }
     };

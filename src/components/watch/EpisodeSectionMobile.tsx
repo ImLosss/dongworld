@@ -20,7 +20,7 @@ export default function EpisodeSection({ slug, slugSeries, initialEpisodes, sele
       .then(res => res.json())
       .then(data => setEpisodes(data.episodes))
       .finally(() => setLoading(false));
-  }, [page, slug, episodes.current_page]);
+  }, [page, slug, episodes.current_page, slugSeries]);
 
   return (
     <section className="dl-mobile-episodes">

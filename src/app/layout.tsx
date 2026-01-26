@@ -8,7 +8,6 @@ import Footer from "@/components/footer";
 import Script from "next/script";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
-import SmartlinkAd from "@/components/Smartlink Ads";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

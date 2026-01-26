@@ -1,6 +1,5 @@
 import Image from "next/image";
 import SeriesList from "@/components/home/SeriesList";
-import Script from "next/script";
 import Link from "next/link";
 import SeriesFilters from "@/components/series/SeriesFilters";
 import { notFound } from "next/navigation";
@@ -86,9 +85,9 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
                                         {(() => {
                                             const hasFilters = !!(params.type || params.genre || params.status);
                                             if (params.search && hasFilters) {
-                                                return <p>Tidak ada hasil untuk "{params.search}" dengan filter yang dipilih</p>;
+                                                return <p>Tidak ada hasil untuk &quot;{params.search}&quot; dengan filter yang dipilih</p>;
                                             } else if (params.search && !hasFilters) {
-                                                return <p>Tidak ada hasil untuk “{params.search}”</p>;
+                                                return <p>Tidak ada hasil untuk &quot;{params.search}&quot;</p>;
                                             } else if (hasFilters) {
                                                 return <p>Tidak ada hasil dengan filter yang dipilih</p>;
                                             }
