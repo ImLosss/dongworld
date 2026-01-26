@@ -2,14 +2,17 @@
 import { useState, useEffect } from "react";
 
 export default function EpisodeSection({ slug, slugSeries, initialEpisodes, selectedEpisode }: { slug: string, slugSeries: string, initialEpisodes: any, selectedEpisode: any }) {
-  const calculatePageFromEpisode = (episodeNumber: number, perPage: number = initialEpisodes.per_page) => {
-        return Math.ceil(episodeNumber / perPage);
-    };
-
-  const initialPage = calculatePageFromEpisode(selectedEpisode);
+  const getSavedPage = () => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(`episode_page_${slug}`);
+      return saved ? parseInt(saved) : initialEpisodes.current_page;
+    }
+    return initialEpisodes.current_page;
+  };
+    
   
   const [episodes, setEpisodes] = useState(initialEpisodes);
-  const [page, setPage] = useState(initialPage);
+  const [page, setPage] = useState(getSavedPage());
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
