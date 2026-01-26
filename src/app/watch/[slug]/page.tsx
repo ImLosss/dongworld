@@ -6,7 +6,6 @@ import StreamPlayer from "@/components/watch/StreamPlayer";
 import EpisodeSectionDesktop from "@/components/watch/EpisodeSectionDesktop";
 import EpisodeSectionMobile from "@/components/watch/EpisodeSectionMobile";
 import CommentSection from "@/components/watch/CommentSection";
-import WatchHistorySaver from "@/components/watch/WatchHistorySaver";
 import HistorySection from "@/components/home/HistorySection";
 
 interface Params {
