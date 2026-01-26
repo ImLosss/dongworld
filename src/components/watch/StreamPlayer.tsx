@@ -6,6 +6,15 @@ interface StreamPlayerProps {
     detail: any;
 }
 
+type HistoryItem = {
+    slugEpisode: string;
+    episodeNumber: number;
+    title: string;
+    watchedAt: string;
+};
+
+type HistoryMap = Record<string, HistoryItem>;
+
 export default function StreamPlayer({ detail }: StreamPlayerProps) {
     const [selectedServer, setSelectedServer] = useState(detail.links?.[0]?.url || "");
     const [saved, setSaved] = useState(false);
@@ -21,7 +30,7 @@ export default function StreamPlayer({ detail }: StreamPlayerProps) {
 
         const key = "history";
         const raw = localStorage.getItem(key);
-        const history = raw ? JSON.parse(raw) : {};
+        const history: HistoryMap = raw ? JSON.parse(raw) : {};
 
         const seriesSlug = detail.series?.slug || detail.slug;
 
