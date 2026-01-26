@@ -13,16 +13,13 @@ export default function EpisodeSection({ slug, initialEpisodes }: { slug: string
   };
   
   const [episodes, setEpisodes] = useState(initialEpisodes);
-  let [page, setPage] = useState(getSavedPage());
+  const [page, setPage] = useState(getSavedPage());
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (page === episodes.current_page) return;
     setLoading(true);
-    if(page > episodes.last_page || page < 1) {
-      page = episodes.last_page;
-      localStorage.setItem(`episode_page_${slug}`, episodes.last_page.toString());
-    } else localStorage.setItem(`episode_page_${slug}`, page.toString());
+    localStorage.setItem(`episode_page_${slug}`, page.toString());
     fetch(`/api/series/${slug}?page=${page}`)
       .then(res => res.json())
       .then(data => setEpisodes(data.episodes))
