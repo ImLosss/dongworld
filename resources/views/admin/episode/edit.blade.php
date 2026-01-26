@@ -36,6 +36,21 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="episode_number" class="form-control-label">Download Links</label>
+<textarea
+  class="form-control @error('download_links') border border-danger rounded-3 @enderror"
+  name="download_links"
+  placeholder="https://link1
+https://link2
+https://link3"
+  autofocus
+>{{ old('download_links', $downloadLinksValue) }}</textarea>                        @error('download_links')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
             @endif
 

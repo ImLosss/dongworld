@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('series_id')->onDelete('cascade');
             $table->integer('episode_number')->nullable();
-            $table->enum('status', ['private', 'published'])->default('private');
             $table->json('download_links')->nullable();
             $table->string('slug')->unique();
             $table->unsignedBigInteger('user_id')->nullable()->onDelete('SET NULL');

@@ -30,6 +30,11 @@ return new class extends Migration
             $table->foreign('series_id')->references('id')->on('series')->onDelete('cascade');
             $table->foreign('episode_id')->references('id')->on('episodes')->onDelete('cascade');
         });
+
+        Schema::table('views', function (Blueprint $table) {
+            $table->foreign('series_id')->references('id')->on('series')->onDelete('cascade');
+            $table->foreign('episode_id')->references('id')->on('episodes')->onDelete('cascade');
+        });
     }
 
     /**

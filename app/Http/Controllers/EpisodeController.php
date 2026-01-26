@@ -44,7 +44,10 @@ class EpisodeController extends Controller
                 Rule::unique('episodes', 'episode_number')
                     ->where(fn ($q) => $q->where('series_id', $series->id)),
             ],
+            'download_links' => ['nullable', 'string'],
         ]);
+
+        $validated['download_links'] = array_filter(array_map('trim', explode("\n", $validated['download_links'] ?? '')));
 
         // slug logic
         $seriesNameSlug = Str::slug($series->name);
@@ -60,6 +63,7 @@ class EpisodeController extends Controller
         $episode = Episode::create([
             'series_id' => $series->id,
             'episode_number' => $validated['episode_number'] ?? null,
+            'download_links' => $validated['download_links'] ?? null,
             'slug' => $slug,
             'user_id' => $request->user()->id,
         ]);
@@ -99,9 +103,15 @@ class EpisodeController extends Controller
      */
     public function edit(Series $series, Episode $episode)
     {
+        $downloadLinksValue =
+        is_array($episode->download_links)
+            ? implode("\n", $episode->download_links)
+            : (is_string($episode->download_links) && $episode->download_links !== ''
+                ? $episode->download_links
+                : "");
         $servers = Server::orderBy('name')->get();
         $links = $episode->links()->get()->keyBy('server_id');
-        return view('admin.episode.edit', compact('series','episode','servers','links'));
+        return view('admin.episode.edit', compact('series','episode','servers','links', 'downloadLinksValue'));
     }
 
     /**
@@ -129,11 +139,13 @@ class EpisodeController extends Controller
 
         $validated = $request->validate($rules);
 
+        $download_links = array_filter(array_map('trim', explode("\n", $request->input('download_links') ?? '')));
+
         $episode->update([
             'episode_number' => $validated['episode_number'] ?? null,
             'slug' => $slug,
             'user_id' => $request->user()->id,
-            'status' => $request->status
+            'download_links' => $download_links ?? null,
         ]);
 
         // update/create links per server (optional)
@@ -177,7 +189,6 @@ class EpisodeController extends Controller
     public function sendNotif($episodeId)
     {
         $episode = Episode::with('series')->findOrFail($episodeId);
-        $episode->update(['status' => 'published']);
         $episode->series->timestamps = false;
         $episode->series->update(['updated_at' => now()]);
     }

@@ -60,7 +60,7 @@ class SearchController extends Controller
         }
 
         return response()->json([
-            'data' => $query->paginate(1),
+            'data' => $query->paginate(3),
         ]);
     }
 }

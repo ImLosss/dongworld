@@ -29,9 +29,18 @@
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="episode_number" class="form-control-label">Episode Number</label>
-            <input class="form-control @error('episode_number') border border-danger rounded-3 @enderror" type="number" min="1" placeholder="{{ $nextEpisode ?? 1 }}" name="episode_number" value="{{ old('episode_number') }}" autofocus>
+                        <input class="form-control @error('episode_number') border border-danger rounded-3 @enderror" type="number" min="1" placeholder="{{ $nextEpisode ?? 1 }}" name="episode_number" value="{{ old('episode_number') }}" autofocus>
                         @error('episode_number')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="episode_number" class="form-control-label">Download Links</label>
+                        <textarea class="form-control @error('download_links') border border-danger rounded-3 @enderror" type="text" placeholder="{{ old('download_links') ?? "https://link1\nhttps://link2\nhttps://link3" }}" name="download_links" autofocus>{{ old('download_links') }}</textarea>
+                        @error('download_links')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>

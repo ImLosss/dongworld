@@ -8,6 +8,10 @@ class Episode extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'download_links' => 'array',
+    ];
+
     public function series()
     {
         return $this->belongsTo(Series::class);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Episode;
 use App\Models\Genre;
 use App\Models\Series;
+use App\Models\View;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
@@ -20,6 +21,7 @@ class SeriesController extends Controller
         }
 
         $series->genres_string = $series->genres->pluck('name')->implode(', ');
+        $series->views = $series->views()->sum('views');
 
         $comments = $series->comments()->orderBy('created_at', 'desc')->get();
 
@@ -33,17 +35,24 @@ class SeriesController extends Controller
     public function getRecomendation()
     {
         $series = Series::with(['genres'])
-        ->orderBy('views', 'desc')
+        ->withSum('views', 'views') // hasil: views_sum_views
+        ->orderByDesc('views_sum_views')
         ->take(10)
-        ->get();
+        ->get()
+        ->each(function ($s) {
+            $s->views = (int) ($s->views_sum_views ?? 0);
+        });
 
         return response()->json([
             'series' => $series
         ]);
     }
 
-    public function incrementViewCount($slug)
+    public function incrementViewCount($slug, Request $request)
     {
+        $request->validate([
+            'episode_id' => 'required|integer|exists:episodes,id',
+        ]);
         $series = Series::where('slug', $slug)->first();
         if (!$series) {
             return response()->json([
@@ -51,11 +60,19 @@ class SeriesController extends Controller
             ], 404);
         }
 
-        $series->increment('views');
+        $today = now()->startOfDay();
+
+        $daily = View::firstOrCreate(
+            ['series_id' => $series->id, 'episode_id' => $request->episode_id, 'created_at' => $today],
+            ['views' => 0]
+        );
+
+        $daily->timestamps = false;
+        $daily->increment('views');
 
         return response()->json([
             'message' => 'View count incremented',
-            'views' => $series->views
+            'views' => $daily->views
         ]);
     }
 
