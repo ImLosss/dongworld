@@ -10,7 +10,7 @@ class WatchController extends Controller
 {
     public function watch($slug)
     {
-        $detailEpisode = Episode::with(['series', 'links.server', 'user'])->where('slug', $slug)->first();
+        $detailEpisode = Episode::with(['series', 'links.server', 'user', 'comments'])->where('slug', $slug)->first();
         if (!$detailEpisode) {
             return response()->json([
                 'message' => 'Episode not found'
@@ -24,9 +24,12 @@ class WatchController extends Controller
         $detailEpisode->series->genres_string = $detailEpisode->series->genres->pluck('name')->implode(', ');
         $detailEpisode->uploader = $detailEpisode->user?->name ? $detailEpisode->user->name : 'Admin';
 
+        $comments = $detailEpisode->comments()->orderBy('created_at', 'desc')->get();
+
         return response()->json([
             'detail-episode' => $detailEpisode,
-            'episodes' => $episodes
+            'episodes' => $episodes,
+            'comments' => $comments ? $comments : []
         ]);
     }
 }

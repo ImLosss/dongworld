@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('episode_id')->nullable();
             $table->string('name');
             $table->text('content');
+            $table->boolean('is_admin')->default(false);
             $table->timestamps();
         });
     }

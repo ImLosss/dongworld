@@ -24,4 +24,9 @@ class Series extends Model
     {
         return $this->hasOne(Episode::class)->ofMany('episode_number', 'max');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

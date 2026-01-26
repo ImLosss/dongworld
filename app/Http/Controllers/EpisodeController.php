@@ -64,6 +64,8 @@ class EpisodeController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
+        $series->update(['updated_at' => now()]);
+
         // optional link inputs per server
         $servers = Server::all();
         foreach ($servers as $server) {
@@ -76,6 +78,8 @@ class EpisodeController extends Controller
                 ]);
             }
         }
+
+
 
         return redirect()->route('episode.index', $series->id)
             ->with('alert', 'success')

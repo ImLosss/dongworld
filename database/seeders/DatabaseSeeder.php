@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             SeriesSeeder::class,
             ServerSeeder::class,
             EpisodeSeeder::class,
+            CommentSeeder::class,
         ]);
     }
 }
