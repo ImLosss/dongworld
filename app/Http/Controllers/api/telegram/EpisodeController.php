@@ -7,6 +7,7 @@ use App\Models\Episode;
 use App\Models\Series;
 use App\Models\Server;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class EpisodeController extends Controller
@@ -32,13 +33,15 @@ class EpisodeController extends Controller
         // buang yang null / empty string
         $downloadLinks = array_filter($downloadLinks, fn ($v) => $v !== null && $v !== '');
 
+        $prefix = Str::lower(Str::random(5));
+
         $episode = Episode::create([
             'series_id' => $request->input('series_id'),
             'episode_number' => $request->input('episode_number'),
             'download_links' => json_encode([
                 'drive' => $request->input('link_drive'),
             ]),
-            'slug' => $series->slug . '-' . $request->input('episode_number'),
+            'slug' => $prefix . '-' . $series->slug . '-' . $request->input('episode_number'),
             'user_id' => null
         ]);
 

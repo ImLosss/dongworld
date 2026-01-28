@@ -50,7 +50,8 @@ class EpisodeController extends Controller
         $validated['download_links'] = array_filter(array_map('trim', explode("\n", $validated['download_links'] ?? '')));
 
         // slug logic
-        $seriesNameSlug = Str::slug($series->name);
+        $prefix = Str::lower(Str::random(5));
+        $seriesNameSlug = Str::slug($prefix . '-' . $series->name);
         if ($series->type === 'movie') {
             $slug = $seriesNameSlug . '-movie';
             $validated['episode_number'] = null;
@@ -122,7 +123,8 @@ class EpisodeController extends Controller
         $rules = [];
 
         // slug logic
-        $seriesNameSlug = Str::slug($series->name);
+        $prefix = Str::lower(Str::random(5));
+        $seriesNameSlug = Str::slug($prefix . '-' . $series->name);
         if ($series->type === 'movie') {
             $slug = $seriesNameSlug . '-movie';
             $rules['episode_number'] = ['nullable'];
