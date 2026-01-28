@@ -5,6 +5,10 @@ export default function EpisodeSection({ slug, slugSeries, initialEpisodes, sele
   const getSavedPage = () => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(`episode_page_${slug}`);
+      if(saved && saved > initialEpisodes.last_page) {
+        localStorage.setItem(`episode_page_${slug}`, initialEpisodes.last_page.toString());
+        return initialEpisodes.last_page;
+      }
       return saved ? parseInt(saved) : initialEpisodes.current_page;
     }
     return initialEpisodes.current_page;

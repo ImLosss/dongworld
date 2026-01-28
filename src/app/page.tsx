@@ -22,6 +22,24 @@ export default async function Home() {
   });
   const data = await response.json();
   heroSlides = data?.heroSlides ?? data?.data ?? [];
+
+  const isToday = (dateStr?: string) => {
+    if (!dateStr) return false;
+    const d = new Date(dateStr);
+    const now = new Date();
+    return d.getFullYear() === now.getFullYear() &&
+          d.getMonth() === now.getMonth() &&
+          d.getDate() === now.getDate();
+  };
+
+  const isWeek = (dateStr?: string) => {
+    if (!dateStr) return false;
+    const d = new Date(dateStr);
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+    return d >= oneWeekAgo && d <= now;
+  };
   return (
     <>
       {/* Hero Section */}
@@ -41,7 +59,9 @@ export default async function Home() {
                   <SeriesList key={series.id} href={`/series/${series.slug}`}>
                     <div className="dl-card-img">
                       <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt={series.name} fill />
-                      <div className="dl-card-badge">NEW</div>
+                      {isToday(series.updated_at) && (
+                        <div className="dl-card-badge">NEW</div>
+                      )}
                     </div>
                     <div className="dl-card-content">
                         <h3 className="dl-card-title">{series.name}</h3>
@@ -60,10 +80,28 @@ export default async function Home() {
           <section id="movies" className="dl-section">
             <div className="dl-section-header">
               <h2>Movies</h2>
-              <a href="all-series.html" className="dl-see-all">Lihat Semua</a>
+              <Link href="/series?type=movie" className="dl-see-all">Lihat Semua</Link>
             </div>
             <div className="dl-card-container">
-              {/* Movie cards will be populated by JavaScript */}
+              { data.movies.map((series: any) => {
+                return (
+                  <SeriesList key={series.id} href={`/series/${series.slug}`}>
+                    <div className="dl-card-img">
+                      <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt={series.name} fill />
+                      {isWeek(series.updated_at) && (
+                        <div className="dl-card-badge">NEW</div>
+                      )}
+                    </div>
+                    <div className="dl-card-content">
+                        <h3 className="dl-card-title">{series.name}</h3>
+                        <div className="dl-card-meta">
+                            <span>{series.episodes_max_episode_number || 0}/{series.total_episodes ? series.total_episodes : "?"} eps</span>
+                            <span className="dl-card-rating"><i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}</span>
+                        </div>
+                    </div>
+                  </SeriesList>
+                )
+              })}
             </div>
           </section>
 

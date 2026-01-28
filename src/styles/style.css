@@ -145,6 +145,13 @@ button {
     /* display: none; */
 }
 
+.dl-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
 .dl-mobile-search-toggle {
     font-size: 1.3rem;
     color: white;
@@ -265,6 +272,17 @@ button {
     position: relative;
     /* margin-top: 50px; */
     overflow: hidden;
+}
+
+.dl-hero-section::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 120px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(30,39,46,0) 0%, var(--dark-color) 100%);
 }
 
 .dl-hero-slider {
@@ -984,4 +1002,103 @@ button {
     gap: 8px;
     flex-wrap: wrap;
     width: 100%;
+}
+
+/* vip section */
+.dl-vip-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--secondary-color);
+    color: var(--gray-color);
+    font-size: 1rem;
+}
+
+.dl-vip-btn:hover {
+    color: var(--primary-color);
+}
+
+/* Modal */
+.dl-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dl-modal {
+    background: var(--secondary-color);
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: var(--shadow);
+}
+
+.dl-modal h3 {
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.dl-modal input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: none;
+    background: var(--darker-color);
+    color: var(--light-color);
+    margin-bottom: 10px;
+}
+
+.dl-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Success Alert */
+.dl-alert-success {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 2100;
+}
+
+.dl-alert-card {
+    background: var(--secondary-color);
+    border: 1px solid rgba(46, 213, 115, 0.4);
+    color: var(--light-color);
+    padding: 12px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow);
+}
+
+.dl-alert-card i {
+    color: var(--success-color);
+    font-size: 1.2rem;
+}
+
+.dl-alert-card button {
+    margin-left: auto;
+    font-size: 1.2rem;
+    color: var(--gray-color);
+}
+
+.dl-modal-actions .dl-btn-secondary,
+.dl-modal-actions .dl-btn-primary {
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.dl-input-error {
+    display: block;
+    color: #ff6b6b;
+    font-size: 12px;
 }

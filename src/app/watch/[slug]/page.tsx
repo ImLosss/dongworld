@@ -94,7 +94,7 @@ export default async function StreamPage({ params } : Params) {
                             <div className="dl-download-header">
                                 <h2>Download</h2>
                                 <span className="dl-download-meta">
-                                    Episode {detail.episode_number}
+                                    Episode {detail.episode_number} 1080p
                                 </span>
                             </div>
                             <div className="dl-download-list">
