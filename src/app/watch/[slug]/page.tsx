@@ -59,7 +59,7 @@ export default async function StreamPage({ params } : Params) {
             <div className="dl-stream-notification">
                 <div className="dl-notification-content">
                     <i className="fas fa-exclamation-circle"></i>
-                    <span>Gunakan VPN jika mengalami masalah saat streaming. Server kami tidak menyimpan file video apapun.</span>
+                    <span>Ganti server jika video tidak dapat diputar. Server kami tidak menyimpan file video apapun.</span>
                 </div>
             </div>
             <div className="row">
