@@ -27,19 +27,19 @@ class SearchController extends Controller
         $query = Series::query();
 
         if ($request->filled('search')) {
-        $search = strtolower($request->search);
+            $search = strtolower($request->search);
 
-        $query->where(function ($q) use ($search) {
-            $q->whereRaw("LOWER(name) LIKE ?", ['%' . $search . '%'])
-            ->orWhereRaw("
-                EXISTS (
-                SELECT 1
-                FROM JSON_TABLE(aliases, '$[*]' COLUMNS(alias VARCHAR(255) PATH '$')) jt
-                WHERE LOWER(jt.alias) LIKE ?
-                )
-            ", ['%' . $search . '%']);
-        });
-    }
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw("LOWER(name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("
+                    EXISTS (
+                    SELECT 1
+                    FROM JSON_TABLE(aliases, '$[*]' COLUMNS(alias VARCHAR(255) PATH '$')) jt
+                    WHERE LOWER(jt.alias) LIKE ?
+                    )
+                ", ['%' . $search . '%']);
+            });
+        }
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);

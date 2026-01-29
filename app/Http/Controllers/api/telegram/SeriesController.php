@@ -21,4 +21,32 @@ class SeriesController extends Controller
             'series' => $series,
         ]);
     }
+
+    public function searchSeries($query)
+    {
+        $search = $query;
+
+        $query = Series::query();
+
+        $search = strtolower($search);
+
+        $query->where(function ($q) use ($search) {
+            $q->whereRaw("LOWER(name) LIKE ?", ['%' . $search . '%'])
+            ->orWhereRaw("
+                EXISTS (
+                SELECT 1
+                FROM JSON_TABLE(aliases, '$[*]' COLUMNS(alias VARCHAR(255) PATH '$')) jt
+                WHERE LOWER(jt.alias) LIKE ?
+                )
+            ", ['%' . $search . '%']);
+        });
+
+        $seriesList = $query
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return response()->json([
+            'series' => $seriesList,
+        ]);
+    }
 }
