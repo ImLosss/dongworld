@@ -13,44 +13,6 @@ interface Params {
   params: { slug: string };
 }
 
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
-    const { slug } = await params;
-
-    const res = await fetch(`${process.env.BASE_URL_BACKEND}api/watch/${slug}`, {
-        headers: { "X-API-KEY": process.env.APIKEY_BACKEND as string },
-        cache: "no-store",
-    });
-
-    if (!res.ok) return { title: "Not Found" };
-
-    const data = await res.json();
-    const detail = data["detail-episode"];
-
-    const title = `${detail.series.name} Episode ${detail.episode_number} | DongWorld`;
-    const description = detail.series.synopsis?.slice(0, 160) || "Tonton donghua terbaru di DongWorld.";
-    const image = process.env.BASE_URL_BACKEND + detail.series.thumbnail;
-    const url = `${process.env.NEXT_PUBLIC_SITE_URL}/watch/${detail.slug}`;
-
-    return {
-        title,
-        description,
-        alternates: { canonical: url },
-        openGraph: {
-            title,
-            description,
-            url,
-            images: [{ url: image }],
-            type: "video.episode",
-        },
-        twitter: {
-            card: "summary_large_image",
-            title,
-            description,
-            images: [image],
-        },
-    };
-}
-
 export default async function StreamPage({ params } : Params) {
     const { slug } = await params
     const res = await fetch(`${process.env.BASE_URL_BACKEND}api/watch/${slug}`, {
