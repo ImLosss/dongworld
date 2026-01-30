@@ -19,7 +19,7 @@ export default function RecommendationSection({ series }: { series: any }) {
                             <div className="dl-card-content">
                                 <h3 className="dl-card-title">{item.name}</h3>
                                 <div className="dl-card-meta">
-                                    <span>{item.current_episode ? item.current_episode : "0"}/{item.total_episodes ? item.total_episodes : "?"} eps</span>
+                                    <span>{item.episodes_max_episode_number || 0}/{item.total_episodes ? item.total_episodes : "?"} eps</span>
                                     <span className="dl-card-rating"><i className="fas fa-star"></i> {item.rating ? item.rating : "N/A"}</span>
                                 </div>
                             </div>
