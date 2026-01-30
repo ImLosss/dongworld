@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const data = await res.json();
     const detail = data["detail-episode"];
 
-    const title = `Dongworld - ${detail.series.name} Episode ${detail.episode_number}`;
+    const title = `${detail.series.name} Episode ${detail.episode_number} | DongWorld`;
     const description = detail.series.synopsis?.slice(0, 160) || "Tonton donghua terbaru di DongWorld.";
     const image = process.env.BASE_URL_BACKEND + detail.series.thumbnail;
     const url = `${process.env.NEXT_PUBLIC_SITE_URL}/watch/${detail.slug}`;

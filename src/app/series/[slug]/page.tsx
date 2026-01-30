@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const data = await getSeriesData(slug);
     const series = data.series;
 
-    const title = `Dongworld - ${series.name}`;
+    const title = `${series.name} | DongWorld`;
     const description = series.synopsis?.slice(0, 160) || "Tonton donghua terbaru di DongWorld.";
     const image = process.env.BASE_URL_BACKEND + series.thumbnail;
     const url = `${process.env.NEXT_PUBLIC_SITE_URL}/series/${series.slug}`;
