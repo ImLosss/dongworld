@@ -8,19 +8,57 @@ import EpisodeSectionDesktop from "@/components/series/EpisodeSectionDesktop";
 import RecommendationSection from "@/components/series/RecommendationSection";
 import CommentSection from "@/components/series/CommentSection";
 import HistorySection from "@/components/home/HistorySection";
+import { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
 
 interface Params {
   params: { slug: string };
 }
 
-export default async function SeriesDetail({ params }: Params) {
-  const { slug } = await params
+async function getSeriesData(slug: string) {
   const res = await fetch(`${process.env.BASE_URL_BACKEND}api/series/${slug}`, {
     headers: {
       'X-API-KEY': process.env.APIKEY_BACKEND as string,
     },
-    cache: 'no-store'
+    next: { revalidate: 300 },
   });
+
+  if(!res.ok) return null;
+  return res.json();
+}
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+    const { slug } = await params;
+
+    const data = await getSeriesData(slug);
+    const series = data.series;
+
+    const title = `Dongworld - ${series.name}`;
+    const description = series.synopsis?.slice(0, 160) || "Tonton donghua terbaru di DongWorld.";
+    const image = process.env.BASE_URL_BACKEND + series.thumbnail;
+    const url = `${process.env.NEXT_PUBLIC_SITE_URL}/series/${series.slug}`;
+
+    return {
+        title,
+        description,
+        alternates: { canonical: url },
+        openGraph: {
+          title,
+          description,
+          url,
+          images: [{ url: image }],
+          type: "video.tv_show",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: [image],
+        },
+    };
+}
+
+export default async function SeriesDetail({ params }: Params) {
+  const { slug } = await params
 
   const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}api/recommendations`, {
     headers: {
@@ -28,9 +66,8 @@ export default async function SeriesDetail({ params }: Params) {
     },
     cache: 'no-store'
   });
-  
-  if (!res.ok) return notFound();
-  const data = await res.json();
+
+  const data = await getSeriesData(slug);
   const episodes = data.episodes;
   const series = data.series;
 
