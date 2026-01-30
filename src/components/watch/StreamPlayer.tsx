@@ -92,7 +92,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                             value={selectedServer}
                             onChange={handleServerChange}
                         >
-                            {detail.links?.map((link: any) => (
+                            {[...detail.links].reverse().map((link: any) => (
                                 <option key={link.id} value={link.url}>
                                     {link.server.name}
                                 </option>
