@@ -119,7 +119,7 @@ export default async function StreamPage({ params } : Params) {
                                     <span><i className="fas fa-star"></i>{detail.series.rating ? detail.series.rating : "N/A"}</span>
                                     <span><i className="fas fa-tags"></i>{detail.series.genres_string ? detail.series.genres_string : "Unknown"}</span>
                                     <span><i className="fas fa-calendar"></i>{detail.series.release_date ? detail.series.release_date : "Unknown"}</span>
-                                    <span><i className="fas fa-video"></i>{detail.series.current_episode ? detail.series.current_episode : "0"}/{detail.series.total_episodes ? detail.series.total_episodes : "?"} Episode</span>
+                                    <span><i className="fas fa-video"></i>{detail.series.episodes_max_episode_number || 0}/{detail.series.total_episodes ? detail.series.total_episodes : "?"} Episode</span>
                                     <span><i className="fas fa-eye"></i>{detail.series.views}</span>
                                 </div>
                                 <div className="dl-details-synopsis">
