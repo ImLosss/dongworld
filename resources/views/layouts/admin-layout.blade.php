@@ -29,7 +29,8 @@
   <link href="{{ asset('./assets/css/nucleo-icons.css') }}" rel="stylesheet" />
   <link href="{{ asset('./assets/css/nucleo-svg.css') }}" rel="stylesheet" />
   <!-- Font Awesome Icons -->
-  <script src="{{ asset('./assets/js/plugins/fontawesome.js') }}" crossorigin="anonymous"></script>
+  <link rel="preload" as="script" href="{{ asset('./assets/js/plugins/fontawesome.js') }}" crossorigin="anonymous">
+    <script src="{{ asset('./assets/js/plugins/fontawesome.js') }}" defer crossorigin="anonymous"></script>
   <link href="{{ asset('./assets/css/nucleo-svg.css') }}" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('./assets/css/soft-ui-dashboard.css?v=1.0.7') }}" rel="stylesheet" />
