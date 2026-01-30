@@ -14,12 +14,12 @@ interface Params {
   params: { slug: string };
 }
 
-async function getSeriesData(slug: string) {
+async function getSeriesData(slug: string, options?: { revalidate?: number }) {
   const res = await fetch(`${process.env.BASE_URL_BACKEND}api/series/${slug}`, {
     headers: {
       'X-API-KEY': process.env.APIKEY_BACKEND as string,
     },
-    next: { revalidate: 300 },
+    next: { revalidate: options?.revalidate ?? 300 },
   });
 
   if(!res.ok) return null;
@@ -29,7 +29,7 @@ async function getSeriesData(slug: string) {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { slug } = await params;
 
-    const data = await getSeriesData(slug);
+    const data = await getSeriesData(slug, { revalidate: 300 });
     const series = data.series;
 
     const title = `${series.name} | DongWorld`;
@@ -67,7 +67,7 @@ export default async function SeriesDetail({ params }: Params) {
     cache: 'no-store'
   });
 
-  const data = await getSeriesData(slug);
+  const data = await getSeriesData(slug, { revalidate: 0 });
   if(data === null) return notFound();
   const episodes = data.episodes;
   const series = data.series;
