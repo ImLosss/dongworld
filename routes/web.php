@@ -8,6 +8,7 @@ use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -53,4 +54,9 @@ Route::group([
     Route::post('upload', [UploadController::class, 'store'])->name('upload.store');
     // keep proxy available but not used by default anymore
     Route::post('upload/proxy', [UploadController::class, 'proxy'])->name('upload.proxy');
+
+    // routeComments
+    Route::resource('comments', CommentController::class)->only(['index', 'show', 'destroy'])->names('comments');
+    Route::post('comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
+    // endRoute
 });
