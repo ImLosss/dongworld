@@ -16,7 +16,8 @@ type HistoryItem = {
 type HistoryMap = Record<string, HistoryItem>;
 
 export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
-    const [selectedServer, setSelectedServer] = useState(detail.links?.[0]?.url || "");
+    const reversedLinks = [...(detail.links || [])].reverse();
+    const [selectedServer, setSelectedServer] = useState(reversedLinks?.[0]?.url || "");
     const [saved, setSaved] = useState(false);
 
     const handleServerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -92,7 +93,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                             value={selectedServer}
                             onChange={handleServerChange}
                         >
-                            {[...detail.links].reverse().map((link: any) => (
+                            {reversedLinks.map((link: any) => (
                                 <option key={link.id} value={link.url}>
                                     {link.server.name}
                                 </option>
