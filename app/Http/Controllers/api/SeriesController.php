@@ -35,9 +35,10 @@ class SeriesController extends Controller
     public function getRecomendation()
     {
         $series = Series::with(['genres'])
-        ->withSum('views', 'views') // hasil: views_sum_views
+        ->withSum('views', 'views')
+        ->withMax('episodes', 'episode_number')
         ->orderByDesc('views_sum_views')
-        ->take(10)
+        ->take(5)
         ->get()
         ->each(function ($s) {
             $s->views = (int) ($s->views_sum_views ?? 0);
