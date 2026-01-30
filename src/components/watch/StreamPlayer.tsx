@@ -25,7 +25,6 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
     };
 
     const saveHistory = () => {
-        console.log("Saving history...");
         if (saved) return;
         setSaved(true);
 
