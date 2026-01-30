@@ -60,7 +60,7 @@ export default async function Home() {
                     <div className="dl-card-img">
                       <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt={series.name} fill />
                       {isToday(series.updated_at) && (
-                        <div className="dl-card-badge">NEW</div>
+                        <div className="dl-card-badge">{series.status == 'completed' ? 'Completed' : 'New'}</div>
                       )}
                     </div>
                     <div className="dl-card-content">
