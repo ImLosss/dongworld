@@ -42,6 +42,8 @@ class EpisodeController extends Controller
             'user_id' => null
         ]);
 
+        $series->update(['updated_at' => now()]);
+
         // optional link inputs per server
         $servers = Server::all();
         $serverAdd = false;
