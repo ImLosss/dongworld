@@ -56,6 +56,7 @@ Route::group([
     Route::post('upload/proxy', [UploadController::class, 'proxy'])->name('upload.proxy');
 
     // routeComments
+    Route::get('comments/datatable', [CommentController::class, 'datatable'])->name('comments.datatable');
     Route::resource('comments', CommentController::class)->only(['index', 'show', 'destroy'])->names('comments');
     Route::post('comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
     // endRoute

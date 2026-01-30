@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class CommentController extends Controller
 {
@@ -14,11 +15,41 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::with(['series', 'episode'])
-            ->latest()
-            ->paginate(20);
+        return view('admin.comment.index');
+    }
 
-        return view('admin.comment.index', compact('comments'));
+    public function datatable(Request $request)
+    {
+        $query = Comment::with(['series', 'episode'])->latest();
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('name', function (Comment $comment) {
+                $badge = $comment->is_admin
+                    ? '<span class="badge badge-sm bg-gradient-dark ms-2">Admin</span>'
+                    : '';
+
+                return '<div class="d-flex align-items-center">'
+                    . '<span class="text-dark">' . e($comment->name) . '</span>'
+                    . $badge
+                    . '</div>';
+            })
+            ->addColumn('content', fn (Comment $comment) => e(Str::limit($comment->content, 120)))
+            ->addColumn('series', fn (Comment $comment) => e(optional($comment->series)->name ?? '-'))
+            ->addColumn('episode', fn (Comment $comment) => e(optional($comment->episode)->episode_number ?? '-'))
+            ->addColumn('created_at', fn (Comment $comment) => optional($comment->created_at)->format('d M Y H:i'))
+            ->addColumn('action', function (Comment $comment) {
+                $detail = '<a href="' . route('comments.show', $comment->id) . '" class="btn btn-sm bg-gradient-info">Detail</a>';
+                $delete = '<button type="button" class="btn btn-sm bg-gradient-danger" onclick="modalHapus(' . $comment->id . ')">Hapus</button>';
+                $form = '<form id="form_' . $comment->id . '" action="' . route('comments.destroy', $comment->id) . '" method="POST" style="display:none;">'
+                    . csrf_field()
+                    . method_field('DELETE')
+                    . '</form>';
+
+                return $detail . $delete . $form;
+            })
+            ->rawColumns(['name', 'action'])
+            ->toJson();
     }
 
     /**

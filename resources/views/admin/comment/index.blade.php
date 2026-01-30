@@ -27,7 +27,7 @@
             </div>
             <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-3">
-                    <table class="table align-items-center mb-0 w-100">
+                    <table id="commentsTable" class="table align-items-center mb-0 w-100">
                         <thead>
                             <tr>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
@@ -39,47 +39,42 @@
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @forelse($comments as $idx => $comment)
-                                <tr>
-                                    <td class="text-sm">{{ $comments->firstItem() + $idx }}</td>
-                                    <td class="text-sm">
-                                        <div class="d-flex align-items-center">
-                                            <span class="text-dark">{{ $comment->name }}</span>
-                                            @if($comment->is_admin)
-                                                <span class="badge badge-sm bg-gradient-dark ms-2">Admin</span>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="text-sm" style="max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                        {{ $comment->content }}
-                                    </td>
-                                    <td class="text-sm">{{ optional($comment->series)->name ?? '-' }}</td>
-                                    <td class="text-sm">{{ optional($comment->episode)->episode_number ?? '-' }}</td>
-                                    <td class="text-sm">{{ $comment->created_at?->format('d M Y H:i') }}</td>
-                                    <td class="text-sm">
-                                        <a href="{{ route('comments.show', $comment->id) }}" class="btn btn-sm bg-gradient-info">Detail</a>
-                                        <button type="button" class="btn btn-sm bg-gradient-danger" onclick="modalHapus({{ $comment->id }})">Hapus</button>
-                                        <form id="form_{{ $comment->id }}" action="{{ route('comments.destroy', $comment->id) }}" method="POST" style="display:none;">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-sm text-center text-secondary">Belum ada komentar</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
 
-<div class="d-flex justify-content-end mt-3">
-    {{ $comments->links() }}
-</div>
+@section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#commentsTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            ajax: {
+                url: "{{ route('comments.datatable') }}",
+                type: 'GET'
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-sm' },
+                { data: 'name', name: 'name', className: 'text-sm', orderable: false, searchable: true },
+                { data: 'content', name: 'content', className: 'text-sm' },
+                { data: 'series', name: 'series', className: 'text-sm', orderable: false, searchable: false },
+                { data: 'episode', name: 'episode', className: 'text-sm', orderable: false, searchable: false },
+                { data: 'created_at', name: 'created_at', className: 'text-sm' },
+                { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-sm' },
+            ],
+            language: {
+                emptyTable: 'Belum ada komentar'
+            },
+            headerCallback: function(thead) {
+                $(thead).find('th').css('text-align', 'left');
+            },
+        });
+    });
+</script>
 @endsection
