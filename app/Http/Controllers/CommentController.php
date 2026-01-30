@@ -39,8 +39,12 @@ class CommentController extends Controller
             ->addColumn('episode', fn (Comment $comment) => e(optional($comment->episode)->episode_number ?? '-'))
             ->addColumn('created_at', fn (Comment $comment) => optional($comment->created_at)->format('d M Y H:i'))
             ->addColumn('action', function (Comment $comment) {
-                $detail = '<a href="' . route('comments.show', $comment->id) . '" class="btn btn-sm bg-gradient-info">Detail</a>';
-                $delete = '<button type="button" class="btn btn-sm bg-gradient-danger" onclick="modalHapus(' . $comment->id . ')">Hapus</button>';
+                $detail = '<a href="' . route('comments.show', $comment->id) . '" class="me-2" data-bs-toggle="tooltip" title="Detail">'
+                    . '<i class="fa-solid fa-eye text-info"></i>'
+                    . '</a>';
+                $delete = '<button type="button" class="cursor-pointer" onclick="modalHapus(' . $comment->id . ')" style="border: none; background: none;" data-bs-toggle="tooltip" title="Hapus">'
+                    . '<i class="fa-solid fa-trash text-danger"></i>'
+                    . '</button>';
                 $form = '<form id="form_' . $comment->id . '" action="' . route('comments.destroy', $comment->id) . '" method="POST" style="display:none;">'
                     . csrf_field()
                     . method_field('DELETE')
