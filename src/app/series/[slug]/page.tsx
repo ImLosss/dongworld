@@ -68,6 +68,7 @@ export default async function SeriesDetail({ params }: Params) {
   });
 
   const data = await getSeriesData(slug);
+  if(data === null) return notFound();
   const episodes = data.episodes;
   const series = data.series;
 
