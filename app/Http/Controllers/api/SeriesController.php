@@ -13,7 +13,7 @@ class SeriesController extends Controller
 {
     public function getSeriesDetail($slug)
     {
-        $series = Series::with(['genres', 'comments'])->where('slug', $slug)->first();
+        $series = Series::with(['genres', 'comments'])->where('slug', $slug)->withMax('episodes', 'episode_number')->first();
         if (!$series) {
             return response()->json([
                 'message' => 'Series not found'

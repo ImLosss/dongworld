@@ -10,7 +10,13 @@ class WatchController extends Controller
 {
     public function watch($slug)
     {
-        $detailEpisode = Episode::with(['series', 'links.server', 'user', 'comments'])->where('slug', $slug)->first();
+        $detailEpisode = Episode::with([
+            'series' => fn ($q) => $q->withMax('episodes', 'episode_number')->with('genres'),
+            'links.server',
+            'user',
+            'comments',
+        ])->where('slug', $slug)->first();
+
         if (!$detailEpisode) {
             return response()->json([
                 'message' => 'Episode not found'
