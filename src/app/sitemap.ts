@@ -20,7 +20,7 @@ const fetchJson = async (url: string) => {
       Accept: "application/json",
       "X-API-KEY": API_KEY,
     },
-    next: { revalidate: 0 },
+    next: { revalidate: 3600 },
   });
 
   if (!res.ok) {
