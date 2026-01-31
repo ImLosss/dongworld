@@ -10,8 +10,8 @@ class SitemapController extends Controller
 {
     public function generateSitemap()
     {
-        $seriesSlugs = Series::all()->pluck('slug');
-        $episodeSlugs = Episode::all()->pluck('slug');
+        $seriesSlugs = Series::all()->pluck(['slug', 'updated_at']);
+        $episodeSlugs = Episode::all()->pluck(['slug', 'updated_at']);
 
         return response()->json([
             'series' => $seriesSlugs,
