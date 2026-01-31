@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\api\SearchController;
 use App\Http\Controllers\api\SeriesController;
+use App\Http\Controllers\api\SitemapController;
 use App\Http\Controllers\api\WatchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,7 @@ Route::group(
         Route::get('/series', [SearchController::class, 'search']);
         Route::get('/genres', [SearchController::class, 'getFilters']);
         Route::get('/watch/{slug}', [WatchController::class, 'watch']);
+        Route::get('/sitemap', [SitemapController::class, 'generateSitemap']);
         Route::get('/recommendations', [SeriesController::class, 'getRecomendation']);
         Route::post('/view-series/{slug}', [SeriesController::class, 'incrementViewCount']);
         Route::post('/comments', [SeriesController::class, 'postComment']);
