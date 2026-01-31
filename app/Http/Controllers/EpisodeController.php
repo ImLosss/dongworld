@@ -126,10 +126,11 @@ class EpisodeController extends Controller
         $prefix = Str::lower(Str::random(5));
         $seriesNameSlug = Str::slug($prefix . '-' . $series->name);
         if ($series->type === 'movie') {
-            $slug = $seriesNameSlug . '-movie';
+            $slug = $episode->slug;
             $rules['episode_number'] = ['nullable'];
         } else {
             $slug = $seriesNameSlug . '-' . $request->episode_number;
+            if($request->episode_number == $episode->episode_number) $slug = $episode->slug;
             $rules['episode_number'] = [
                 'required',
                 'integer',
