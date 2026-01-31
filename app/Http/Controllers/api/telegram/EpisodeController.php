@@ -62,7 +62,7 @@ class EpisodeController extends Controller
         return response()->json([
             'message' => 'Episode created successfully',
             'episode_id' => $episode->id,
-            'link' => "https://dongworld.websiteku.space/watch/" . $episode->slug,
+            'link' => "https://dongworld.top/watch/" . $episode->slug,
             'server' => $serverAdd,
             'download' => $request->input('drive') ? true : false,
         ], 201);
