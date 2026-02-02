@@ -2,33 +2,46 @@
 import { useEffect } from "react";
 
 export default function SmartlinkAd() {
-    useEffect(() => {
-        const url = "https://www.effectivegatecpm.com/r78gx5zh?key=ddf94cbeb9a2045ab67820c3959ee7af";
-        const delay = 60 * 1000; // 60 detik
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-        function isCooldown() {
-            const lastClick = localStorage.getItem("smartlink_last_click");
-            if (!lastClick) return false;
-            return (Date.now() - parseInt(lastClick)) < delay;
-        }
+    // ❗ Jangan jalankan untuk crawler
+    if (isCrawler()) return;
 
-        function handleClick() {
-            if (isCooldown()) return; // masih cooldown → tidak membuka link
+    const url = "https://www.effectivegatecpm.com/r78gx5zh?key=ddf94cbeb9a2045ab67820c3959ee7af";
+    const delay = 60 * 1000;
 
-            // buka smartlink
-            window.open(url, "_blank");
+    function isCooldown() {
+      const lastClick = localStorage.getItem("smartlink_last_click");
+      if (!lastClick) return false;
+      return Date.now() - parseInt(lastClick) < delay;
+    }
 
-            // simpan waktu terakhir klik
-            localStorage.setItem("smartlink_last_click", Date.now().toString());
-        }
+    function handleClick() {
+      if (isCooldown()) return;
 
-        document.addEventListener("click", handleClick);
+      window.open(url, "_blank");
+      localStorage.setItem("smartlink_last_click", Date.now().toString());
+    }
 
-        // Cleanup
-        return () => {
-            document.removeEventListener("click", handleClick);
-        };
-    }, []);
+    document.addEventListener("click", handleClick);
 
-    return null; // Component ini tidak render apapun
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  return null;
+}
+
+function isCrawler() {
+  const ua = navigator.userAgent.toLowerCase();
+  return (
+    ua.includes("googlebot") ||
+    ua.includes("bingbot") ||
+    ua.includes("slurp") ||
+    ua.includes("duckduckbot") ||
+    ua.includes("baiduspider") ||
+    ua.includes("yandex")
+  );
 }
