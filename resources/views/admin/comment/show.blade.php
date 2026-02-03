@@ -36,7 +36,7 @@
                 <hr class="horizontal dark my-4">
                 <div class="row text-sm">
                     <div class="col-md-6">
-                        <div class="mb-2"><strong>Series:</strong> adwd</div>
+                        <div class="mb-2"><strong>Series:</strong> {{ optional($comment->episode->series)->name ?? (optional($comment->series)->name ?? '-') }}</div>
                         <div><strong>Episode:</strong> {{ optional($comment->episode)->episode_number ?? '-' }}</div>
                     </div>
                     <div class="col-md-6">
