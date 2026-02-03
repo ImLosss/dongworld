@@ -20,7 +20,7 @@ class CommentController extends Controller
 
     public function datatable(Request $request)
     {
-        $query = Comment::with(['series', 'episode'])->latest();
+        $query = Comment::with(['series', 'episode.series'])->latest();
 
         return DataTables::of($query)
             ->addIndexColumn()
@@ -35,7 +35,11 @@ class CommentController extends Controller
                     . '</div>';
             })
             ->addColumn('content', fn (Comment $comment) => e(Str::limit($comment->content, 120)))
-            ->addColumn('series', fn (Comment $comment) => e(optional($comment->series)->name ?? '-'))
+            ->addColumn('series', function (Comment $comment) {
+                $seriesName = optional($comment->series)->name ?? '-';
+                if ($comment->episode && $comment->episode->series) $seriesName = $comment->episode->series->name;
+                return e($seriesName);
+            })
             ->addColumn('episode', fn (Comment $comment) => e(optional($comment->episode)->episode_number ?? '-'))
             ->addColumn('created_at', fn (Comment $comment) => optional($comment->created_at)->format('d M Y H:i'))
             ->addColumn('action', function (Comment $comment) {
