@@ -81,7 +81,7 @@ class CommentController extends Controller
      */
     public function show(string $id)
     {
-        $comment = Comment::with(['series', 'episode'])->findOrFail($id);
+        $comment = Comment::with(['series', 'episode.series'])->findOrFail($id);
 
         $relatedComments = Comment::with(['series', 'episode'])
             ->where('series_id', $comment->series_id)
