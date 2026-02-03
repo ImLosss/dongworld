@@ -40,7 +40,7 @@
                         <div><strong>Episode:</strong> {{ optional($comment->episode)->episode_number ?? '-' }}</div>
                     </div>
                     <div class="col-md-6">
-                        <div class="mb-2"><strong>Series ID:</strong> {{ $comment->series_id ?? '-' }}</div>
+                        <div class="mb-2"><strong>Series ID:</strong> {{ optional($comment->episode->series)->id ?? (optional($comment->series)->id ?? '-') }}</div>
                         <div><strong>Episode ID:</strong> {{ $comment->episode_id ?? '-' }}</div>
                     </div>
                 </div>
