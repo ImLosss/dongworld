@@ -22,6 +22,8 @@ export default function Navbar() {
         if (value) params.set("search", value);
         else params.delete("search");
 
+        params.delete("page");
+
         const qs = params.toString();
 
         if(active) setActive(false);

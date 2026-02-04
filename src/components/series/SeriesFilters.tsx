@@ -14,7 +14,7 @@ export default function SeriesFilters({ dataFilters }: { dataFilters: DataFilter
 
     const updateParam = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams.toString());
-        params.set("page", "1");
+        params.delete("page");
         if (key === "genre") {
             const current = params.get("genre");
             const list = current ? current.split(",").filter(Boolean) : [];
