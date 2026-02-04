@@ -14,20 +14,21 @@ export default function SeriesFilters({ dataFilters }: { dataFilters: DataFilter
 
     const updateParam = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams.toString());
+        params.set("page", "1");
         if (key === "genre") {
-        const current = params.get("genre");
-        const list = current ? current.split(",").filter(Boolean) : [];
+            const current = params.get("genre");
+            const list = current ? current.split(",").filter(Boolean) : [];
 
-        if (value) {
-            if (!list.includes(value)) list.push(value);
-            params.set("genre", list.join(","));
+            if (value) {
+                if (!list.includes(value)) list.push(value);
+                params.set("genre", list.join(","));
+            } else {
+                params.delete("genre");
+            }
         } else {
-            params.delete("genre");
+            if (value) params.set(key, value);
+            else params.delete(key);
         }
-    } else {
-        if (value) params.set(key, value);
-        else params.delete(key);
-    }
         router.push(`/series?${params.toString()}`);
     };
 

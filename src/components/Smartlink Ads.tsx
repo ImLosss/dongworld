@@ -9,19 +9,39 @@ export default function SmartlinkAd() {
     if (isCrawler()) return;
 
     const url = "https://www.effectivegatecpm.com/r78gx5zh?key=ddf94cbeb9a2045ab67820c3959ee7af";
-    const delay = 60 * 1000;
+    const minute = 10 * 1000;
+    const hour = 60 * 60 * 1000;
+    const maxPerHour = 3;
 
     function isCooldown() {
-      const lastClick = localStorage.getItem("smartlink_last_click");
-      if (!lastClick) return false;
-      return Date.now() - parseInt(lastClick) < delay;
+      const raw = localStorage.getItem("smartlink_clicks");
+      const lastClickRaw = localStorage.getItem("smartlink_last_click");
+      const now = Date.now();
+
+      const clicks: number[] = raw ? JSON.parse(raw) : [];
+      const recent = clicks.filter((t) => now - t < hour);
+
+      localStorage.setItem("smartlink_clicks", JSON.stringify(recent));
+
+      const lastClick = lastClickRaw ? parseInt(lastClickRaw) : 0;
+      const inMinuteCooldown = now - lastClick < minute;
+      const exceededHourly = recent.length >= maxPerHour;
+
+      return inMinuteCooldown || exceededHourly;
     }
 
     function handleClick() {
       if (isCooldown()) return;
 
       window.open(url, "_blank");
-      localStorage.setItem("smartlink_last_click", Date.now().toString());
+
+      const raw = localStorage.getItem("smartlink_clicks");
+      const now = Date.now();
+      const clicks: number[] = raw ? JSON.parse(raw) : [];
+      const recent = clicks.filter((t) => now - t < hour);
+      recent.push(now);
+      localStorage.setItem("smartlink_clicks", JSON.stringify(recent));
+      localStorage.setItem("smartlink_last_click", now.toString());
     }
 
     document.addEventListener("click", handleClick);
