@@ -6,9 +6,9 @@ import Link from "next/link";
 export default function EpisodeSectionDesktop({ slug, slugSeries, initialEpisodes, selectedEpisode }: { slug: string, slugSeries: string, initialEpisodes: any, selectedEpisode: any }) {
     const getSavedPage = () => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem(`episode_page_${slug}`);
+            const saved = localStorage.getItem(`episode_page_${slugSeries}`);
             if(saved && saved > initialEpisodes.last_page) {
-                localStorage.setItem(`episode_page_${slug}`, initialEpisodes.last_page.toString());
+                localStorage.setItem(`episode_page_${slugSeries}`, initialEpisodes.last_page.toString());
                 return initialEpisodes.last_page;
             }
             return saved ? parseInt(saved) : initialEpisodes.current_page;
