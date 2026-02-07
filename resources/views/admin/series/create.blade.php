@@ -282,7 +282,7 @@
                                                         data-rating="${item.score}"
                                                         data-synopsis="${item.synopsis}"
                                                         data-aliases="${item.titles.map(t => t.title).join('; ')}"
-                                                        data-thumbnail="${item.images.webp.image_url}"
+                                                        data-thumbnail="${item.images.webp.large_image_url || item.images.jpg.image_url}"
                                                         data-studios="${item.studios.map(s => s.name).join(', ')}"
                                                         data-status="${item.status == "Finished Airing" ? "complete" : "ongoing"}"
                                                         data-type="${item.type}"
