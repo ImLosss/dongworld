@@ -16,8 +16,12 @@ type HistoryItem = {
 type HistoryMap = Record<string, HistoryItem>;
 
 export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
-    const reversedLinks = [...(detail.links || [])].reverse();
-    const [selectedServer, setSelectedServer] = useState(reversedLinks?.[0]?.url || "");
+    const sortedLinks = [...(detail.links || [])].sort((a: any, b: any) => {
+        const aOkru = (a.server?.name || "").toLowerCase() === "okru";
+        const bOkru = (b.server?.name || "").toLowerCase() === "okru";
+        return Number(bOkru) - Number(aOkru);
+    });
+    const [selectedServer, setSelectedServer] = useState(sortedLinks?.[0]?.url || "");
     const [saved, setSaved] = useState(false);
 
     const handleServerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -93,7 +97,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                             value={selectedServer}
                             onChange={handleServerChange}
                         >
-                            {reversedLinks.map((link: any) => (
+                            {sortedLinks.map((link: any) => (
                                 <option key={link.id} value={link.url}>
                                     {link.server.name}
                                 </option>
