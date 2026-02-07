@@ -111,7 +111,7 @@ export default async function StreamPage({ params } : Params) {
                     <section className="dl-donghua-details">
                         <div className="dl-details-content">
                             <div className="dl-details-poster">
-                                <Image src={process.env.BASE_URL_BACKEND + detail.series.thumbnail} alt={detail.series.name} width={100} height={100} />
+                                <Image src={process.env.BASE_URL_BACKEND + detail.series.thumbnail} alt={detail.series.name} width={600} height={600} priority />
                             </div>
                             <div className="dl-details-info">
                                 <h1 className="dl-details-title">{detail.series.name}</h1>
