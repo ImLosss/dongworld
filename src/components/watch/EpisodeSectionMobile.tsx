@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEpisode }: { slugSeries: string, initialEpisodes: any, selectedEpisode: any }) {
   const pageSize = 25;
@@ -20,7 +20,7 @@ export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEp
     };
   });
 
-  const getSavedPage = (totalPages: number) => {
+  const getSavedPage = useCallback((totalPages: number) => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(storageKey);
       const savedPage = saved ? parseInt(saved) : 1;
@@ -31,7 +31,7 @@ export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEp
       return validPage;
     }
     return 1;
-  };
+  }, [storageKey]);
 
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEp
 
   useEffect(() => {
     setPage(getSavedPage(totalPages));
-  }, [slugSeries, totalPages]);
+  }, [slugSeries, totalPages, getSavedPage]);
 
   const startIndex = (page - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, sortedEpisodes.length);

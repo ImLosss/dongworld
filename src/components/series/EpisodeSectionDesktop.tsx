@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 
@@ -22,7 +22,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
         };
     });
 
-    const getSavedPage = (totalPages: number) => {
+    const getSavedPage = useCallback((totalPages: number) => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem(storageKey);
             const savedPage = saved ? parseInt(saved) : 1;
@@ -33,7 +33,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
             return validPage;
         }
         return 1;
-    };
+    }, [storageKey]);
 
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
 
     useEffect(() => {
         setPage(getSavedPage(totalPages));
-    }, [slug, totalPages]);
+    }, [slug, totalPages, getSavedPage]);
 
     const startIndex = (page - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize, sortedEpisodes.length);
