@@ -44,10 +44,11 @@ class EpisodeController extends Controller
                 Rule::unique('episodes', 'episode_number')
                     ->where(fn ($q) => $q->where('series_id', $series->id)),
             ],
-            'download_links' => ['nullable', 'string'],
+            'downloads' => ['nullable', 'array'],
+            'downloads.*.link' => ['nullable', 'string'],
+            'downloads.*.quality' => ['nullable', 'string'],
+            'downloads.*.server' => ['nullable', 'string'],
         ]);
-
-        $validated['download_links'] = array_filter(array_map('trim', explode("\n", $validated['download_links'] ?? '')));
 
         // slug logic
         $prefix = Str::lower(Str::random(5));
@@ -64,7 +65,6 @@ class EpisodeController extends Controller
         $episode = Episode::create([
             'series_id' => $series->id,
             'episode_number' => $validated['episode_number'] ?? null,
-            'download_links' => $validated['download_links'] ?? null,
             'slug' => $slug,
             'user_id' => $request->user()->id,
         ]);
@@ -82,6 +82,27 @@ class EpisodeController extends Controller
                     'url' => $url,
                 ]);
             }
+        }
+
+        $downloadsInput = $request->input('downloads', []);
+        $downloads = collect($downloadsInput)
+            ->map(function ($row) {
+                return [
+                    'link' => trim($row['link'] ?? ''),
+                    'quality' => trim($row['quality'] ?? ''),
+                    'server' => trim($row['server'] ?? ''),
+                ];
+            })
+            ->filter(fn ($row) => $row['link'] !== '')
+            ->values();
+
+        foreach ($downloads as $row) {
+            $episode->downloads()->create([
+                'episode_id' => $episode->id,
+                'link' => $row['link'],
+                'quality' => $row['quality'] !== '' ? $row['quality'] : '1080P',
+                'server' => $row['server'] !== '' ? $row['server'] : 'drive',
+            ]);
         }
 
 
@@ -104,15 +125,10 @@ class EpisodeController extends Controller
      */
     public function edit(Series $series, Episode $episode)
     {
-        $downloadLinksValue =
-        is_array($episode->download_links)
-            ? implode("\n", $episode->download_links)
-            : (is_string($episode->download_links) && $episode->download_links !== ''
-                ? $episode->download_links
-                : "");
         $servers = Server::orderBy('name')->get();
         $links = $episode->links()->get()->keyBy('server_id');
-        return view('admin.episode.edit', compact('series','episode','servers','links', 'downloadLinksValue'));
+        $downloads = $episode->downloads()->get();
+        return view('admin.episode.edit', compact('series','episode','servers','links','downloads'));
     }
 
     /**
@@ -140,15 +156,17 @@ class EpisodeController extends Controller
             ];
         }
 
-        $validated = $request->validate($rules);
+        $rules['downloads'] = ['nullable', 'array'];
+        $rules['downloads.*.link'] = ['nullable', 'string'];
+        $rules['downloads.*.quality'] = ['nullable', 'string'];
+        $rules['downloads.*.server'] = ['nullable', 'string'];
 
-        $download_links = array_filter(array_map('trim', explode("\n", $request->input('download_links') ?? '')));
+        $validated = $request->validate($rules);
 
         $episode->update([
             'episode_number' => $validated['episode_number'] ?? null,
             'slug' => $slug,
             'user_id' => $request->user()->id,
-            'download_links' => $download_links ?? null,
         ]);
 
         // update/create links per server (optional)
@@ -171,6 +189,28 @@ class EpisodeController extends Controller
                     $existing->delete();
                 }
             }
+        }
+
+        $downloadsInput = $request->input('downloads', []);
+        $downloads = collect($downloadsInput)
+            ->map(function ($row) {
+                return [
+                    'link' => trim($row['link'] ?? ''),
+                    'quality' => trim($row['quality'] ?? ''),
+                    'server' => trim($row['server'] ?? ''),
+                ];
+            })
+            ->filter(fn ($row) => $row['link'] !== '')
+            ->values();
+
+        $episode->downloads()->delete();
+        foreach ($downloads as $row) {
+            $episode->downloads()->create([
+                'episode_id' => $episode->id,
+                'link' => $row['link'],
+                'quality' => $row['quality'] !== '' ? $row['quality'] : '1080P',
+                'server' => $row['server'] !== '' ? $row['server'] : 'drive',
+            ]);
         }
 
         return redirect()->route('episode.index', $series->id)

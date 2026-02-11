@@ -27,7 +27,7 @@ class SeriesController extends Controller
 
         return response()->json([
             'series' => $series,
-            'episodes' => $series->episodes()->orderBy('episode_number')->paginate(25),
+            'episodes' => $series->episodes()->orderBy('episode_number')->get(),
             'comments' => $comments ? $comments : []
         ]);
     }

@@ -36,23 +36,67 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="episode_number" class="form-control-label">Download Links</label>
-<textarea
-  class="form-control @error('download_links') border border-danger rounded-3 @enderror"
-  name="download_links"
-  placeholder="https://link1
-https://link2
-https://link3"
-  autofocus
->{{ old('download_links', $downloadLinksValue) }}</textarea>                        @error('download_links')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
             </div>
             @endif
+
+            @php
+                $oldDownloads = old('downloads');
+                if (!is_array($oldDownloads) || count($oldDownloads) === 0) {
+                    $oldDownloads = $downloads->map(function ($row) {
+                        return [
+                            'link' => $row->link,
+                            'quality' => $row->quality,
+                            'server' => $row->server,
+                        ];
+                    })->toArray();
+                }
+                if (!is_array($oldDownloads) || count($oldDownloads) === 0) {
+                    $oldDownloads = [['link' => '', 'quality' => '', 'server' => '']];
+                }
+            @endphp
+
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-control-label">Download Links (Server & Resolusi)</label>
+                </div>
+                <div class="col-12" id="downloads-container">
+                    @foreach($oldDownloads as $i => $row)
+                    <div class="row align-items-end download-row" data-index="{{ $i }}">
+                        <div class="col-md-6">
+                            <div class="form-group has-validation">
+                                <label class="form-control-label">Link</label>
+                                <input class="form-control" type="text" name="downloads[{{ $i }}][link]" placeholder="https://..." value="{{ $row['link'] ?? '' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group has-validation">
+                                <label class="form-control-label">Resolusi</label>
+                                <input class="form-control" type="text" name="downloads[{{ $i }}][quality]" placeholder="1080P" value="{{ $row['quality'] ?? '' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group has-validation">
+                                <label class="form-control-label">Server</label>
+                                <input class="form-control" type="text" name="downloads[{{ $i }}][server]" placeholder="drive" value="{{ $row['server'] ?? '' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-download" title="Hapus">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                <div class="col-12 mt-2">
+                    <button type="button" id="add-download" class="btn btn-outline-dark btn-sm">
+                        <i class="fa-solid fa-plus"></i> Tambah Link
+                    </button>
+                    @error('downloads')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-12">
@@ -77,4 +121,71 @@ https://link3"
 @endsection
 
 @section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('downloads-container');
+        const addBtn = document.getElementById('add-download');
+
+        function nextIndex() {
+            const rows = container.querySelectorAll('.download-row');
+            if (!rows.length) return 0;
+            const last = rows[rows.length - 1];
+            return Number(last.getAttribute('data-index')) + 1;
+        }
+
+        function buildRow(index) {
+            const row = document.createElement('div');
+            row.className = 'row align-items-end download-row';
+            row.setAttribute('data-index', String(index));
+            row.innerHTML = `
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label class="form-control-label">Link</label>
+                        <input class="form-control" type="text" name="downloads[${index}][link]" placeholder="https://..." value="">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group has-validation">
+                        <label class="form-control-label">Resolusi</label>
+                        <input class="form-control" type="text" name="downloads[${index}][quality]" placeholder="1080P" value="">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group has-validation">
+                        <label class="form-control-label">Server</label>
+                        <input class="form-control" type="text" name="downloads[${index}][server]" placeholder="drive" value="">
+                    </div>
+                </div>
+                <div class="col-md-1 text-end">
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-download" title="Hapus">
+                        <i class="fa-solid fa-minus"></i>
+                    </button>
+                </div>
+            `;
+            return row;
+        }
+
+        function ensureAtLeastOne() {
+            const rows = container.querySelectorAll('.download-row');
+            if (!rows.length) {
+                container.appendChild(buildRow(0));
+            }
+        }
+
+        addBtn.addEventListener('click', function () {
+            const idx = nextIndex();
+            container.appendChild(buildRow(idx));
+        });
+
+        container.addEventListener('click', function (e) {
+            const btn = e.target.closest('.remove-download');
+            if (!btn) return;
+            const row = btn.closest('.download-row');
+            if (row) row.remove();
+            ensureAtLeastOne();
+        });
+
+        ensureAtLeastOne();
+    });
+</script>
 @endsection

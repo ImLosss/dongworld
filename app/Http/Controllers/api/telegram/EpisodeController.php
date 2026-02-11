@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\telegram;
 
 use App\Http\Controllers\Controller;
+use App\Models\Download;
 use App\Models\Episode;
 use App\Models\Link;
 use App\Models\Series;
@@ -27,19 +28,20 @@ class EpisodeController extends Controller
 
         $series = Series::findOrFail($request->input('series_id'));
 
-        $downloadLinks = [$request->input('drive')];
-
-        // buang yang null / empty string
-        $downloadLinks = array_filter($downloadLinks, fn ($v) => $v !== null && $v !== '');
-
         $prefix = Str::lower(Str::random(5));
 
         $episode = Episode::create([
             'series_id' => $request->input('series_id'),
             'episode_number' => $request->input('episode_number'),
-            'download_links' => $downloadLinks,
             'slug' => $prefix . '-' . $series->slug . '-' . $request->input('episode_number'),
             'user_id' => null
+        ]);
+
+        Download::create([
+            'episode_id' => $episode->id,
+            'link' => $request->input('drive'),
+            'quality' => '1080P',
+            'server' => 'drive'
         ]);
 
         $series->update(['updated_at' => now()]);

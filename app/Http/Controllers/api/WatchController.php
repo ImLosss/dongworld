@@ -15,6 +15,7 @@ class WatchController extends Controller
             'links.server',
             'user',
             'comments',
+            'downloads',
         ])->where('slug', $slug)->first();
 
         if (!$detailEpisode) {
@@ -25,7 +26,7 @@ class WatchController extends Controller
 
         $episodes = Episode::where('series_id', $detailEpisode->series_id)
             ->orderBy('episode_number')
-            ->paginate(25);
+            ->get();
 
         $nextEpisode = Episode::where('series_id', $detailEpisode->series_id)
             ->where('episode_number', '>', $detailEpisode->episode_number)
