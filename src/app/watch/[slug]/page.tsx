@@ -101,28 +101,6 @@ export default async function StreamPage({ params } : Params) {
                 <div className="col-12 col-lg-8">
                     {/* Stream Player Section */}
                     <StreamPlayer detail={detail} nextEpisodeSlug={nextEpisodeSlug} prevEpisodeSlug={prevEpisodeSlug} />
-                    {/* Donghua Details */}
-                    <section className="dl-donghua-details">
-                        <div className="dl-details-content">
-                            <div className="dl-details-poster">
-                                <Image src={process.env.BASE_URL_BACKEND + detail.series.thumbnail} alt={detail.series.name} width={600} height={600} priority />
-                            </div>
-                            <div className="dl-details-info">
-                                <h1 className="dl-details-title">{detail.series.name}</h1>
-                                <div className="dl-details-meta">
-                                    <span><i className="fas fa-star"></i>{detail.series.rating ? detail.series.rating : "N/A"}</span>
-                                    <span><i className="fas fa-tags"></i>{detail.series.genres_string ? detail.series.genres_string : "Unknown"}</span>
-                                    <span><i className="fas fa-calendar"></i>{detail.series.release_date ? detail.series.release_date : "Unknown"}</span>
-                                    <span><i className="fas fa-video"></i>{detail.series.episodes_max_episode_number || 0}/{detail.series.total_episodes ? detail.series.total_episodes : "?"} Episode</span>
-                                    <span><i className="fas fa-eye"></i>{detail.series.views}</span>
-                                </div>
-                                <div className="dl-details-synopsis">
-                                    <h3>Sinopsis</h3>
-                                    <p>{detail.series.synopsis}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                     {/* Download Section */}
                     {detail.downloads.length > 0 && (
                         <section className="dl-download-section">
@@ -149,6 +127,28 @@ export default async function StreamPage({ params } : Params) {
                         </section>
                     )}
                     <EpisodeSectionMobile slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
+                    {/* Donghua Details */}
+                    <section className="dl-donghua-details">
+                        <div className="dl-details-content">
+                            <div className="dl-details-poster">
+                                <Image src={process.env.BASE_URL_BACKEND + detail.series.thumbnail} alt={detail.series.name} width={600} height={600} priority />
+                            </div>
+                            <div className="dl-details-info">
+                                <h1 className="dl-details-title">{detail.series.name}</h1>
+                                <div className="dl-details-meta">
+                                    <span><i className="fas fa-star"></i>{detail.series.rating ? detail.series.rating : "N/A"}</span>
+                                    <span><i className="fas fa-tags"></i>{detail.series.genres_string ? detail.series.genres_string : "Unknown"}</span>
+                                    <span><i className="fas fa-calendar"></i>{detail.series.release_date ? detail.series.release_date : "Unknown"}</span>
+                                    <span><i className="fas fa-video"></i>{detail.series.episodes_max_episode_number || 0}/{detail.series.total_episodes ? detail.series.total_episodes : "?"} Episode</span>
+                                    <span><i className="fas fa-eye"></i>{detail.series.views}</span>
+                                </div>
+                                <div className="dl-details-synopsis">
+                                    <h3>Sinopsis</h3>
+                                    <p>{detail.series.synopsis}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     {/* Comments Section */}
                     <CommentSection comments={comments} slug={slug} />
 
