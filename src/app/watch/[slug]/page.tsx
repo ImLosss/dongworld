@@ -148,7 +148,7 @@ export default async function StreamPage({ params } : Params) {
                             </div>
                         </section>
                     )}
-                    <EpisodeSectionMobile slug={slug} slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
+                    <EpisodeSectionMobile slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     {/* Comments Section */}
                     <CommentSection comments={comments} slug={slug} />
 
@@ -157,7 +157,7 @@ export default async function StreamPage({ params } : Params) {
                 
                 <div className="col-12 col-lg-4">
                     <div className="dl-episode-sidebar d-none d-lg-block">
-                        <EpisodeSectionDesktop slug={slug} slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
+                        <EpisodeSectionDesktop slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     </div>
 
                     {/* Watch History Section */}
