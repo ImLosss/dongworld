@@ -633,6 +633,53 @@
     border-radius: 6px;
 }
 
+.dl-episode-page-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.dl-episode-page-chip {
+    background-color: var(--darker-color);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--light-color);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    transition: var(--transition);
+}
+
+.dl-episode-page-chip:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.dl-episode-page-chip.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+@media (max-width: 576px) {
+    .dl-episode-page-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+    }
+
+    .dl-episode-page-chips::-webkit-scrollbar {
+        display: none;
+    }
+
+    .dl-episode-page-chip {
+        flex: 0 0 auto;
+        font-size: 0.7rem;
+    }
+}
+
 /* Desktop Episode Scroll */
 .dl-episode-list-container {
     position: relative;

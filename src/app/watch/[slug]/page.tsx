@@ -79,12 +79,6 @@ export default async function StreamPage({ params } : Params) {
     const nextEpisodeSlug = data.nextEpisodeSlug;
     const prevEpisodeSlug = data.prevEpisodeSlug;
 
-    const downloadLinks: string[] = Array.isArray(detail.download_links)
-    ? detail.download_links
-    : detail.download_links
-        ? JSON.parse(detail.download_links)
-        : [];
-
     fetch(`${process.env.BASE_URL_BACKEND}api/view-series/${detail.series.slug}`, {
         method: 'POST',
         headers: {
@@ -130,25 +124,25 @@ export default async function StreamPage({ params } : Params) {
                         </div>
                     </section>
                     {/* Download Section */}
-                    {downloadLinks.length > 0 && (
+                    {detail.downloads.length > 0 && (
                         <section className="dl-download-section">
                             <div className="dl-download-header">
                                 <h2>Download</h2>
                                 <span className="dl-download-meta">
-                                    Episode {detail.episode_number} 1080p
+                                    Episode {detail.episode_number}
                                 </span>
                             </div>
                             <div className="dl-download-list">
-                                {downloadLinks.map((link: string, idx: number) => (
+                                {detail.downloads.map((download: any, idx: number) => (
                                     <a
                                         key={idx}
-                                        href={link}
+                                        href={download.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="dl-download-item"
                                     >
                                         <i className="fas fa-download"></i>
-                                        <span>Link {idx + 1}</span>
+                                        <span>{download.quality} | {download.server}</span>
                                     </a>
                                 ))}
                             </div>
