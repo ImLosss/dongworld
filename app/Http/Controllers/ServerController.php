@@ -31,6 +31,7 @@ class ServerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'note' => 'nullable|string',
         ]);
 
         Server::create($validated);
@@ -63,6 +64,7 @@ class ServerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'note' => 'nullable|string',
         ]);
 
         $server->update($validated);
