@@ -96,6 +96,7 @@ class SeriesController extends Controller
             'release_date' => 'nullable|string',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'genres' => 'nullable|array',
+            'folder_id' => 'nullable|string|max:255',
             'genres.*' => 'exists:genres,id',
         ]);
         $validated['aliases'] = array_filter(array_map('trim', explode(';', $request->aliases)));
@@ -171,6 +172,7 @@ class SeriesController extends Controller
             'total_episodes' => 'nullable|numeric|min:0',
             'release_date' => 'nullable|string',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'folder_id' => 'nullable|string|max:255',
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
         ]);

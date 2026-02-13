@@ -164,6 +164,17 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="folder_id" class="form-control-label">Folder ID (drive)</label>
+                        <input class="form-control @error('folder_id') border border-danger rounded-3 @enderror" type="text" placeholder="Folder ID" name="folder_id" value="{{ old('folder_id') }}">
+                        @error('folder_id')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12">
                     <div class="form-group has-validation">
                         <label for="synopsis" class="form-control-label">Sinopsis</label>
