@@ -37,7 +37,7 @@
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="note" class="form-control-label">Note</label>
-                        <input class="form-control @error('note') border border-danger rounded-3 @enderror" type="text" placeholder="Note" name="note" value="{{ old('note') }}" autofocus>
+                        <input class="form-control @error('note') border border-danger rounded-3 @enderror" type="text" placeholder="Note" name="note" value="{{ old('note', $server->note) }}" autofocus>
                         @error('note')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
