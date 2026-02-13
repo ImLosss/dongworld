@@ -18,6 +18,25 @@
     color: var(--primary-color);
 }
 
+.dl-server-notification {
+    background-color: rgba(71, 184, 255, 0.1);
+    border-left: 4px solid rgba(23, 166, 255, 0.649);
+    padding: 12px 20px;
+    margin-top: 10px;
+    border-radius: 0 4px 4px 0;
+}
+
+.dl-server-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gray-color);
+}
+
+.dl-server-content i {
+    color: rgba(23, 166, 255, 0.649);
+}
+
 /* Stream Player Section */
 .dl-stream-player-section {
     margin-bottom: 10px;

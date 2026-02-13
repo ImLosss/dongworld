@@ -116,6 +116,17 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                     </div>
                 </div>
             </div>
+            {/* Server Note */}
+            {sortedLinks.map((link: any) => (
+                link.url === selectedServer && link.server.note && (
+                    <div key={link.id} className="dl-server-notification">
+                        <div className="dl-server-content">
+                            <i className="fas fa-info-circle"></i>
+                            <span>{link.server.note}</span>
+                        </div>
+                    </div>
+                )
+            ))}
         </section>
     );
 }
