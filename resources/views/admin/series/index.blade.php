@@ -66,6 +66,7 @@
             processing: true,
             serverSide: true,
             ordering: false,
+            pageLength: 50,
             ajax: {
         url: "{{ route('series.datatable') }}",
                 type: 'GET'
