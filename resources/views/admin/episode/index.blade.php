@@ -43,6 +43,7 @@
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Episode</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Server</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Dibuat</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Link Episode</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Aksi</th>
                             </tr>
                         </thead>
@@ -71,6 +72,7 @@
                 { data: 'episode', name: 'episode', className: 'text-sm' },
                 { data: 'server', name: 'server', className: 'text-sm', orderable: false, searchable: false },
                 { data: 'created_at', name: 'created_at', className: 'text-sm' },
+                { data: 'link', name: 'link', className: 'text-sm', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-sm' },
             ],
             language: {

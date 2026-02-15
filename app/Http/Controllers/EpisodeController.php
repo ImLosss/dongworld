@@ -253,6 +253,9 @@ class EpisodeController extends Controller
                 return $e->links->map(fn($l) => optional($l->server)->name)->filter()->unique()->implode(', ') ? : 'Belum';
             })
             ->editColumn('created_at', fn (Episode $e) => optional($e->created_at)?->format('d M Y H:i'))
+            ->addColumn('link', function (Episode $e) {
+                return '<a href="https://dongworld.top/watch/' . $e->slug . '" target="_blank">Lihat Episode</a>';
+            })
             ->addColumn('action', function (Episode $data) use ($user, $series) {
                 $update = '';
                 $delete = '';
@@ -301,7 +304,7 @@ class EpisodeController extends Controller
 
                 return $update . $delete . $form . ($serverHtml ? $html : '');
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'link'])
             ->toJson();
     }
 }
