@@ -40,8 +40,7 @@
                     <table id="episodesTable" class="table align-items-center mb-0 w-100">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Nama</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Episode</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Server</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Dibuat</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Aksi</th>
@@ -69,9 +68,8 @@
                 type: 'GET'
             },
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-sm' },
-        { data: 'name', name: 'name', className: 'text-sm' },
-        { data: 'server', name: 'server', className: 'text-sm', orderable: false, searchable: false },
+                { data: 'episode', name: 'episode', className: 'text-sm' },
+                { data: 'server', name: 'server', className: 'text-sm', orderable: false, searchable: false },
                 { data: 'created_at', name: 'created_at', className: 'text-sm' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-sm' },
             ],
@@ -83,5 +81,75 @@
             },
         });
     });
+
+    $(document).on('click', '.js-delete-server-link', function (e) {
+        e.preventDefault();
+
+        const $el = $(this);
+        const linkId = $el.data('link-id');
+
+        $.ajax({
+            url: "{{ url('links') }}/" + linkId,
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        text: response.message,
+                        icon: response.alert,
+                        timer: 1500,
+                        showConfirmButton: false,
+                        timerProgressBar: true
+                    })
+                    $('#episodesTable').DataTable().ajax.reload(null, false);
+                } else {
+                    Swal.fire({
+                        text: 'Gagal menghapus link server.',
+                        icon: 'error',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        timerProgressBar: true
+                    })
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    text: 'Terjadi kesalahan saat menghapus link server.',
+                    icon: 'error',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    timerProgressBar: true
+                })
+            }
+        });
+    })
 </script>
+
+<style>
+  /* Perbesar area klik tanpa membesarkan icon */
+  .episode-dropdown-toggle{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;          /* hit area */
+    height: 34px;         /* hit area */
+    padding: 8px;         /* hit area */
+    border-radius: 8px;
+    line-height: 1;
+  }
+  .episode-dropdown-toggle:hover,
+  .episode-dropdown-toggle:focus{
+    background: rgba(0,0,0,.06);
+    outline: none;
+  }
+
+  /* Lebar dropdown mengikuti konten (override Bootstrap min-width: 10rem) */
+  .episode-dropdown-menu{
+    min-width: unset !important;
+    width: max-content;
+    white-space: nowrap;
+  }
+</style>
 @endsection

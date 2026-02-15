@@ -9,6 +9,7 @@ use App\Http\Controllers\ServerController;
 use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -60,4 +61,7 @@ Route::group([
     Route::resource('comments', CommentController::class)->only(['index', 'show', 'destroy'])->names('comments');
     Route::post('comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
     // endRoute
+
+    // routeLinks
+    Route::delete('links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
 });

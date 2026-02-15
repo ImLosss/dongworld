@@ -241,14 +241,13 @@ class EpisodeController extends Controller
      */
     public function datatable(Request $request, Series $series)
     {
-        $query = Episode::with(['links.server'])->where('series_id', $series->id);
+        $query = Episode::with(['links.server'])->where('series_id', $series->id)->orderBy('episode_number', 'desc');
         $user = $request->user();
 
         return DataTables::of($query)
-            ->addIndexColumn()
-            ->addColumn('name', function (Episode $e) use ($series) {
+            ->addColumn('episode', function (Episode $e) use ($series) {
                 if ($series->type === 'movie') return $series->name . ' (Movie)';
-                return $series->name . ' - Episode ' . ($e->episode_number ?? '-');
+                return $e->episode_number ?? '-';
             })
             ->addColumn('server', function (Episode $e) {
                 return $e->links->map(fn($l) => optional($l->server)->name)->filter()->unique()->implode(', ') ? : 'Belum';
@@ -257,6 +256,33 @@ class EpisodeController extends Controller
             ->addColumn('action', function (Episode $data) use ($user, $series) {
                 $update = '';
                 $delete = '';
+
+                $dropdownId = 'dropdownTable_' . $data->id;
+                $serverHtml = '';
+                $data->links->each(function ($link) use (&$serverHtml) {
+                    $serverHtml .=
+                        '<a class="dropdown-item px-2 py-1 js-delete-server-link"'
+                        . ' href="#"'
+                        . ' data-link-id="' . $link->id . '">'
+                        . 'Delete ' . optional($link->server)->name
+                        . '</a>';
+                });
+                $html = <<<HTML
+                    <div class="btn-group dropstart ms-2">
+                        <a class="episode-dropdown-toggle cursor-pointer"
+                        id="{$dropdownId}"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        role="button">
+                            <i class="fa fa-ellipsis-v text-secondary" aria-hidden="true"></i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end episode-dropdown-menu px-2 py-2"
+                            aria-labelledby="{$dropdownId}">
+                            {$serverHtml}
+                        </div>
+                    </div>
+                HTML;
 
                 if ($user && $user->can('episodeUpdate')) {
                     $update = '<a href="' . route('episode.edit', [$series->id, $data->id]) . '" data-bs-toggle="tooltip" title="Edit">'
@@ -273,7 +299,7 @@ class EpisodeController extends Controller
                       . method_field('DELETE')
                       . '</form>';
 
-                return $update . $delete . $form;
+                return $update . $delete . $form . ($serverHtml ? $html : '');
             })
             ->rawColumns(['action'])
             ->toJson();
