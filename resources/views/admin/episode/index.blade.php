@@ -130,28 +130,37 @@
 </script>
 
 <style>
-  /* Perbesar area klik tanpa membesarkan icon */
-  .episode-dropdown-toggle{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;          /* hit area */
-    height: 34px;         /* hit area */
-    padding: 8px;         /* hit area */
-    border-radius: 8px;
-    line-height: 1;
-  }
-  .episode-dropdown-toggle:hover,
-  .episode-dropdown-toggle:focus{
-    background: rgba(0,0,0,.06);
-    outline: none;
-  }
+    /* Perbesar area klik tanpa membesarkan icon */
+    .episode-dropdown-toggle{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;          /* hit area */
+        height: 34px;         /* hit area */
+        padding: 8px;         /* hit area */
+        border-radius: 8px;
+        line-height: 1;
+    }
+    .episode-dropdown-toggle:hover,
+    .episode-dropdown-toggle:focus{
+        background: rgba(0,0,0,.06);
+        outline: none;
+    }
 
-  /* Lebar dropdown mengikuti konten (override Bootstrap min-width: 10rem) */
-  .episode-dropdown-menu{
-    min-width: unset !important;
-    width: max-content;
-    white-space: nowrap;
-  }
+    /* Lebar dropdown mengikuti konten (override Bootstrap min-width: 10rem) */
+    .episode-dropdown-menu{
+        min-width: unset !important;
+        width: max-content;
+        white-space: nowrap;
+    }
+
+    #episodesTable tbody tr:hover > * {
+        background-color: rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* Opsional: ubah cursor biar terasa interaktif */
+    #episodesTable tbody tr:hover {
+        cursor: pointer;
+    }
 </style>
 @endsection
