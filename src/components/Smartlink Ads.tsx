@@ -8,7 +8,7 @@ export default function SmartlinkAd() {
     // ❗ Jangan jalankan untuk crawler
     if (isCrawler()) return;
 
-    const url = "https://www.effectivegatecpm.com/r78gx5zh?key=ddf94cbeb9a2045ab67820c3959ee7af";
+    const url = "https://www.effectivegatecpm.com/xx3z06hf1?key=bd214403dcbfedf7a86ad57ef67b0d9f";
     const minute = 10 * 1000;
     const hour = 60 * 60 * 1000;
     const maxPerHour = 3;

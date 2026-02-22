@@ -9,6 +9,8 @@ import RecommendationSection from "@/components/series/RecommendationSection";
 import CommentSection from "@/components/series/CommentSection";
 import HistorySection from "@/components/home/HistorySection";
 import { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
+import StreamNotificationRotator from "@/components/StreamNotificationRotater";
+import { Fragment } from "react/jsx-dev-runtime";
 
 interface Params {
   params: { slug: string };
@@ -78,12 +80,22 @@ export default async function SeriesDetail({ params }: Params) {
   return (
     <>
       {/* Stream Notification */}
-      <div className="dl-stream-notification">
-        <div className="dl-notification-content">
-          <i className="fas fa-exclamation-circle"></i>
-          <span>Join channel telegram kami agar tidak ketinggalan update dan pemberitahuan lainnya, <Link href="https://t.me/dongworld" target="_blank">klik disini</Link></span>
-        </div>
-      </div>
+      <StreamNotificationRotator
+        intervalMs={15_000}
+        messages={[
+          <Fragment key="ads-warning">
+            Skip iklan dengan menutup tab/pop-up iklan, lalu kembali ke halaman ini untuk
+            melanjutkan menonton. Kami hanya membatasi iklan muncul 3x setiap 1 jam.
+          </Fragment>,
+          <Fragment key="ads-warning">
+            Join channel telegram kami agar tidak ketinggalan update dan pemberitahuan lainnya,{" "}
+            <Link href="https://t.me/dongworld" target="_blank">
+              klik disini
+            </Link>
+            .
+          </Fragment>,
+        ]}
+      />
       <div className="row">
         <div className="col-12 col-lg-8">
           <section className="dl-breadcrumb-section">

@@ -9,6 +9,9 @@ import CommentSection from "@/components/watch/CommentSection";
 import HistorySection from "@/components/home/HistorySection";
 import RecommendationSection from "@/components/series/RecommendationSection";
 import { Metadata } from "next";
+import StreamNotificationRotator from "@/components/StreamNotificationRotater";
+import { Fragment } from "react/jsx-dev-runtime";
+import Link from "next/dist/client/link";
 
 interface Params {
   params: { slug: string };
@@ -91,12 +94,22 @@ export default async function StreamPage({ params } : Params) {
     return (
         <>
             {/* Stream Notification */}
-            <div className="dl-stream-notification">
-                <div className="dl-notification-content">
-                    <i className="fas fa-exclamation-circle"></i>
-                    <span>Ganti server jika video tidak dapat diputar. Server kami tidak menyimpan file video apapun.</span>
-                </div>
-            </div>
+            <StreamNotificationRotator
+                intervalMs={15_000}
+                messages={[
+                <Fragment key="ads-warning">
+                    Skip iklan dengan menutup tab/pop-up iklan, lalu kembali ke halaman ini untuk
+                    melanjutkan menonton. Kami hanya membatasi iklan muncul 3x setiap 1 jam.
+                </Fragment>,
+                <Fragment key="ads-warning">
+                    Join channel telegram kami agar tidak ketinggalan update dan pemberitahuan lainnya,{" "}
+                    <Link href="https://t.me/dongworld" target="_blank">
+                    klik disini
+                    </Link>
+                    .
+                </Fragment>,
+                ]}
+            />
             <div className="row">
                 <div className="col-12 col-lg-8">
                     {/* Stream Player Section */}

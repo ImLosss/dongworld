@@ -9,7 +9,7 @@ import Script from "next/script";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { Suspense } from "react";
-// import SmartlinkAd from "@/components/Smartlink Ads";
+import SmartlinkAd from "@/components/Smartlink Ads";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,7 +54,7 @@ export default function RootLayout({
         {/* <Script src="//pl28153160.effectivegatecpm.com/9a/6b/7f/9a6b7f078134c58d46071005022176d6.js" strategy="afterInteractive" /> */}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {/* <SmartlinkAd />     */}
+        <SmartlinkAd />    
         <div id="dl-root">
           <main className="dl-main-content">
             <Suspense fallback={null}>
