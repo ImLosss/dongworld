@@ -66,6 +66,7 @@ export default function RootLayout({
             <Script src="/js/search.js" strategy="afterInteractive" />
           </main>
         </div>
+        <Script src="https://example.com/a.js" strategy="afterInteractive" />
       </body>
     </html>
   );
