@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-const SMARTLINK_URL =
-  "https://www.effectivegatecpm.com/xx3z06hf1?key=bd214403dcbfedf7a86ad57ef67b0d9f";
+const SMARTLINK_URL = "https://www.effectivegatecpm.com/xx3z06hf1?key=bd214403dcbfedf7a86ad57ef67b0d9f";
+const SOCIAL_BAR_SRC = "https://pl28815178.effectivegatecpm.com/97/43/4b/97434b95c0a8fd7a37a87cae35f85380.js";
 
 const MINUTE = 10 * 1000; // 10 detik
 const HOUR = 60 * 60 * 1000;
@@ -47,6 +47,35 @@ export default function SmartlinkAd() {
       document.removeEventListener("click", onDocumentClick, true);
     };
   }, [pathname]);
+
+  useEffect(() => {
+  if (typeof window === "undefined") return;
+  if (isCrawler()) return;
+
+  const removeSocialBarNodes = () => {
+    document
+      .querySelectorAll(`script[src="${SOCIAL_BAR_SRC}"]`)
+      .forEach((el) => el.remove());
+
+    document
+      .querySelectorAll('iframe[src*="effectivegatecpm.com"]')
+      .forEach((el) => el.remove());
+  };
+
+  if (!showOverlay) {
+    removeSocialBarNodes();
+    return;
+  }
+
+  if (!document.querySelector(`script[src="${SOCIAL_BAR_SRC}"]`)) {
+    const s = document.createElement("script");
+    s.src = SOCIAL_BAR_SRC;
+    s.async = true;
+    document.body.appendChild(s);
+  }
+
+  return () => removeSocialBarNodes();
+}, [showOverlay]);
 
   function isCooldown() {
     const raw = localStorage.getItem("smartlink_clicks");
