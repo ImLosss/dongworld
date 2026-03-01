@@ -66,7 +66,6 @@ export default function RootLayout({
             <Script src="/js/search.js" strategy="afterInteractive" />
           </main>
         </div>
-        <Script src="https://pl28815178.effectivegatecpm.com/97/43/4b/97434b95c0a8fd7a37a87cae35f85380.js" strategy="afterInteractive" />
       </body>
     </html>
   );
