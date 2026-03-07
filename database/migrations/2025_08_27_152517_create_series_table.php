@@ -25,6 +25,8 @@ return new class extends Migration
             $table->float('rating')->default(4);
             $table->enum('status', ['ongoing', 'complete', 'dropped']);
             $table->enum('type', ['movie', 'tv', 'special', 'ova', 'pv', 'ona'])->default('tv');
+            $table->unsignedBigInteger('next_series_id')->nullable();
+            $table->unsignedBigInteger('previous_series_id')->nullable();
             $table->timestamps();
         });
     }

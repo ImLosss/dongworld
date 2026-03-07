@@ -36,11 +36,11 @@
                 <hr class="horizontal dark my-4">
                 <div class="row text-sm">
                     <div class="col-md-6">
-                        <div class="mb-2"><strong>Series:</strong> {{ optional($comment->episode->series)->name ?? (optional($comment->series)->name ?? '-') }}</div>
+                        <div class="mb-2"><strong>Series:</strong> {{ $comment->episode?->series?->name ?? $comment->series?->name ?? '-' }}</div>
                         <div><strong>Episode:</strong> {{ optional($comment->episode)->episode_number ?? '-' }}</div>
                     </div>
                     <div class="col-md-6">
-                        <div class="mb-2"><strong>Series ID:</strong> {{ optional($comment->episode->series)->id ?? (optional($comment->series)->id ?? '-') }}</div>
+                        <div class="mb-2"><strong>Series ID:</strong> {{ $comment->episode?->series?->id ?? $comment->series?->id ?? '-' }}</div>
                         <div><strong>Episode ID:</strong> {{ $comment->episode_id ?? '-' }}</div>
                     </div>
                 </div>

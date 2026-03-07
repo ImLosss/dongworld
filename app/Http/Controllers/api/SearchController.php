@@ -62,7 +62,7 @@ class SearchController extends Controller
         $query->withMax('episodes', 'episode_number');
 
         return response()->json([
-            'data' => $query->paginate(3),
+            'data' => $query->paginate(10),
         ]);
     }
 }

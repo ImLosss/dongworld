@@ -42,6 +42,34 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="next_series_id" class="form-control-label">Next Series</label>
+                        <select name="next_series_id" id="next_series_id" class="form-control select2 @error('next_series_id') border border-danger rounded-3 @enderror">
+                            <option value="">- Pilih Next Series -</option>
+                            @foreach($seriesOptions as $s)
+                                <option value="{{ $s->id }}" {{ (string) old('next_series_id') === (string) $s->id ? 'selected' : '' }}>{{ $s->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('next_series_id')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="previous_series_id" class="form-control-label">Previous Series</label>
+                        <select name="previous_series_id" id="previous_series_id" class="form-control select2 @error('previous_series_id') border border-danger rounded-3 @enderror">
+                            <option value="">- Pilih Previous Series -</option>
+                            @foreach($seriesOptions as $s)
+                                <option value="{{ $s->id }}" {{ (string) old('previous_series_id') === (string) $s->id ? 'selected' : '' }}>{{ $s->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('previous_series_id')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
@@ -388,6 +416,22 @@
             $('#genres').select2({
                 width: '100%',
                 placeholder: '- Pilih Genre -'
+            });
+        }
+
+        if (window.$ && $('#next_series_id').length) {
+            $('#next_series_id').select2({
+                width: '100%',
+                placeholder: '- Pilih Next Series -',
+                allowClear: true
+            });
+        }
+
+        if (window.$ && $('#previous_series_id').length) {
+            $('#previous_series_id').select2({
+                width: '100%',
+                placeholder: '- Pilih Previous Series -',
+                allowClear: true
             });
         }
 

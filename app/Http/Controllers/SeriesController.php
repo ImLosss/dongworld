@@ -74,7 +74,8 @@ class SeriesController extends Controller
     public function create()
     {
     $genres = Genre::orderBy('name')->get();
-    return view('admin.series.create', compact('genres'));
+    $seriesOptions = Series::orderBy('name')->get(['id', 'name']);
+    return view('admin.series.create', compact('genres', 'seriesOptions'));
     }
 
     /**
@@ -88,6 +89,8 @@ class SeriesController extends Controller
             'slug' => 'nullable|string|max:255|unique:series,slug',
             'type' => 'required',
             'status' => 'required',
+            'next_series_id' => 'nullable|exists:series,id|different:previous_series_id',
+            'previous_series_id' => 'nullable|exists:series,id|different:next_series_id',
             'duration' => 'nullable|integer',
             'studios' => 'nullable|string',
             'rating' => 'nullable|numeric',
@@ -151,7 +154,10 @@ class SeriesController extends Controller
     public function edit(Series $series)
     {
     $genres = Genre::orderBy('name')->get();
-    return view('admin.series.edit', compact('series','genres'));
+    $seriesOptions = Series::where('id', '!=', $series->id)
+        ->orderBy('name')
+        ->get(['id', 'name']);
+    return view('admin.series.edit', compact('series','genres', 'seriesOptions'));
     }
 
     /**
@@ -165,6 +171,8 @@ class SeriesController extends Controller
             'slug' => 'nullable|string|max:255|unique:series,slug,' . $series->id,
             'type' => 'required',
             'status' => 'required',
+            'next_series_id' => 'nullable|exists:series,id|different:previous_series_id|not_in:' . $series->id,
+            'previous_series_id' => 'nullable|exists:series,id|different:next_series_id|not_in:' . $series->id,
             'duration' => 'nullable|integer',
             'studios' => 'nullable|string',
             'rating' => 'nullable|numeric',

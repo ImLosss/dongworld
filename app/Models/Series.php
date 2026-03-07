@@ -34,4 +34,14 @@ class Series extends Model
     {
         return $this->hasMany(View::class);
     }
+
+    public function nextSeries()
+    {
+        return $this->belongsTo(Series::class, 'next_series_id', 'id');
+    }
+
+    public function previousSeries()
+    {
+        return $this->belongsTo(Series::class, 'previous_series_id', 'id');
+    }
 }

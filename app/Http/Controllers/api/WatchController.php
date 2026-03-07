@@ -16,6 +16,8 @@ class WatchController extends Controller
             'user',
             'comments',
             'downloads',
+            'series.nextSeries',
+            'series.previousSeries',
         ])->where('slug', $slug)->first();
 
         if (!$detailEpisode) {
