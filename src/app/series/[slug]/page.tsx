@@ -127,6 +127,8 @@ export default async function SeriesDetail({ params }: Params) {
                 <div className="dl-details-synopsis">
                   <h3>Sinopsis</h3>
                   <p>{series.synopsis ? series.synopsis : "Sinopsis tidak tersedia."}</p>
+                  {series.next_series && <p><b>Selanjutnya:</b> <Link href={`/series/${series.next_series.slug}`}>{series.next_series.name}</Link></p>}
+                  {series.previous_series && <p><b>Sebelumnya:</b> <Link href={`/series/${series.previous_series.slug}`}>{series.previous_series.name}</Link></p>}
                 </div>
               </div>
             </div>

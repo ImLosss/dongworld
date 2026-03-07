@@ -12,6 +12,7 @@ import { Metadata } from "next";
 import StreamNotificationRotator from "@/components/StreamNotificationRotater";
 import { Fragment } from "react/jsx-dev-runtime";
 import Link from "next/dist/client/link";
+import SynopsisText from "@/components/series/SynopsisText";
 
 interface Params {
   params: { slug: string };
@@ -157,7 +158,9 @@ export default async function StreamPage({ params } : Params) {
                                 </div>
                                 <div className="dl-details-synopsis">
                                     <h3>Sinopsis</h3>
-                                    <p>{detail.series.synopsis}</p>
+                                    <SynopsisText text={detail.series.synopsis} maxChars={300} />
+                                    {detail.series.next_series && <p><b>Selanjutnya:</b> <Link href={`/series/${detail.series.next_series.slug}`}>{detail.series.next_series.name}</Link></p>}
+                                    {detail.series.previous_series && <p><b>Sebelumnya:</b> <Link href={`/series/${detail.series.previous_series.slug}`}>{detail.series.previous_series.name}</Link></p>}
                                 </div>
                             </div>
                         </div>
