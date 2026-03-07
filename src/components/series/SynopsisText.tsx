@@ -18,7 +18,7 @@ export default function SynopsisText({ text, maxChars = 220 }: Props) {
   return (
     <div>
       <p>{displayText}{isLong && (
-        <button type="button" onClick={() => setExpanded((v) => !v)}>
+        <button type="button" onClick={() => setExpanded((v) => !v)} style={{ color: "white"}}>
           {expanded ? "Sembunyikan" : "Lihat selengkapnya"}
         </button>
       )}</p>
