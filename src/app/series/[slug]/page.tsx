@@ -11,6 +11,7 @@ import HistorySection from "@/components/home/HistorySection";
 import { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
 import StreamNotificationRotator from "@/components/StreamNotificationRotater";
 import { Fragment } from "react/jsx-dev-runtime";
+import SynopsisText from "@/components/series/SynopsisText";
 
 interface Params {
   params: { slug: string };
@@ -126,7 +127,7 @@ export default async function SeriesDetail({ params }: Params) {
                 </div>
                 <div className="dl-details-synopsis">
                   <h3>Sinopsis</h3>
-                  <p>{series.synopsis ? series.synopsis : "Sinopsis tidak tersedia."}</p>
+                  <SynopsisText text={series.synopsis} maxChars={300} />
                   {series.next_series && <p><b>Selanjutnya:</b> <Link href={`/series/${series.next_series.slug}`}>{series.next_series.name}</Link></p>}
                   {series.previous_series && <p><b>Sebelumnya:</b> <Link href={`/series/${series.previous_series.slug}`}>{series.previous_series.name}</Link></p>}
                 </div>
