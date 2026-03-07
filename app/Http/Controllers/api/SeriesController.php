@@ -34,8 +34,15 @@ class SeriesController extends Controller
 
     public function getRecomendation()
     {
+        $start = now()->subDays(6)->startOfDay();
+        $end = now()->endOfDay();
+
         $series = Series::with(['genres'])
-        ->withSum('views', 'views')
+        ->withSum([
+            'views as views_sum_views' => function ($q) use ($start, $end) {
+                $q->whereBetween('created_at', [$start, $end]);
+            }
+        ], 'views')
         ->withMax('episodes', 'episode_number')
         ->orderByDesc('views_sum_views')
         ->take(5)
