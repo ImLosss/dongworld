@@ -55,9 +55,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE_URL}/series/${item.slug}`,
       lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
     })),
-    ...episodes.map((item) => ({
-      url: `${SITE_URL}/watch/${item.slug}`,
-      lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
-    })),
+    // ...episodes.map((item) => ({
+    //   url: `${SITE_URL}/watch/${item.slug}`,
+    //   lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
+    // })),
   ];
 }
