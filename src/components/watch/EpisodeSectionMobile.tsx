@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEpisode }: { slugSeries: string, initialEpisodes: any, selectedEpisode: any }) {
   const pageSize = 25;
   const storageKey = `episode_page_${slugSeries}`;
   const episodeList = Array.isArray(initialEpisodes) ? initialEpisodes : (initialEpisodes?.data || []);
+  const didInit = useRef(false);
 
   const sortedEpisodes = [...episodeList].sort((a: any, b: any) => a.episode_number - b.episode_number);
 
@@ -20,27 +21,24 @@ export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEp
     };
   });
 
-  const getSavedPage = useCallback((totalPages: number) => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(storageKey);
-      const savedPage = saved ? parseInt(saved) : 1;
-      const validPage = Math.min(Math.max(savedPage, 1), totalPages);
-      if (savedPage !== validPage) {
-        localStorage.setItem(storageKey, validPage.toString());
-      }
-      return validPage;
-    }
-    return 1;
-  }, [storageKey]);
+  const getPageFromSelectedEpisode = useCallback(() => {
+        if (selectedEpisode == null) return 1;
+        const target = Number(selectedEpisode);
+        const idx = sortedEpisodes.findIndex((ep: any) => Number(ep.episode_number) === target);
+        if (idx === -1) return 1;
+        return Math.floor(idx / pageSize) + 1;
+    }, [selectedEpisode, sortedEpisodes]);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(() => getPageFromSelectedEpisode() || 1);
   const [loading, setLoading] = useState(false);
 
-  const totalPages = Math.max(1, pageItems.length);
-
   useEffect(() => {
-    setPage(getSavedPage(totalPages));
-  }, [slugSeries, totalPages, getSavedPage]);
+    if (didInit.current) return;
+    didInit.current = true;
+
+    const initialPage = getPageFromSelectedEpisode();
+    localStorage.setItem(storageKey, String(initialPage));
+  }, [getPageFromSelectedEpisode, storageKey]);
 
   const startIndex = (page - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, sortedEpisodes.length);
