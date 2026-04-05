@@ -86,6 +86,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                         frameBorder="0"
                         allowFullScreen
                         title="Video Player"
+                        id="video-player"
                     ></iframe>
                 </div>
 

@@ -7,7 +7,7 @@ const SOCIAL_BAR_SRC = "https://pl28815178.effectivegatecpm.com/97/43/4b/97434b9
 
 const MINUTE = 10 * 1000; // 10 detik
 const HOUR = 60 * 60 * 1000;
-const MAX_PER_HOUR = 3;
+const MAX_PER_HOUR = 1;
 
 export default function SmartlinkAd() {
   const [showOverlay, setShowOverlay] = useState(false);
@@ -49,33 +49,33 @@ export default function SmartlinkAd() {
   }, [pathname]);
 
   useEffect(() => {
-  if (typeof window === "undefined") return;
-  if (isCrawler()) return;
+    if (typeof window === "undefined") return;
+    if (isCrawler()) return;
 
-  const removeSocialBarNodes = () => {
-    document
-      .querySelectorAll(`script[src="${SOCIAL_BAR_SRC}"]`)
-      .forEach((el) => el.remove());
+    const removeSocialBarNodes = () => {
+      document
+        .querySelectorAll(`script[src="${SOCIAL_BAR_SRC}"]`)
+        .forEach((el) => el.remove());
 
-    document
-      .querySelectorAll('iframe[src*="effectivegatecpm.com"]')
-      .forEach((el) => el.remove());
-  };
+      document
+        .querySelectorAll('iframe[src*="effectivegatecpm.com"]')
+        .forEach((el) => el.remove());
+    };
 
-  if (!showOverlay) {
-    removeSocialBarNodes();
-    return;
-  }
+    if (!showOverlay) {
+      removeSocialBarNodes();
+      return;
+    }
 
-  if (!document.querySelector(`script[src="${SOCIAL_BAR_SRC}"]`)) {
-    const s = document.createElement("script");
-    s.src = SOCIAL_BAR_SRC;
-    s.async = true;
-    document.body.appendChild(s);
-  }
+    if (!document.querySelector(`script[src="${SOCIAL_BAR_SRC}"]`)) {
+      const s = document.createElement("script");
+      s.src = SOCIAL_BAR_SRC;
+      s.async = true;
+      document.body.appendChild(s);
+    }
 
-  return () => removeSocialBarNodes();
-}, [showOverlay]);
+    return () => removeSocialBarNodes();
+  }, [showOverlay]);
 
   function isCooldown() {
     const raw = localStorage.getItem("smartlink_clicks");
