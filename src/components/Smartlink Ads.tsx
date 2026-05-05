@@ -106,8 +106,6 @@ export default function SmartlinkAd() {
     localStorage.setItem("smartlink_last_click", now.toString());
 
     setShowOverlay(false);
-
-    console.log("Smartlink clicked. Total clicks in last hour:", recent.length);
   }
 
   if (!showOverlay) return null;
