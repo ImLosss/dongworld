@@ -95,6 +95,7 @@ export default function SmartlinkAd() {
   }
 
   function recordClick() {
+    window.open(SMARTLINK_URL, "_blank");
     const raw = localStorage.getItem("smartlink_clicks");
     const now = Date.now();
     const clicks: number[] = raw ? JSON.parse(raw) : [];
@@ -105,6 +106,8 @@ export default function SmartlinkAd() {
     localStorage.setItem("smartlink_last_click", now.toString());
 
     setShowOverlay(false);
+
+    console.log("Smartlink clicked. Total clicks in last hour:", recent.length);
   }
 
   if (!showOverlay) return null;
@@ -116,8 +119,6 @@ export default function SmartlinkAd() {
       aria-label="Open link"
       onClick={() => {
         recordClick();
-        const w = window.open(SMARTLINK_URL, "_blank", "noopener,noreferrer");
-        if (w) w.opener = null;
       }}
       style={{
         position: "fixed",
