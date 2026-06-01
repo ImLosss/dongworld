@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import "@/styles/style.css";
 import "@/styles/responsive.css";
@@ -11,14 +11,11 @@ import Sidebar from "@/components/sidebar";
 import { Suspense } from "react";
 import SmartlinkAd from "@/components/Smartlink Ads";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const uiFont = Roboto({
+  variable: "--font-primary",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -53,7 +50,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous" />
         {/* <Script src="//pl28153160.effectivegatecpm.com/9a/6b/7f/9a6b7f078134c58d46071005022176d6.js" strategy="afterInteractive" /> */}
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${uiFont.variable}`}>
         <SmartlinkAd />    
         <div id="dl-root">
           <main className="dl-main-content">

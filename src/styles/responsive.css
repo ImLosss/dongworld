@@ -91,6 +91,7 @@
     
     .dl-hero-synopsis {
         font-size: 1rem;
+        line-clamp: 4;
         -webkit-line-clamp: 4;
     }
     
@@ -109,11 +110,11 @@
     }
 
     .dl-section-header h2 {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
     }
 
     .dl-see-all {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
     
     .dl-filter-options {
@@ -136,6 +137,10 @@
     
     .dl-card-container {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .dl-card-img {
+        height: 210px;
     }
     
     .dl-top-donghua .dl-card {
@@ -220,6 +225,7 @@
     }
     
     .dl-hero-synopsis {
+        line-clamp: 3;
         -webkit-line-clamp: 3;
     }
     

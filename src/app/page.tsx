@@ -49,7 +49,7 @@ export default async function Home() {
           {/* Rilis Section */}
           <section id="trending" className="dl-section">
             <div className="dl-section-header">
-              <h2>Baru ditambahkan</h2>
+              <h2>Baru Ditambahkan</h2>
               <Link href="/series" className="dl-see-all">Lihat Semua</Link>
             </div>
 
@@ -123,18 +123,40 @@ export default async function Home() {
 
           {/* Community Card */}
           <section id="community" className="dl-section">
-            <div className="dl-side-card">
-              <h2>Komunitas</h2>
-              <a href="https://t.me/dongworld" target="_blank"><i className="fab fa-telegram"></i></a>
-            </div>
+            <a
+              className="dl-side-card dl-side-card--community"
+              href="https://t.me/dongworld"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <div className="dl-side-card-text">
+                <h2>Komunitas</h2>
+                <div className="dl-side-card-subtitle">Join channel Telegram</div>
+              </div>
+              <span className="dl-side-card-action" aria-hidden="true">
+                <i className="fab fa-telegram"></i>
+              </span>
+            </a>
           </section>
 
           {/* Donation Card */}
           <section id="donation" className="dl-section">
-            <div className="dl-side-card">
-              <h2>Donasi</h2>
-              <a href="https://sociabuzz.com/dongworld/tribe" target="_blank"><i className="fas fa-donate"></i></a>
-            </div>
+            <a
+              className="dl-side-card dl-side-card--donation"
+              href="https://sociabuzz.com/dongworld/tribe"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <div className="dl-side-card-text">
+                <h2>Donasi</h2>
+                <div className="dl-side-card-subtitle">Dukung DongWorld</div>
+              </div>
+              <span className="dl-side-card-action" aria-hidden="true">
+                <i className="fas fa-donate"></i>
+              </span>
+            </a>
           </section>
         </div>
       </div>

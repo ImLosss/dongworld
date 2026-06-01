@@ -38,7 +38,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Logo */}
-                <Link href="/" className="dl-logo">
+                <Link href="/" className="dl-logo" style={{ textDecoration: "none", color: "inherit" }}>
                     <span>DongWorld</span>
                 </Link>
 

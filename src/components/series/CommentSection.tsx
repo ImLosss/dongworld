@@ -184,9 +184,9 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
                                 <div className="dl-comment-header">
                                     <span className="dl-comment-author">
                                         {comment.name}
-                                        {comment.is_admin && (
+                                        {comment.is_admin ? (
                                             <i className="fas fa-crown" style={{ marginLeft: "5px", color: "gold" }}></i>
-                                        )}
+                                        ) : null}
                                     </span>
                                     <span className="dl-comment-date">{formatRelativeTime(comment.created_at)}</span>
                                 </div>
