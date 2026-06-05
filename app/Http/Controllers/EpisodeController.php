@@ -213,7 +213,7 @@ class EpisodeController extends Controller
             ]);
         }
 
-        return redirect()->route('episode.index', $series->id)
+        return redirect()->back()
             ->with('alert', 'success')
             ->with('message', 'Episode berhasil diupdate');
     }
