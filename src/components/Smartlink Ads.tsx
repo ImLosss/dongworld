@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-const SMARTLINK_URL = "https://www.profitablecpmratenetwork.com/xx3z06hf1?key=bd214403dcbfedf7a86ad57ef67b0d9f";
+const SMARTLINK_URL = "https://omg10.com/4/11110538";
 const SOCIAL_BAR_SRC = "https://pl28815178.effectivegatecpm.com/97/43/4b/97434b95c0a8fd7a37a87cae35f85380.js";
 
 const MINUTE = 10 * 1000; // 10 detik
