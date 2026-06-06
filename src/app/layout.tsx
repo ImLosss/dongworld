@@ -47,19 +47,6 @@ export default function RootLayout({
         <meta name="keywords" content="donghua, anime china, streaming donghua, watch donghua online" />
         <meta name="monetag" content="de5d604beb69db008bb68cc82e852480" />
         <meta name="author" content="DongWorld Team" />
-        <Script id="al5sm-ad" strategy="afterInteractive">
-          {`
-            (function(s){
-              s.dataset.zone='11110531';
-              s.src='https://al5sm.com/tag.min.js';
-            })(
-              [document.documentElement, document.body]
-                .filter(Boolean)
-                .pop()
-                .appendChild(document.createElement('script'))
-            );
-          `}
-        </Script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous" />
         {/* <Script src="//pl28153160.effectivegatecpm.com/9a/6b/7f/9a6b7f078134c58d46071005022176d6.js" strategy="afterInteractive" /> */}
