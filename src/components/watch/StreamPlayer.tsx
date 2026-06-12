@@ -16,7 +16,23 @@ type HistoryItem = {
 type HistoryMap = Record<string, HistoryItem>;
 
 export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
-    const sortedLinks = [...(detail.links || [])].sort((a: any, b: any) => {
+    const BASE_EMBED_URL = "http://player.websiteku.space/embed?url=";
+    const sortedLinks = [...(detail.links || [])]
+    .map((link: any) => {
+        const serverName = (link.server?.name || "").toLowerCase();
+        
+        // Periksa apakah server adalah okru atau vkru
+        if (serverName === "okru" || serverName === "vkru") {
+            return {
+                ...link,
+                // Gunakan encodeURIComponent agar URL asli aman digabungkan sebagai parameter
+                url: `${BASE_EMBED_URL}${link.url}`,
+            };
+        }
+        
+        // Kembalikan link asli jika bukan okru/vkru
+        return link;
+    }).sort((a: any, b: any) => {
         const aOkru = (a.server?.name || "").toLowerCase() === "okru";
         const bOkru = (b.server?.name || "").toLowerCase() === "okru";
         return Number(bOkru) - Number(aOkru);
