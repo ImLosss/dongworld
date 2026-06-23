@@ -43,5 +43,6 @@ Route::group(
         Route::get('telegram/series/search/{query}', [\App\Http\Controllers\api\telegram\SeriesController::class, 'searchSeries']);
         Route::post('telegram/episode', [\App\Http\Controllers\api\telegram\EpisodeController::class, 'getEpisode']);
         Route::post('telegram/episode/update', [\App\Http\Controllers\api\telegram\EpisodeController::class, 'updateServerLink']);
+        Route::post('telegram/link/delete', [\App\Http\Controllers\api\telegram\EpisodeController::class, 'deleteServerLink']);
     }
 );

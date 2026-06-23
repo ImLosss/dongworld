@@ -119,4 +119,23 @@ class EpisodeController extends Controller
 
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function deleteServerLink(Request $request) {
+        $request->validate([
+            'episode_id' => 'required|integer|exists:episodes,id',
+            'server_id' => 'required|integer|exists:servers,id'
+        ]);
+
+        $link = Link::where('episode_id', $request->input('episode_id'))
+            ->where('server_id', $request->input('server_id'))
+            ->first();
+
+        if (!$link) {
+            return response()->json(['message' => 'Link not found'], 404);
+        }
+
+        $link->delete();
+
+        return response()->json(['status' => 'success'], 200);
+    }
 }
