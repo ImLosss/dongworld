@@ -79,7 +79,8 @@ class EpisodeController extends Controller
             ]
         ]);
 
-        $episode = Episode::where('series_id', $request->input('series_id'))
+        $episode = Episode::with('downloads')
+            ->where('series_id', $request->input('series_id'))
             ->where('episode_number', $request->input('episode_number'))
             ->first();
 
