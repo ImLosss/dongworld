@@ -75,9 +75,7 @@ class EpisodeController extends Controller
             'series_id' => 'required|integer|exists:series,id',
             'episode_number' => [
                 'required',
-                'integer',
-                Rule::unique('episodes', 'episode_number')
-                    ->where(fn ($q) => $q->where('series_id', $request->input('series_id'))),
+                'integer'
             ]
         ]);
 
