@@ -91,4 +91,32 @@ class EpisodeController extends Controller
         ], 200);
 
     }
+
+    public function updateServerLink(Request $request) {
+        $request->validate([
+            'episode_id' => 'required|integer|exists:episodes,id'
+        ]);
+
+        $episode = Episode::findOrFail($request->input('episode_id'));
+        $servers = Server::all();
+        foreach ($servers as $server) {
+            $url = $request->input('links_' . $server->id);
+            if ($url) {
+                $link = Link::where('episode_id', $episode->id)
+                    ->where('server_id', $server->id)
+                    ->first();
+                if ($link) {
+                    $link->update(['url' => $url]);
+                } else {
+                    Link::create([
+                        'episode_id' => $episode->id,
+                        'server_id' => $server->id,
+                        'url' => $url,
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['status' => 'success'], 200);
+    }
 }
