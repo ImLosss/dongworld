@@ -33,7 +33,7 @@ class SeriesController extends Controller
 
         return response()->json([
             'series_name' => $series->name,
-            'episodes' => $series->episodes
+            'episodes' => $series->episodes->sortByDesc('episode_number')
         ]);
     }
 
