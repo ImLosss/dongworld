@@ -69,4 +69,27 @@ class EpisodeController extends Controller
             'download' => $request->input('drive') ? true : false,
         ], 201);
     }
+
+    public function getEpisode(Request $request) {
+        $request->validate([
+            'series_id' => 'required|integer|exists:series,id',
+            'episode_number' => [
+                'required',
+                'integer',
+                Rule::unique('episodes', 'episode_number')
+                    ->where(fn ($q) => $q->where('series_id', $request->input('series_id'))),
+            ]
+        ]);
+
+        $episode = Episode::where('series_id', $request->input('series_id'))
+            ->where('episode_number', $request->input('episode_number'))
+            ->first();
+
+        if (!$episode) return response()->json(['message' => 'Episode not found'], 404);
+
+        return response()->json([
+            'episode' => $episode
+        ], 200);
+
+    }
 }
