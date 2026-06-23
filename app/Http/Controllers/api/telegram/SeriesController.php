@@ -22,6 +22,20 @@ class SeriesController extends Controller
         ]);
     }
 
+    public function getAllEps($id)
+    {
+        $series = Series::with('episodes')->where('id', $id)->first();
+        if (!$series) {
+            return response()->json([
+                'message' => 'Series not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'episodes' => $series
+        ]);
+    }
+
     public function searchSeries($query)
     {
         $search = $query;
