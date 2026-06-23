@@ -32,7 +32,8 @@ class SeriesController extends Controller
         }
 
         return response()->json([
-            'episodes' => $series
+            'series_name' => $series->name,
+            'episodes' => $series->episodes
         ]);
     }
 
