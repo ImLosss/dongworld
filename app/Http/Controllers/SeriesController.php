@@ -230,7 +230,7 @@ class SeriesController extends Controller
         $request->validate(['q' => 'required|string|min:3']);
 
         try {
-            $response = Http::get('https://api.jikan.moe/v4/anime', [
+            $response = Http::get('https://api.tenrai.org/v1/anime', [
                 'q' => $request->q,
                 'limit' => 20,
             ]);
