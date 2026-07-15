@@ -94,8 +94,9 @@ class ServerController extends Controller
         $user = $request->user();
 
         return DataTables::of($query)
-            ->addIndexColumn()
+            // ->addIndexColumn()
             ->editColumn('created_at', fn (Server $s) => optional($s->created_at)?->format('d M Y H:i'))
+            ->addColumn('id', fn (Server $s) => $s->id)
             ->addColumn('action', function (Server $data) use ($user) {
                 $update = '';
                 $delete = '';

@@ -66,7 +66,7 @@
                 type: 'GET'
             },
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-sm' },
+                { data: 'id', name: 'id', className: 'text-sm' },
                 { data: 'name', name: 'name', className: 'text-sm' },
                 { data: 'created_at', name: 'created_at', className: 'text-sm' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-sm' },
