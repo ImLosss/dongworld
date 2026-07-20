@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
   console.log(`Incoming request from IP: ${ip}, Origin: ${origin}`);
 
-  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+  if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
     return NextResponse.json(
       { message: "Forbidden" },
       { status: 403 }

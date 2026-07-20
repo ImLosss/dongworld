@@ -107,7 +107,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
                 return;
             }
 
-            const newComment: Comment = (await res.json()).comment;
+            const newComment: Comment = data.comment;
 
             setDisplayedComments(prev => [newComment, ...prev]);
             setCommentText("");
