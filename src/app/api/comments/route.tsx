@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
   const origin = request.headers.get("origin");
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown";
 
+  console.log(request.headers);
   const time = new Date().toISOString();
 
   console.log(`[${time}] Incoming request from IP: ${ip}, Origin: ${origin}`);
