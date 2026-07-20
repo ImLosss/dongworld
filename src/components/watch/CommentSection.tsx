@@ -87,18 +87,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
         e.preventDefault();
 
         localStorage.setItem("commenterName", name);
-        const lastCommentDate = localStorage.getItem("lastCommentDate") || null;
-
-        // block komentar jika terlalu sering
-        if (lastCommentDate) {
-            const lastDate = new Date(lastCommentDate);
-            const now = new Date();
-            const diff = now.getTime() - lastDate.getTime();
-            if (diff < 10000) {
-                alert("Tolong tunggu beberapa saat sebelum mengirim komentar lagi.");
-                return;
-            }
-        }
+        
 
         try {
             const res = await fetch("/api/comments", {
@@ -111,9 +100,12 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
                 }),
             });
 
-            if (!res.ok) throw new Error("Gagal kirim komentar");
+            const data = await res.json();
 
-            localStorage.setItem("lastCommentDate", new Date().toISOString());
+            if (!res.ok) {
+                alert(data.message || "Gagal mengirim komentar.");
+                return;
+            }
 
             const newComment: Comment = (await res.json()).comment;
 
