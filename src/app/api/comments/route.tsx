@@ -2,6 +2,11 @@ import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  const origin = request.headers.get("origin");
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown";
+
+  console.log("Comment from", ip);
+  console.log("Origin:", origin);
 
   const backendRes = await fetch(`${process.env.BASE_URL_BACKEND}api/comments`, {
     method: "POST",
