@@ -9,12 +9,17 @@ const ALLOWED_ORIGINS = [
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const origin = request.headers.get("origin");
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown";
+  const ip =
+    request.headers.get("cf-connecting-ip") ??
+    request.headers.get("x-real-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+    "unknown";
 
-  console.log(request.headers);
-  const time = new Date().toISOString();
+  const time = new Date().toLocaleString("id-ID", {
+    timeZone: "Asia/Makassar",
+  });
 
-  console.log(`[${time}] Incoming request from IP: ${ip}, Origin: ${origin}`);
+  console.log(`[${time} WITA] Incoming request from IP: ${ip}, Origin: ${origin}`);
 
   if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
     return NextResponse.json(
