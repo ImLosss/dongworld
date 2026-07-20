@@ -115,7 +115,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
             if (listRef.current) listRef.current.scrollTop = 0;
 
         } catch (err) {
-            console.error(err);
+            console.log(err);
             alert("Komentar gagal ditambahkan!");
         }
     };
