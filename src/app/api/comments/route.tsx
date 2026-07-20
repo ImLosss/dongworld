@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
 
   console.log("Comment from", ip);
   console.log("Origin:", origin);
+  console.log("Body:", body);
 
   const backendRes = await fetch(`${process.env.BASE_URL_BACKEND}api/comments`, {
     method: "POST",
