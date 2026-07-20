@@ -11,7 +11,9 @@ export async function POST(request: NextRequest) {
   const origin = request.headers.get("origin");
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown";
 
-  console.log(`Incoming request from IP: ${ip}, Origin: ${origin}`);
+  const time = new Date().toISOString();
+
+  console.log(`[${time}] Incoming request from IP: ${ip}, Origin: ${origin}`);
 
   if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
     return NextResponse.json(
