@@ -13,6 +13,7 @@ import StreamNotificationRotator from "@/components/StreamNotificationRotater";
 import { Fragment } from "react/jsx-dev-runtime";
 import Link from "next/dist/client/link";
 import SynopsisText from "@/components/series/SynopsisText";
+import { createCsrfToken } from "@/lib/csrfToken";
 
 interface Params {
   params: { slug: string };
@@ -75,6 +76,9 @@ export default async function StreamPage({ params } : Params) {
     });
 
     if (!res.ok) return notFound();
+
+    const csrfToken = createCsrfToken();
+    
     const data = await res.json();
     const episodes = data.episodes;
     const comments = data.comments;
@@ -166,7 +170,7 @@ export default async function StreamPage({ params } : Params) {
                         </div>
                     </section>
                     {/* Comments Section */}
-                    <CommentSection comments={comments} slug={slug} />
+                    <CommentSection comments={comments} slug={slug} csrfToken={csrfToken} />
 
                     <RecommendationSection series={recommendationsData.series} />
                 </div>

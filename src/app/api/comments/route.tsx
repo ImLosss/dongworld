@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { canComment } from "@/lib/commentRateLimit";
+import { verifyCsrfToken } from "@/lib/csrfToken";
 
 const ALLOWED_ORIGINS = [
   "https://dongworld.top",
@@ -18,6 +19,15 @@ export async function POST(request: NextRequest) {
   const time = new Date().toLocaleString("id-ID", {
     timeZone: "Asia/Makassar",
   });
+
+  const csrfToken = request.headers.get("x-csrf-token");
+  if (!csrfToken || !verifyCsrfToken(csrfToken)) {
+    console.log(`[${time} WITA] Invalid CSRF token from IP: ${ip}, Origin: ${origin}, Token: ${csrfToken}`);
+    return NextResponse.json(
+      { message: "Forbidden" },
+      { status: 403 }
+    );
+  }
 
   console.log(`[${time} WITA] Incoming request from IP: ${ip}, Origin: ${origin}`);
 

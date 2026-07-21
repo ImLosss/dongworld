@@ -28,7 +28,7 @@ type Comment = {
     created_at: string;
 };
 
-export default function CommentSection({ comments, slug }: { comments: Comment[], slug: string }) {
+export default function CommentSection({ comments, slug, csrfToken }: { comments: Comment[], slug: string, csrfToken: string }) {
     const getCommenterName = () => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem(`commenterName`);
@@ -91,7 +91,7 @@ export default function CommentSection({ comments, slug }: { comments: Comment[]
         try {
             const res = await fetch("/api/comments", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken },
                 body: JSON.stringify({
                     name,
                     comment: commentText,

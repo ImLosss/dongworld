@@ -12,6 +12,7 @@ import { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
 import StreamNotificationRotator from "@/components/StreamNotificationRotater";
 import { Fragment } from "react/jsx-dev-runtime";
 import SynopsisText from "@/components/series/SynopsisText";
+import { createCsrfToken } from "@/lib/csrfToken";
 
 interface Params {
   params: { slug: string };
@@ -72,6 +73,9 @@ export default async function SeriesDetail({ params }: Params) {
 
   const data = await getSeriesData(slug, { revalidate: 0 });
   if(data === null) return notFound();
+
+  const csrfToken = createCsrfToken();
+  
   const episodes = data.episodes;
   const series = data.series;
 
@@ -136,7 +140,7 @@ export default async function SeriesDetail({ params }: Params) {
           </section>
           <EpisodeSectionMobile slug={slug} initialEpisodes={episodes} />
           {/* Comments Section */}
-          <CommentSection comments={comments} slug={slug} />
+          <CommentSection comments={comments} slug={slug} csrfToken={csrfToken} />
 
           {/* Recommendation Section */}
           <RecommendationSection series={recommendationsData.series} />
