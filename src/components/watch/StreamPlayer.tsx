@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface StreamPlayerProps {
     detail: any;
@@ -23,10 +23,38 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
         const bOkru = (b.server?.name || "").toLowerCase() === "okru";
         return Number(bOkru) - Number(aOkru);
     });
-    const [selectedServer, setSelectedServer] = useState(sortedLinks?.[0]?.url || "");
+
+    const getServerUrl = () => {
+        const saved = localStorage.getItem("server");
+
+        if (!saved) {
+            return sortedLinks[0]?.url || "";
+        }
+
+        const match = sortedLinks.find(
+            link => link.server.name === saved
+        );
+
+        return match?.url || sortedLinks[0]?.url || "";
+    };
+
+    const [selectedServer, setSelectedServer] = useState(sortedLinks[0]?.server.name || "");
     const [saved, setSaved] = useState(false);
 
+    const currentLink =
+        sortedLinks.find(link => link.server.name === selectedServer) ??
+        sortedLinks[0];
+
+    useEffect(() => {
+        const saved = localStorage.getItem("server");
+
+        if (saved) {
+            setSelectedServer(saved);
+        }
+    }, [detail.slug]);
+
     const handleServerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        localStorage.setItem("server", e.target.value);
         setSelectedServer(e.target.value);
     };
 
@@ -84,7 +112,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                 {/* Embedded Player */}
                 <div className="dl-video-container" onLoad={saveHistory}>
                     <iframe
-                        src={selectedServer || "https://geo.dailymotion.com/player.html?video=x9yei3c"}
+                        src={currentLink.url}
                         frameBorder="0"
                         allowFullScreen
                         title="Video Player"
@@ -101,7 +129,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                             onChange={handleServerChange}
                         >
                             {sortedLinks.map((link: any) => (
-                                <option key={link.id} value={link.url}>
+                                <option key={link.id} value={link.server.name}>
                                     {link.server.name}
                                 </option>
                             ))}
@@ -120,16 +148,14 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                 </div>
             </div>
             {/* Server Note */}
-            {sortedLinks.map((link: any) => (
-                link.url === selectedServer && link.server.note && (
-                    <div key={link.id} className="dl-server-notification">
-                        <div className="dl-server-content">
-                            <i className="fas fa-info-circle"></i>
-                            <span>{link.server.note}</span>
-                        </div>
+            {currentLink?.server.note && (
+                <div className="dl-server-notification">
+                    <div className="dl-server-content">
+                        <i className="fas fa-info-circle"></i>
+                        <span>{currentLink.server.note}</span>
                     </div>
-                )
-            ))}
+                </div>
+            )}
         </section>
     );
 }
