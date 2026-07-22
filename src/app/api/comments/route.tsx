@@ -51,14 +51,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!canComment(ip)) {
+  const rateLimit = canComment(ip);
+
+  if (!rateLimit.status) {
     return NextResponse.json(
-      {
-        message: "Silakan tunggu 1 menit sebelum mengirim komentar lagi.",
-      },
-      {
-        status: 429,
-      }
+      { message: rateLimit.message },
+      { status: 429 }
     );
   }
 
