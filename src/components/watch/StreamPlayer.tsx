@@ -138,7 +138,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                         </select>
                     </div>
 
-                    <div className="dl-server-right">
+                    <div className="dl-server-right" onClick={openSmartlink}>
                         {prevEpisodeSlug && (
                             <Link href={prevEpisodeSlug ? `/watch/${prevEpisodeSlug}` : "#"}className="dl-server-nav"><i className="fas fa-chevron-left"></i>{detail.episode_number - 1}</Link>
                         )}
