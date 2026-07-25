@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { openSmartlink } from "@/lib/smartlink";
 
 export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
     const pageSize = 25;
@@ -69,7 +70,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
                 <div className="dl-episode-list" style={loading ? { opacity: 0.5, pointerEvents: "none" } : {}}>
                     {pageEpisodes.length > 0 ? (
                         pageEpisodes.map((episode: any) => (
-                            <Link key={episode.id} href={'/watch/' + episode.slug} className="dl-episode-item">
+                            <Link key={episode.id} href={'/watch/' + episode.slug} className="dl-episode-item" onClick={openSmartlink}>
                                 <span className="dl-episode-number">Episode {episode.episode_number}</span>
                                 <span className="dl-episode-title">{episode.title}</span>
                                 <span className="dl-episode-duration">{dayjs(episode.created_at).format("DD MMM YYYY")}</span>

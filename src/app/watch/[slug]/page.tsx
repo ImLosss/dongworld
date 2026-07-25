@@ -14,6 +14,7 @@ import { Fragment } from "react/jsx-dev-runtime";
 import Link from "next/dist/client/link";
 import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
+import DownloadSection from "@/components/watch/DownloadSection";
 
 interface Params {
   params: { slug: string };
@@ -120,30 +121,7 @@ export default async function StreamPage({ params } : Params) {
                     {/* Stream Player Section */}
                     <StreamPlayer detail={detail} nextEpisodeSlug={nextEpisodeSlug} prevEpisodeSlug={prevEpisodeSlug} />
                     {/* Download Section */}
-                    {detail.downloads.length > 0 && (
-                        <section className="dl-download-section">
-                            <div className="dl-download-header">
-                                <h2>Download</h2>
-                                <span className="dl-download-meta">
-                                    Episode {detail.episode_number}
-                                </span>
-                            </div>
-                            <div className="dl-download-list">
-                                {detail.downloads.map((download: any, idx: number) => (
-                                    <a
-                                        key={idx}
-                                        href={download.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="dl-download-item"
-                                    >
-                                        <i className="fas fa-download"></i>
-                                        <span>{download.quality} | {download.server}</span>
-                                    </a>
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                    <DownloadSection downloads={detail.downloads} episodeNumber={detail.episode_number} />
                     <EpisodeSectionMobile slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     {/* Donghua Details */}
                     <section className="dl-donghua-details">

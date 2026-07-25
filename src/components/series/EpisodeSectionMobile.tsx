@@ -1,4 +1,5 @@
 "use client";
+import { openSmartlink } from "@/lib/smartlink";
 import { useState, useEffect, useCallback } from "react";
 
 export default function EpisodeSection({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
@@ -67,7 +68,7 @@ export default function EpisodeSection({ slug, initialEpisodes }: { slug: string
         <div className="dl-mobile-episode-list">
           {pageEpisodes.length > 0 ? (
             pageEpisodes.map((episode: any) => (
-              <a key={episode.id} href={'/watch/' + episode.slug} className="dl-mobile-episode-item">
+              <a key={episode.id} href={'/watch/' + episode.slug} className="dl-mobile-episode-item" onClick={openSmartlink}>
                 Episode {episode.episode_number}
               </a>
             ))

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { openSmartlink } from "@/lib/smartlink";
 
 interface StreamPlayerProps {
     detail: any;
@@ -110,7 +111,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                 </div>
 
                 {/* Embedded Player */}
-                <div className="dl-video-container" onLoad={saveHistory}>
+                <div className="dl-video-container" id="smartlink-slot" onLoad={saveHistory} onClick={openSmartlink}>
                     <iframe
                         src={currentLink.url}
                         frameBorder="0"
@@ -126,6 +127,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                         <select
                             id="server-select"
                             value={selectedServer}
+                            onClick={openSmartlink}
                             onChange={handleServerChange}
                         >
                             {sortedLinks.map((link: any) => (

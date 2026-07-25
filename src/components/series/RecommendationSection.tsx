@@ -1,4 +1,6 @@
 // import { useState, useEffect } from "react";
+"use client";
+import { openSmartlink } from "@/lib/smartlink";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,10 +12,10 @@ export default function RecommendationSection({ series }: { series: any }) {
             </div>
             <div className="dl-recommendation-container">
                 {series.map((item: any) => (
-                    <Link key={item.id} href={`/series/${item.slug}`} style={{ display: "block", color: "inherit", textDecoration: "none" }}>
+                    <Link key={item.id} href={`/series/${item.slug}`} style={{ display: "block", color: "inherit", textDecoration: "none" }} onClick={openSmartlink}>
                         <div className="dl-card">
                             <div className="dl-card-img">
-                                <Image src={process.env.BASE_URL_BACKEND + item.thumbnail} alt={item.name} sizes="368px" fill />
+                                <Image src={`/api/image?path=${encodeURIComponent(item.thumbnail)}`} alt={item.name} sizes="368px" fill />
                                 <div className="dl-card-badge">HOT</div>
                             </div>
                             <div className="dl-card-content">

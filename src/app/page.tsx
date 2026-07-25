@@ -64,11 +64,11 @@ export default async function Home() {
                       )}
                     </div>
                     <div className="dl-card-content">
-                        <h3 className="dl-card-title">{series.name}</h3>
-                        <div className="dl-card-meta">
-                            <span>{series.episodes_max_episode_number || 0}/{series.total_episodes ? series.total_episodes : "?"} eps</span>
-                            <span className="dl-card-rating"><i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}</span>
-                        </div>
+                      <h3 className="dl-card-title">{series.name}</h3>
+                      <div className="dl-card-meta">
+                        <span>{series.episodes_max_episode_number || 0}/{series.total_episodes ? series.total_episodes : "?"} eps</span>
+                        <span className="dl-card-rating"><i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}</span>
+                      </div>
                     </div>
                   </SeriesList>
                 )
