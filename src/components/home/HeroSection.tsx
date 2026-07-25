@@ -58,7 +58,7 @@ export default function HeroSection({ slides }: { slides: Slide[] }) {
           <div
             key={i}
             className="dl-hero-slide"
-            style={{ backgroundImage: `url('${process.env.NEXT_PUBLIC_BASE_URL_BACKEND + s.thumbnail}')` }}
+            style={{ backgroundImage: `url('${`/api/image?path=${encodeURIComponent(s.thumbnail)}`}')` }}
           >
             <div className="dl-hero-content">
               <div className="dl-hero-info">

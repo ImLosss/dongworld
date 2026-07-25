@@ -58,7 +58,7 @@ export default async function Home() {
                 return (
                   <SeriesList key={series.id} href={`/series/${series.slug}`}>
                     <div className="dl-card-img">
-                      <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt={series.name} fill />
+                      <Image src={`/api/image?path=${encodeURIComponent(series.thumbnail)}`} sizes="368px" alt={series.name} fill />
                       {isToday(series.updated_at) && (
                         <div className="dl-card-badge">{series.status == 'complete' ? 'END' : 'New'}</div>
                       )}
@@ -87,7 +87,7 @@ export default async function Home() {
                 return (
                   <SeriesList key={series.id} href={`/series/${series.slug}`}>
                     <div className="dl-card-img">
-                      <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt={series.name} fill />
+                      <Image src={`/api/image?path=${encodeURIComponent(series.thumbnail)}`} sizes="368px" alt={series.name} fill />
                       {isWeek(series.updated_at) && (
                         <div className="dl-card-badge">NEW</div>
                       )}
