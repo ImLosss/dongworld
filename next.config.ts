@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         hostname: "dongworld-admin.websiteku.space",
       },
       {
+        protocol: "https",
+        hostname: "dongworld-admin.websiteku.site",
+      },
+      {
         protocol: "http", // Gunakan http untuk IP lokal, ganti ke https jika perlu
         hostname: "10.69.217.166",
       },
