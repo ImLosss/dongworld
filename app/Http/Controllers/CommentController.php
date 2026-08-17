@@ -89,16 +89,32 @@ class CommentController extends Controller
      */
     public function show(string $id)
     {
-        $comment = Comment::with(['series', 'episode.series'])->findOrFail($id);
+        $comment = Comment::with([
+            'series',
+            'episode.series',
+            'replyTo',
+            'replies' => function ($query) {
+                $query->latest();
+            },
+        ])->findOrFail($id);
 
-        $relatedComments = Comment::with(['series', 'episode'])
+        $relatedComments = Comment::with([
+            'series',
+            'episode',
+            'replyTo',
+        ])
             ->where('series_id', $comment->series_id)
             ->where('episode_id', $comment->episode_id)
+            ->whereNull('reply_to_comment_id')
+            ->where('id', '!=', $comment->id)
             ->latest()
             ->take(10)
             ->get();
 
-        return view('admin.comment.show', compact('comment', 'relatedComments'));
+        return view('admin.comment.show', compact(
+            'comment',
+            'relatedComments'
+        ));
     }
 
     /**
@@ -135,6 +151,7 @@ class CommentController extends Controller
             'name' => Auth::user()->name ?? 'Admin',
             'content' => $content,
             'is_admin' => true,
+            'reply_to_comment_id' => $comment->replyTo ? $comment->reply_to_comment_id : $comment->id,
         ]);
 
         return redirect()->route('comments.show', $comment->id)

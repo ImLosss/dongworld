@@ -33,6 +33,21 @@
                     @endif
                 </div>
                 <p class="text-sm mb-0">{{ $comment->content }}</p>
+                @if($comment->replyTo)
+                    <div class="mt-3 p-3 border rounded">
+                        <div class="text-xs text-secondary mb-1">
+                            Membalas komentar:
+                        </div>
+
+                        <div class="text-sm font-weight-bold">
+                            {{ $comment->replyTo->name }}
+                        </div>
+
+                        <div class="text-sm text-secondary">
+                            {{ $comment->replyTo->content }}
+                        </div>
+                    </div>
+                @endif
                 <hr class="horizontal dark my-4">
                 <div class="row text-sm">
                     <div class="col-md-6">
@@ -46,6 +61,40 @@
                 </div>
             </div>
         </div>
+
+        @if($comment->replies->count())
+            <div class="mt-4">
+                <h6 class="text-sm mb-3">
+                    Balasan ({{ $comment->replies->count() }})
+                </h6>
+
+                @foreach($comment->replies as $reply)
+                    <div class="border rounded p-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="text-sm font-weight-bold">
+                                    {{ $reply->name }}
+                                </span>
+
+                                @if($reply->is_admin)
+                                    <span class="badge badge-sm bg-gradient-dark">
+                                        Admin
+                                    </span>
+                                @endif
+                            </div>
+
+                            <span class="text-xs text-secondary">
+                                {{ $reply->created_at?->format('d M Y H:i') }}
+                            </span>
+                        </div>
+
+                        <p class="text-sm mb-0">
+                            {{ $reply->content }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
 
         <div class="card">
             <div class="card-header pb-0 px-3">
