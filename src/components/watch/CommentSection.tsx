@@ -26,11 +26,10 @@ export type Comment = {
     content: string;
     is_admin: boolean;
     created_at: string;
-    reply_to_comment_id?: number | null; // Kolom baru dari database
+    reply_to_comment_id?: number | null;
 };
 
-// Tipe untuk menampung komentar beserta balasannya
-type CommentNode = Comment & { replies: CommentNode[] };
+type CommentNode = Comment & { replies: Comment[] }; // Diubah: Replies bukan node rekursif lagi, cukup array 1 level
 
 export default function CommentSection({ comments, slug, csrfToken }: { comments: Comment[], slug: string, csrfToken: string }) {
     const getCommenterName = () => {
@@ -47,19 +46,18 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
     const [currentIndex, setCurrentIndex] = useState(10);
     const [loading, setLoading] = useState(false);
     
-    // State untuk menyimpan data komentar yang sedang dibalas
-    const [replyingTo, setReplyingTo] = useState<{ id: number; name: string; content: string } | null>(null);
+    // Perhatikan kita menggunakan rootId sebagai penanda ID utama yang akan di-submit
+    const [replyingTo, setReplyingTo] = useState<{ rootId: number; name: string; content: string } | null>(null);
 
     const commentsEndRef = useRef<HTMLDivElement>(null);
     const listRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // 1. Load 10 komentar pertama dari props saat mount
     useEffect(() => {
         setDisplayedComments(comments.slice(0, 10));
     }, [comments]);
 
-    // 2. Fungsi untuk menyusun flat data menjadi tree bercabang
+    // Fungsi ini dimodifikasi untuk memastikan kedalaman maksimal HANYA 1 level
     const buildCommentTree = (flatComments: Comment[]): CommentNode[] => {
         const commentMap = new Map<number, CommentNode>();
         const rootComments: CommentNode[] = [];
@@ -70,12 +68,21 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
 
         flatComments.forEach(comment => {
             const node = commentMap.get(comment.id)!;
+            
             if (comment.reply_to_comment_id) {
-                const parent = commentMap.get(comment.reply_to_comment_id);
-                if (parent) {
-                    parent.replies.push(node);
+                // Lacak ke Root Parent sejati (jika di database telanjur ada data bersarang lebih dari 1 level)
+                let parentId = comment.reply_to_comment_id;
+                let parentNode = commentMap.get(parentId);
+                
+                while (parentNode && parentNode.reply_to_comment_id) {
+                    parentId = parentNode.reply_to_comment_id;
+                    parentNode = commentMap.get(parentId);
+                }
+
+                if (parentNode) {
+                    parentNode.replies.push(node);
                 } else {
-                    rootComments.push(node); // Fallback jika parent belum diload
+                    rootComments.push(node);
                 }
             } else {
                 rootComments.push(node);
@@ -99,7 +106,6 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
         return name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
     };
 
-    // 3. Load More dari sisa props comments
     const loadMoreComments = () => {
         setLoading(true);
         setTimeout(() => {
@@ -110,7 +116,6 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
         }, 1000);
     };
 
-    // 4. Submit ke Database menggunakan fetch
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         localStorage.setItem("commenterName", name);
@@ -123,7 +128,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                     name,
                     comment: commentText,
                     slug,
-                    reply_to_comment_id: replyingTo ? replyingTo.id : null
+                    reply_to_comment_id: replyingTo ? replyingTo.rootId : null 
                 }),
             });
 
@@ -134,16 +139,12 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                 return;
             }
 
-            // Pastikan API mengembalikan data komentar lengkap dengan `reply_to_comment_id`
             const newComment: Comment = data.comment;
-
-            // Update UI dengan komentar baru
-            setDisplayedComments(prev => [newComment, ...prev]);
+            setDisplayedComments(prev => [...prev, newComment]);
+            
+            // Reset state
             setCommentText("");
-            setReplyingTo(null); // Reset indikator balas
-
-            // Scroll ke atas (opsional)
-            // if (listRef.current) listRef.current.scrollTop = 0;
+            setReplyingTo(null); 
 
         } catch (err) {
             console.error(err);
@@ -151,46 +152,51 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
         }
     };
 
-    const handleReply = (id: number, authorName: string, content: string) => {
-        setReplyingTo({ id, name: authorName, content });
+    const handleReply = (rootId: number, authorName: string, content: string, isRoot: boolean) => {
+        setReplyingTo({ rootId, name: authorName, content });
         
-        // Auto scroll ke form input
+        // UX Tambahan: Jika membalas sub-komentar orang lain, otomatis tambahkan @nama 
+        if (!isRoot) {
+            setCommentText(`@${authorName} `);
+        } else {
+            setCommentText("");
+        }
+        
         if (textareaRef.current) {
             textareaRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
             setTimeout(() => {
                 textareaRef.current?.focus();
+                // Opsional: pindahkan kursor ke akhir teks (setelah @nama)
+                const length = textareaRef.current!.value.length;
+                textareaRef.current!.setSelectionRange(length, length);
             }, 100);
         }
     };
 
-    const CommentItem = ({ node }: { node: CommentNode }) => (
-        <div className="dl-comment-thread">
-            <div className="dl-comment">
-                <div className="dl-comment-avatar">
-                    <div className="dl-avatar-placeholder">{getInitials(node.name)}</div>
+    // Komponen Reusable Card (Dibuat statis 1 lapis tanpa rekursif)
+    const CommentCard = ({ comment, rootId, isRoot }: { comment: Comment, rootId: number, isRoot: boolean }) => (
+        <div className="dl-comment">
+            <div className="dl-comment-avatar">
+                <div className="dl-avatar-placeholder">{getInitials(comment.name)}</div>
+            </div>
+            <div className="dl-comment-content">
+                <div className="dl-comment-header">
+                    <span className="dl-comment-author">
+                        {comment.name}
+                        {comment.is_admin && <i className="fas fa-crown" style={{ marginLeft: "5px", color: "gold" }}></i>}
+                    </span>
+                    <span className="dl-comment-date">{formatRelativeTime(comment.created_at)}</span>
                 </div>
-                <div className="dl-comment-content">
-                    <div className="dl-comment-header">
-                        <span className="dl-comment-author">
-                            {node.name}
-                            {node.is_admin && <i className="fas fa-crown" style={{ marginLeft: "5px", color: "gold" }}></i>}
-                        </span>
-                        <span className="dl-comment-date">{formatRelativeTime(node.created_at)}</span>
-                    </div>
-                    <div className="dl-comment-text">{node.content}</div>
-                    <div className="dl-comment-actions">
-                        <button className="dl-comment-reply" onClick={() => handleReply(node.id, node.name, node.content)}>Balas</button>
-                    </div>
+                <div className="dl-comment-text">{comment.content}</div>
+                <div className="dl-comment-actions">
+                    <button 
+                        className="dl-comment-reply" 
+                        onClick={() => handleReply(rootId, comment.name, comment.content, isRoot)}
+                    >
+                        Balas
+                    </button>
                 </div>
             </div>
-            
-            {node.replies.length > 0 && (
-                <div className="dl-comment-replies">
-                    {node.replies.map(reply => (
-                        <CommentItem key={reply.id} node={reply} />
-                    ))}
-                </div>
-            )}
         </div>
     );
 
@@ -219,19 +225,18 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                             required
                         />
                         
-                        {/* Indikator sedang membalas */}
                         {replyingTo && (
                             <div className="dl-replying-indicator">
                                 <div className="dl-replying-header">
                                     <span>Membalas <strong>@{replyingTo.name}</strong></span>
-                                    <button type="button" onClick={() => setReplyingTo(null)}>
+                                    <button type="button" onClick={() => { setReplyingTo(null); setCommentText(""); }}>
                                         <i className="fas fa-times"></i> Batal
                                     </button>
                                 </div>
                                 <div className="dl-replying-content">
                                     <i className="fas fa-quote-left" style={{ marginRight: '8px', opacity: 0.5, fontSize: '0.8rem' }}></i>
                                     {replyingTo.content.length > 80 
-                                        ? replyingTo.content.substring(0, 250) + "..." 
+                                        ? replyingTo.content.substring(0, 80) + "..." 
                                         : replyingTo.content}
                                 </div>
                             </div>
@@ -251,13 +256,25 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
             </div>
 
             <div className="dl-comments-list-container">
-                <div 
-                    className="dl-comments-list" 
-                    ref={listRef}
-                    onScroll={handleScroll}
-                >
-                    {commentTree.map(node => (
-                        <CommentItem key={node.id} node={node} />
+                <div className="dl-comments-list" ref={listRef} onScroll={handleScroll}>
+                    
+                    {/* Render List Pasti 1 Level Saja */}
+                    {commentTree.map(rootNode => (
+                        <div key={rootNode.id} className="dl-comment-thread">
+                            
+                            {/* Komentar Utama */}
+                            <CommentCard comment={rootNode} rootId={rootNode.id} isRoot={true} />
+                            
+                            {/* Kumpulan Balasan */}
+                            {rootNode.replies.length > 0 && (
+                                <div className="dl-comment-replies">
+                                    {rootNode.replies.map(reply => (
+                                        <CommentCard key={reply.id} comment={reply} rootId={rootNode.id} isRoot={false} />
+                                    ))}
+                                </div>
+                            )}
+
+                        </div>
                     ))}
                     
                     {loading && (
