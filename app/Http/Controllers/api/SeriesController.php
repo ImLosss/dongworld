@@ -90,6 +90,7 @@ class SeriesController extends Controller
             'slug' => 'required|string',
             'name' => 'required|string|max:30',
             'comment' => 'required|string|max:250',
+            'reply_to_comment_id' => 'nullable|integer|exists:comments,id',
         ]);
 
         $data = Series::where('slug', $request->slug)->first();
@@ -102,9 +103,20 @@ class SeriesController extends Controller
             return response()->json(['message' => 'Series or episode not found'], 404);
         }
 
+        if ($request->reply_to_comment_id) {
+            $parentComment = $data->comments()
+                ->where('id', $request->reply_to_comment_id)
+                ->first();
+
+            if (!$parentComment) {
+                return response()->json(['message' => 'Comment to reply not found'], 404);
+            }
+        }
+
         $comment = $data->comments()->create([
             'name' => $request->name,
             'content' => $request->comment,
+            'reply_to_comment_id' => $request->reply_to_comment_id,
         ]);
 
         return response()->json([
