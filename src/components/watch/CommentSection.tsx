@@ -216,7 +216,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                                 <div className="dl-replying-content">
                                     <i className="fas fa-quote-left" style={{ marginRight: '8px', opacity: 0.5, fontSize: '0.8rem' }}></i>
                                     {replyingTo.content.length > 80 
-                                        ? replyingTo.content.substring(0, 80) + "..." 
+                                        ? replyingTo.content.substring(0, 250) + "..." 
                                         : replyingTo.content}
                                 </div>
                             </div>
