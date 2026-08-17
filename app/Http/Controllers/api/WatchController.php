@@ -45,7 +45,7 @@ class WatchController extends Controller
         $detailEpisode->uploader = $detailEpisode->user?->name ? $detailEpisode->user->name : 'Admin';
 
         // Comment utama: terbaru → terlama
-        $comments = $series->comments()
+        $comments = $detailEpisode->comments()
             ->whereNull('reply_to_comment_id')
             ->orderBy('created_at', 'desc')
             ->get();
