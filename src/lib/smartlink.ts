@@ -1,6 +1,6 @@
 const SMARTLINK_URL = "https://omg10.com/4/11110538";
 
-const MINUTE = 10 * 1000;
+const MINUTE = 25 * 1000;
 const HOUR = 60 * 60 * 1000;
 const MAX_PER_HOUR = 3;
 
