@@ -32,6 +32,7 @@
                             <tr>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Nama</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Reply To</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Konten</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Series</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Episode</th>
@@ -62,6 +63,7 @@
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-sm' },
                 { data: 'name', name: 'name', className: 'text-sm', orderable: false, searchable: true },
+                { data: 'reply_to', name: 'reply_to', className: 'text-sm', orderable: false, searchable: true },
                 { data: 'content', name: 'content', className: 'text-sm' },
                 { data: 'series', name: 'series', className: 'text-sm', orderable: false, searchable: false },
                 { data: 'episode', name: 'episode', className: 'text-sm', orderable: false, searchable: false },

@@ -34,6 +34,14 @@ class CommentController extends Controller
                     . $badge
                     . '</div>';
             })
+            ->addColumn('reply_to', function (Comment $comment) {
+                if ($comment->replyTo) {
+                    return '<div class="d-flex align-items-center">'
+                        . '<span class="text-dark">@' . e($comment->replyTo->name) . '</span>'
+                        . '</div>';
+                }
+                return '-';
+            })
             ->addColumn('content', fn (Comment $comment) => e(Str::limit($comment->content, 120)))
             ->addColumn('series', function (Comment $comment) {
                 $seriesName = optional($comment->series)->name ?? '-';
