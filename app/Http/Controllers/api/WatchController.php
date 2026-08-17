@@ -14,7 +14,7 @@ class WatchController extends Controller
             'series' => fn ($q) => $q->withMax('episodes', 'episode_number')->with('genres'),
             'links.server',
             'user',
-            'comments',
+            'comments.replies',
             'downloads',
             'series.nextSeries',
             'series.previousSeries',
@@ -44,7 +44,21 @@ class WatchController extends Controller
         $detailEpisode->series->views = $detailEpisode->series->views()->where('episode_id', $detailEpisode->id)->sum('views');
         $detailEpisode->uploader = $detailEpisode->user?->name ? $detailEpisode->user->name : 'Admin';
 
-        $comments = $detailEpisode->comments()->orderBy('created_at', 'desc')->get();
+        // Comment utama: terbaru → terlama
+        $comments = $series->comments()
+            ->whereNull('reply_to_comment_id')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Reply: terlama → terbaru
+        $comments->each(function ($comment) {
+            $comment->setRelation(
+                'replies',
+                $comment->replies
+                    ->sortBy('created_at')
+                    ->values()
+            );
+        });
 
         return response()->json([
             'detail-episode' => $detailEpisode,
