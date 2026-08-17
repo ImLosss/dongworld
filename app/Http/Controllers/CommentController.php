@@ -64,7 +64,7 @@ class CommentController extends Controller
 
                 return $detail . $delete . $form;
             })
-            ->rawColumns(['name', 'action'])
+            ->rawColumns(['name', 'action', 'reply_to'])
             ->toJson();
     }
 
