@@ -13,7 +13,7 @@ class SeriesController extends Controller
 {
     public function getSeriesDetail($slug)
     {
-        $series = Series::with(['genres', 'comments', 'nextSeries', 'previousSeries'])->where('slug', $slug)->withMax('episodes', 'episode_number')->first();
+        $series = Series::with(['genres', 'comments.replies', 'nextSeries', 'previousSeries'])->where('slug', $slug)->withMax('episodes', 'episode_number')->first();
         if (!$series) {
             return response()->json([
                 'message' => 'Series not found'
@@ -23,7 +23,21 @@ class SeriesController extends Controller
         $series->genres_string = $series->genres->pluck('name')->implode(', ');
         $series->views = $series->views()->sum('views');
 
-        $comments = $series->comments()->orderBy('created_at', 'desc')->get();
+        // Comment utama: terbaru → terlama
+        $comments = $series->comments()
+            ->whereNull('reply_to_comment_id')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Reply: terlama → terbaru
+        $comments->each(function ($comment) {
+            $comment->setRelation(
+                'replies',
+                $comment->replies
+                    ->sortBy('created_at')
+                    ->values()
+            );
+        });
 
         return response()->json([
             'series' => $series,
