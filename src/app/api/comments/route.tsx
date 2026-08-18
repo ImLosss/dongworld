@@ -42,12 +42,46 @@ export async function POST(request: NextRequest) {
     name: String(body.name ?? "").trim(),
     comment: String(body.comment ?? "").trim(),
     slug: String(body.slug ?? "").trim(),
+    turnstile: String(body.cf_turnstile_response ?? "").trim(),
   };
 
   if (!payload.name || !payload.comment || !payload.slug) {
     return NextResponse.json(
       { message: "Forbidden" },
       { status: 403 }
+    );
+  }
+
+  // =================================================================
+  // VERIFIKASI CLOUDFLARE TURNSTILE
+  // =================================================================
+  const cfFormData = new FormData();
+  cfFormData.append('secret', process.env.TURNSTILE_SECRET_KEY as string); 
+  cfFormData.append('response', payload.turnstile);
+  cfFormData.append('remoteip', ip); 
+
+  try {
+    const cfVerify = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: cfFormData,
+    });
+
+    const cfResponse = await cfVerify.json();
+
+    console.log(`[${time} WITA] Turnstile verification response for IP: ${ip}:`, cfResponse);
+
+    if (!cfResponse.success) {
+      console.log(`[${time} WITA] Turnstile failed for IP: ${ip} | Error:`, cfResponse['error-codes']);
+      return NextResponse.json(
+        { message: "Forbidden" },
+        { status: 403 }
+      );
+    }
+  } catch (error) {
+    console.error(`[${time} WITA] Error contacting Cloudflare:`, error);
+    return NextResponse.json(
+      { message: "Terjadi kesalahan pada sistem keamanan." },
+      { status: 500 }
     );
   }
 
