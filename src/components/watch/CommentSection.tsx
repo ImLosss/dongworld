@@ -238,7 +238,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                             required
                         ></textarea>
                         <Turnstile
-                            siteKey="SITE_KEY_DARI_CLOUDFLARE_ANDA"
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
                             onSuccess={(token) => setTurnstileToken(token)}
                         />
                         <button type="submit" className="dl-btn-primary" disabled={loading || !turnstileToken}>Kirim</button>
