@@ -1,4 +1,5 @@
 "use client";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useState, useEffect, useRef } from "react";
 
 function formatRelativeTime(date: string) {
@@ -45,6 +46,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
     const [displayedComments, setDisplayedComments] = useState<Comment[]>([]);
     const [currentIndex, setCurrentIndex] = useState(10);
     const [loading, setLoading] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState<string>("");
     
     // State membalas ke ID Root
     const [replyingTo, setReplyingTo] = useState<{ rootId: number; name: string; content: string } | null>(null);
@@ -83,6 +85,10 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         localStorage.setItem("commenterName", name);
+        if (!turnstileToken) {
+            alert("Mohon tunggu verifikasi keamanan selesai.");
+            return;
+        }
 
         try {
             const res = await fetch("/api/comments", {
@@ -92,7 +98,8 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                     name,
                     comment: commentText,
                     slug,
-                    reply_to_comment_id: replyingTo ? replyingTo.rootId : null 
+                    reply_to_comment_id: replyingTo ? replyingTo.rootId : null,
+                    cf_turnstile_response: turnstileToken
                 }),
             });
 
@@ -230,7 +237,11 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                             maxLength={250}
                             required
                         ></textarea>
-                        <button type="submit" className="dl-btn-primary" disabled={loading}>Kirim</button>
+                        <Turnstile
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                            onSuccess={(token) => setTurnstileToken(token)}
+                        />
+                        <button type="submit" className="dl-btn-primary" disabled={loading || !turnstileToken}>Kirim</button>
                     </form>
                 </div>
             </div>
