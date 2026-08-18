@@ -1,5 +1,5 @@
 "use client";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, TurnstileInstance } from "@marsidev/react-turnstile";
 import { useState, useEffect, useRef } from "react";
 
 function formatRelativeTime(date: string) {
@@ -47,6 +47,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
     const [currentIndex, setCurrentIndex] = useState(10);
     const [loading, setLoading] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState<string>("");
+    const turnstileRef = useRef<TurnstileInstance>(null);
     
     // State membalas ke ID Root
     const [replyingTo, setReplyingTo] = useState<{ rootId: number; name: string; content: string } | null>(null);
@@ -89,6 +90,8 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
             alert("Mohon tunggu verifikasi keamanan selesai.");
             return;
         }
+
+        setLoading(true);
 
         try {
             const res = await fetch("/api/comments", {
@@ -138,6 +141,10 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
         } catch (err) {
             console.error(err);
             alert("Komentar gagal ditambahkan!");
+        } finally {
+            setLoading(false);
+            setTurnstileToken("");
+            turnstileRef.current?.reset();
         }
     };
 
@@ -238,10 +245,11 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                             required
                         ></textarea>
                         <Turnstile
-                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                            ref={turnstileRef} 
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ""}
                             onSuccess={(token) => setTurnstileToken(token)}
                         />
-                        <button type="submit" className="dl-btn-primary" disabled={loading || !turnstileToken}>Kirim</button>
+                        <button type="submit" className="dl-btn-primary" disabled={loading || !turnstileToken}>{loading ? "Mengirim..." : "Kirim"}</button>
                     </form>
                 </div>
             </div>
