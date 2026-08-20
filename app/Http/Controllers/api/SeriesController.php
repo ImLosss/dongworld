@@ -8,6 +8,8 @@ use App\Models\Genre;
 use App\Models\Series;
 use App\Models\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SeriesController extends Controller
 {
@@ -108,9 +110,11 @@ class SeriesController extends Controller
         ]);
 
         $data = Series::where('slug', $request->slug)->first();
+        $isEpisode = false;
 
         if (!$data) {
-            $data = Episode::where('slug', $request->slug)->first();
+            $data = Episode::with('series')->where('slug', $request->slug)->first();
+            $isEpisode = true;
         }
 
         if (!$data) {
@@ -132,6 +136,28 @@ class SeriesController extends Controller
             'content' => $request->comment,
             'reply_to_comment_id' => $request->reply_to_comment_id,
         ]);
+
+        $replyFromName = isset($parentComment) ? $parentComment->name : null;
+        $seriesName = $isEpisode ? $data->series->name : $data->name;
+        $episode = $isEpisode ? $data->episode_number : null;
+        $linkToComment = 'https://dongworld.site/' . ($isEpisode ? 'watch/' : 'series/') . $data->slug;
+
+
+        try {
+            Http::timeout(3)->withHeaders([
+                'sb-webhook-token' => 'sbwhook-lwatbodiymchocuj2fdbt1qs'
+            ])->post('https://webhook.websiteku.site/send-notif-comment', [
+                'name' => $comment->name,
+                'comment' => $comment->content,
+                'reply_from' => $replyFromName,
+                'series_name' => $seriesName,
+                'episode' => $episode,
+                'link_to_comment' => $linkToComment,
+            ]);
+        } catch (\Exception $e) {
+            // Catat error di file log Laravel, tapi biarkan user tetap sukses memposting komentar
+            Log::error('Gagal mengirim notif telegram: ' . $e->getMessage());
+        }
 
         return response()->json([
             'message' => 'Comment posted successfully',
