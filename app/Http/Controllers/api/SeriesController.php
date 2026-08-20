@@ -140,7 +140,7 @@ class SeriesController extends Controller
         $replyFromName = isset($parentComment) ? $parentComment->name : null;
         $seriesName = $isEpisode ? $data->series->name : $data->name;
         $episode = $isEpisode ? $data->episode_number : null;
-        $linkToComment = 'https://dongworld.site/' . ($isEpisode ? 'watch/' : 'series/') . $data->slug;
+        $linkToComment = 'https://dongworld.top/' . ($isEpisode ? 'watch/' : 'series/') . $data->slug;
 
 
         try {
