@@ -57,7 +57,7 @@ export default function RootLayout({
           color="#ff3d4d" /* Sesuaikan dengan var(--primary-color) Anda */
           initialPosition={0.08}
           crawlSpeed={200}
-          height={3}
+          height={4}
           crawl={true}
           showSpinner={false} /* Set true jika ingin ada ikon loading berputar di pojok */
           easing="ease"
