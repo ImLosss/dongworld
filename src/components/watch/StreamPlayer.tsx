@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { openSmartlink } from "@/lib/smartlink";
 
 interface StreamPlayerProps {
@@ -19,11 +19,11 @@ type HistoryMap = Record<string, HistoryItem>;
 export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
     const BASE_EMBED_URL = "http://player.websiteku.space/embed?url=";
     const sortedLinks = [...(detail.links || [])]
-    .sort((a: any, b: any) => {
-        const aOkru = (a.server?.name || "").toLowerCase() === "okru";
-        const bOkru = (b.server?.name || "").toLowerCase() === "okru";
-        return Number(bOkru) - Number(aOkru);
-    });
+        .sort((a: any, b: any) => {
+            const aOkru = (a.server?.name || "").toLowerCase() === "okru";
+            const bOkru = (b.server?.name || "").toLowerCase() === "okru";
+            return Number(bOkru) - Number(aOkru);
+        });
 
     const getServerUrl = () => {
         const saved = localStorage.getItem("server");
@@ -41,6 +41,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
 
     const [selectedServer, setSelectedServer] = useState(sortedLinks[0]?.server.name || "");
     const [saved, setSaved] = useState(false);
+    const serverTabsRef = useRef<HTMLDivElement>(null);
 
     const currentLink =
         sortedLinks.find(link => link.server.name === selectedServer) ??
@@ -52,11 +53,32 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
         if (saved) {
             setSelectedServer(saved);
         }
+
+        setTimeout(() => {
+            const container = serverTabsRef.current;
+            if (!container) return;
+
+            const activeTab = container.querySelector('.dl-server-tab.active') as HTMLElement;
+
+            if (activeTab) {
+                // Hitung posisi agar tab berada di tengah layar kontainer
+                const containerWidth = container.clientWidth;
+                const tabOffsetLeft = activeTab.offsetLeft;
+                const tabWidth = activeTab.clientWidth;
+
+                const scrollTarget = tabOffsetLeft - (containerWidth / 2) + (tabWidth / 2);
+
+                container.scrollTo({
+                    left: scrollTarget,
+                    behavior: 'smooth'
+                });
+            }
+        }, 150);
     }, [detail.slug]);
 
-    const handleServerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        localStorage.setItem("server", e.target.value);
-        setSelectedServer(e.target.value);
+    const handleServerChange = (serverName: string) => {
+        localStorage.setItem("server", serverName);
+        setSelectedServer(serverName);
     };
 
     const saveHistory = () => {
@@ -122,29 +144,38 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                 </div>
 
                 {/* Server Selection */}
-                <div className="dl-server-selection">
-                    <div className="dl-server-left">
-                        <select
-                            id="server-select"
-                            value={selectedServer}
-                            onClick={openSmartlink}
-                            onChange={handleServerChange}
-                        >
+                <div className="dl-server-minimal-bar">
+                    <div className="dl-server-tabs-container">
+                        <span className="dl-server-icon" title="Pilih Server">
+                            <i className="fas fa-server"></i>
+                        </span>
+                        <div className="dl-server-tabs" ref={serverTabsRef}>
                             {sortedLinks.map((link: any) => (
-                                <option key={link.id} value={link.server.name}>
+                                <button
+                                    key={link.id}
+                                    className={`dl-server-tab ${selectedServer === link.server.name ? 'active' : ''}`}
+                                    onClick={() => {
+                                        handleServerChange(link.server.name);
+                                        openSmartlink();
+                                    }}
+                                >
                                     {link.server.name}
-                                </option>
+                                </button>
                             ))}
-                        </select>
+                        </div>
                     </div>
 
-                    <div className="dl-server-right" onClick={openSmartlink}>
+                    <div className="dl-episode-nav-icons" onClick={openSmartlink}>
                         {prevEpisodeSlug && (
-                            <Link href={prevEpisodeSlug ? `/watch/${prevEpisodeSlug}` : "#"}className="dl-server-nav"><i className="fas fa-chevron-left"></i>{detail.episode_number - 1}</Link>
+                            <Link href={`/watch/${prevEpisodeSlug}`} className="dl-nav-icon" title={`Episode ${detail.episode_number - 1}`}>
+                                <i className="fas fa-step-backward"></i>
+                            </Link>
                         )}
 
                         {nextEpisodeSlug && (
-                            <Link href={`/watch/${nextEpisodeSlug}`} className="dl-server-nav">{detail.episode_number + 1} <i className="fas fa-chevron-right"></i></Link>
+                            <Link href={`/watch/${nextEpisodeSlug}`} className="dl-nav-icon" title={`Episode ${detail.episode_number + 1}`}>
+                                <i className="fas fa-step-forward"></i>
+                            </Link>
                         )}
                     </div>
                 </div>

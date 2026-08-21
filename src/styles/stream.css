@@ -67,51 +67,101 @@
 }
 
 /* Server Selection */
-.dl-server-selection {
-    padding: 15px;
-    background-color: var(--darker-color);
+.dl-server-minimal-bar {
     display: flex;
     justify-content: space-between;
-}
-
-.dl-server-left {
-    flex: 1;
-}
-
-.dl-server-right {
-    display: flex;
-    gap: 8px;
-}
-
-.dl-server-selection select {
-    padding: 8px 15px;
-    border-radius: 5px;
-    background-color: var(--secondary-color);
-    color: var(--light-color);
-    border: none;
-}
-
-.dl-server-nav {
-    padding: 8px 15px;
-    margin:5px;
-    font-size: 0.9rem;
-    border-radius: 6px;
+    align-items: center;
     background-color: var(--darker-color);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: var(--light-color);
-    text-decoration: none;
-    display: inline-flex;
+    padding: 0 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Bagian Kiri: Tab Server */
+.dl-server-tabs-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    min-width: 0; /* Penting agar tab bisa di-swipe dan tidak jebol */
+}
+
+.dl-server-icon {
+    color: var(--primary-color);
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.dl-server-tabs {
+    display: flex;
+    gap: 20px; /* Jarak antar teks server */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 15px 0; /* Memberi ruang sentuh */
+}
+
+.dl-server-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+/* Tampilan Tab Teks (Tanpa Kotak) */
+.dl-server-tab {
+    background: none;
+    border: none;
+    color: var(--gray-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.dl-server-tab:hover {
+    color: white;
+}
+
+/* Efek Garis Bawah (Underline) untuk Server Aktif */
+.dl-server-tab.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.dl-server-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -15px; /* Sejajar dengan padding bawah container */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px 3px 0 0;
+}
+
+/* Bagian Kanan: Ikon Navigasi (Prev/Next) */
+.dl-episode-nav-icons {
+    display: flex;
+    gap: 15px;
+    padding-left: 15px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dl-nav-icon {
+    color: var(--gray-color);
+    font-size: 1.1rem;
+    background: none;
+    border: none;
+    padding: 10px 5px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-.dl-server-selection a,
-.dl-server-selection a:hover,
-.dl-server-selection a:focus,
-.dl-server-selection a:visited {
-    text-decoration: none;
-    /* color: var(--light-color); */
+.dl-nav-icon:hover {
+    color: var(--primary-color);
 }
 
 /* Breadcrumb */
@@ -1084,6 +1134,38 @@
     .dl-comment-replies .dl-comment::after {
         left: -25px; /* 45 - 20 = 25px */
         width: 25px; /* Pas menempel pinggir avatar */
+    }
+
+    .dl-server-minimal-bar {
+        padding: 0 10px;
+    }
+    
+    .dl-server-icon {
+        font-size: 0.9rem;
+    }
+    
+    .dl-server-tabs {
+        gap: 15px;
+        padding: 12px 0;
+    }
+    
+    .dl-server-tab {
+        font-size: 0.85rem;
+    }
+    
+    .dl-server-tab.active::after {
+        bottom: -12px;
+    }
+    
+    .dl-episode-nav-icons {
+        gap: 10px;
+        padding-left: 10px;
+        margin-left: 5px
+    }
+    
+    .dl-nav-icon {
+        font-size: 1rem;
+        padding: 8px 5px;
     }
 }
 
