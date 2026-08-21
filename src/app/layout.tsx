@@ -10,6 +10,7 @@ import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { Suspense } from "react";
 import SmartlinkAd from "@/components/Smartlink Ads";
+import NextTopLoader from "nextjs-toploader";
 
 const uiFont = Roboto({
   variable: "--font-primary",
@@ -52,6 +53,17 @@ export default function RootLayout({
         {/* <Script src="//pl28153160.effectivegatecpm.com/9a/6b/7f/9a6b7f078134c58d46071005022176d6.js" strategy="afterInteractive" /> */}
       </head>
       <body className={`${uiFont.variable}`}>
+        <NextTopLoader 
+          color="#ff3d4d" /* Sesuaikan dengan var(--primary-color) Anda */
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false} /* Set true jika ingin ada ikon loading berputar di pojok */
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #ff3d4d,0 0 5px #ff3d4d"
+        />
         {/* <SmartlinkAd />     */}
         <div id="dl-root">
           <main className="dl-main-content">
