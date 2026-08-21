@@ -564,19 +564,77 @@
 }
 
 .dl-comment-thread {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
+    position: relative;
+    overflow: hidden; 
+    flex-shrink: 0; /* <--- INI KUNCI PERBAIKANNYA */
+    padding-bottom: 0px; /* Bantalan aman untuk huruf paling bawah */
 }
 
 .dl-comment-replies {
-    margin-left: 48px; /* Menggeser reply ke kanan */
-    padding-left: 15px;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    margin-left: 55px; /* Jarak pas (40px avatar + 15px gap) */
+    padding-left: 0;
+    padding-top: 10px;
+    border-left: none !important; 
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+
+/* 2. KUNCI RAHASIA: Thread memotong kelebihan garis yang tembus ke atas */
+.dl-comment-thread {
+    position: relative;
+    overflow: hidden; 
+}
+
+/* 3. AVATAR DI ATAS GARIS: Avatar akan menutupi garis yang melintas di belakangnya */
+.dl-comment-avatar {
+    position: relative;
+    z-index: 2; /* Menang dari garis (z-index: 1) */
+    background-color: var(--secondary-color); /* Pastikan warna solid, tidak transparan */
+}
+
+.dl-comment-replies .dl-comment {
+    position: relative;
+}
+
+/* 4. BENTUK "L" UNTUK SEMUA BALASAN */
+.dl-comment-replies .dl-comment::before {
+    content: '';
+    position: absolute;
+    top: 0px; /* Mulai dari celah atas */
+    left: -35px; /* Mundur persis ke titik tengah avatar utama (55 - 35 = 20px) */
+    width: 35px; /* DULU 25px. SEKARANG 35px agar garis pas menyentuh pinggir kiri avatar! */
+    height: 20px; /* Turun menembak pas ke titik tengah vertikal avatar balasan */
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    border-bottom-left-radius: 8px; /* Lengkungan sudut L */
+    pointer-events: none;
+    z-index: 1; /* Posisi di belakang avatar */
+}
+
+/* Trik Khusus: Balasan PERTAMA garisnya ditarik tinggi ke atas sejauh 9999px */
+/* Garis ini akan bersembunyi di balik punggung avatar utama dan sisanya dipotong oleh overflow: hidden */
+.dl-comment-replies .dl-comment:first-child::before {
+    top: -9999px; 
+    height: calc(9999px + 20px); 
+}
+
+/* 5. GARIS TERUSAN KE BAWAH (Menghubungkan bentuk L satu dengan L lainnya) */
+.dl-comment-replies .dl-comment::after {
+    content: '';
+    position: absolute;
+    top: 15px; /* Mulai dari batas lengkungan L */
+    bottom: -15px; /* Turun bablas menyambung ke komentar selanjutnya */
+    left: -35px; 
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 6. Sembunyikan garis terusan ke bawah pada balasan TERAKHIR agar bentuknya murni "L" */
+.dl-comment-replies .dl-comment:last-child::after {
+    display: none;
 }
 
 .dl-replying-indicator {
@@ -1020,8 +1078,12 @@
     }
 
     .dl-comment-replies {
-        margin-left: 20px;
-        padding-left: 10px;
+        margin-left: 45px;
+    }
+    .dl-comment-replies .dl-comment::before,
+    .dl-comment-replies .dl-comment::after {
+        left: -25px; /* 45 - 20 = 25px */
+        width: 25px; /* Pas menempel pinggir avatar */
     }
 }
 
