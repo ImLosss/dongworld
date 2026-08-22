@@ -8,7 +8,8 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('series.index') }}">Series</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('series.index') }}">Series</a>
+            </li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Edit</li>
         </ol>
         <h5 class="font-weight-bolder mb-0">Series</h5>
@@ -16,269 +17,343 @@
 @endsection
 
 @section('content')
-<div class="card">
-    <div class="card-header pb-0 px-3">
-    <h5 class="mb-0">Edit Series</h5>
+    <div class="card">
+        <div class="card-header pb-0 px-3">
+            <h5 class="mb-0">Edit Series</h5>
+        </div>
+        <div class="card-body pt-4 p-3">
+            <form action="{{ route('series.update', $series->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="name" class="form-control-label">Nama</label>
+                            <input class="form-control @error('name') border border-danger rounded-3 @enderror"
+                                type="text" placeholder="Nama Series" name="name"
+                                value="{{ old('name', $series->name) }}" autofocus>
+                            @error('name')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="slug" class="form-control-label">Slug</label>
+                            <input class="form-control @error('slug') border border-danger rounded-3 @enderror"
+                                type="text" placeholder="slug-series" name="slug"
+                                value="{{ old('slug', $series->slug) }}">
+                            @error('slug')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="next_series_id" class="form-control-label">Next Series</label>
+                            <select name="next_series_id" id="next_series_id"
+                                class="form-control select2 @error('next_series_id') border border-danger rounded-3 @enderror">
+                                <option value="">- Pilih Next Series -</option>
+                                @foreach ($seriesOptions as $s)
+                                    <option value="{{ $s->id }}"
+                                        {{ (string) old('next_series_id', $series->next_series_id) === (string) $s->id ? 'selected' : '' }}>
+                                        {{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('next_series_id')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="previous_series_id" class="form-control-label">Previous Series</label>
+                            <select name="previous_series_id" id="previous_series_id"
+                                class="form-control select2 @error('previous_series_id') border border-danger rounded-3 @enderror">
+                                <option value="">- Pilih Previous Series -</option>
+                                @foreach ($seriesOptions as $s)
+                                    <option value="{{ $s->id }}"
+                                        {{ (string) old('previous_series_id', $series->previous_series_id) === (string) $s->id ? 'selected' : '' }}>
+                                        {{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('previous_series_id')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="type" class="form-control-label">Tipe</label>
+                            <select name="type"
+                                class="form-control @error('type') border border-danger rounded-3 @enderror">
+                                <option value="tv" {{ old('type', $series->type) == 'tv' ? 'selected' : '' }}>TV
+                                </option>
+                                <option value="ona" {{ old('type', $series->type) == 'ona' ? 'selected' : '' }}>ONA
+                                </option>
+                                <option value="movie" {{ old('type', $series->type) == 'movie' ? 'selected' : '' }}>Movie
+                                </option>
+                                <option value="special" {{ old('type', $series->type) == 'special' ? 'selected' : '' }}>
+                                    Special</option>
+                                <option value="ova" {{ old('type', $series->type) == 'ova' ? 'selected' : '' }}>OVA
+                                </option>
+                                <option value="pv" {{ old('type', $series->type) == 'pv' ? 'selected' : '' }}>PV
+                                </option>
+                            </select>
+                            @error('type')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="status" class="form-control-label">Status</label>
+                            <select name="status"
+                                class="form-control @error('status') border border-danger rounded-3 @enderror">
+                                <option value="ongoing"
+                                    {{ old('status', $series->status) == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                <option value="complete"
+                                    {{ old('status', $series->status) == 'complete' ? 'selected' : '' }}>Complete</option>
+                                <option value="dropped"
+                                    {{ old('status', $series->status) == 'dropped' ? 'selected' : '' }}>Dropped</option>
+                            </select>
+                            @error('status')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="genres" class="form-control-label">Genres</label>
+                            <select name="genres[]" id="genres"
+                                class="form-control select2 @error('genres') border border-danger rounded-3 @enderror"
+                                multiple>
+                                @foreach ($genres as $g)
+                                    <option value="{{ $g->id }}"
+                                        {{ collect(old('genres', $series->genres->pluck('id')->toArray()))->contains($g->id) ? 'selected' : '' }}>
+                                        {{ $g->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('genres')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="total_episodes" class="form-control-label">Total Episode</label>
+                            <input class="form-control @error('total_episodes') border border-danger rounded-3 @enderror"
+                                type="number" placeholder="12" name="total_episodes"
+                                value="{{ old('total_episodes', $series->total_episodes) }}">
+                            @error('total_episodes')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="duration" class="form-control-label">Duration</label>
+                            <input class="form-control @error('duration') border border-danger rounded-3 @enderror"
+                                type="number" placeholder="Duration in minutes" name="duration"
+                                value="{{ $series->duration }}">
+                            @error('duration')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="studios" class="form-control-label">Studios</label>
+                            <input class="form-control @error('studios') border border-danger rounded-3 @enderror"
+                                type="text" placeholder="Studios" name="studios" value="{{ $series->studios }}">
+                            @error('studios')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="rating" class="form-control-label">Rating</label>
+                            <input class="form-control @error('rating') border border-danger rounded-3 @enderror"
+                                type="number" step="0.1" min="0" max="10" placeholder="7.5"
+                                name="rating" value="{{ old('rating', $series->rating) }}">
+                            @error('rating')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="aliases" class="form-control-label">Aliases</label>
+                            <input class="form-control @error('aliases') border border-danger rounded-3 @enderror"
+                                type="text" placeholder="Pisah dengan koma (,)" name="aliases"
+                                value="{{ old('aliases', $series->aliases ? implode(', ', $series->aliases) : '') }}"
+                                autofocus>
+                            @error('aliases')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="release_date" class="form-control-label">Tanggal Rilis</label>
+                            <input class="form-control @error('release_date') border border-danger rounded-3 @enderror"
+                                type="date" placeholder="2025-08-01" name="release_date"
+                                value="{{ old('release_date', $series->release_date) }}">
+                            @error('release_date')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="release_day" class="form-control-label">Hari Rilis</label>
+                            <select class="form-control @error('release_day') border border-danger rounded-3 @enderror"
+                                name="release_day" id="release_day">
+                                <option value="">Pilih Hari</option>
+                                <option value="0" {{ (string) old('release_day', $series->release_day ?? '') === '0' ? 'selected' : '' }}>Minggu</option>
+                                <option value="1" {{ (string) old('release_day', $series->release_day ?? '') === '1' ? 'selected' : '' }}>Senin</option>
+                                <option value="2" {{ (string) old('release_day', $series->release_day ?? '') === '2' ? 'selected' : '' }}>Selasa</option>
+                                <option value="3" {{ (string) old('release_day', $series->release_day ?? '') === '3' ? 'selected' : '' }}>Rabu</option>
+                                <option value="4" {{ (string) old('release_day', $series->release_day ?? '') === '4' ? 'selected' : '' }}>Kamis</option>
+                                <option value="5" {{ (string) old('release_day', $series->release_day ?? '') === '5' ? 'selected' : '' }}>Jumat</option>
+                                <option value="6" {{ (string) old('release_day', $series->release_day ?? '') === '6' ? 'selected' : '' }}>Sabtu</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="folder_id" class="form-control-label">Folder ID (drive)</label>
+                            <input class="form-control @error('folder_id') border border-danger rounded-3 @enderror"
+                                type="text" placeholder="Folder ID" name="folder_id"
+                                value="{{ old('folder_id', $series->folder_id) }}">
+                            @error('folder_id')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-validation">
+                            <label for="thumbnail" class="form-control-label">Thumbnail</label>
+                            <input id="thumbnailInput"
+                                class="form-control @error('thumbnail') border border-danger rounded-3 @enderror"
+                                type="file" accept="image/*" name="thumbnail">
+                            @if ($series->thumbnail)
+                                <img id="thumbPreview" src="{{ asset($series->thumbnail) }}" alt="thumb"
+                                    style="display:block;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
+                            @else
+                                <img id="thumbPreview" alt="thumb"
+                                    style="display:none;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
+                            @endif
+                            @error('thumbnail')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="update_timestamp"
+                                id="update_timestamp" value="1"
+                                {{ old('update_timestamp', false) ? 'checked' : '' }}>
+
+                            <label class="form-check-label" for="update_timestamp">
+                                Update timestamp
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group has-validation">
+                            <label for="synopsis" class="form-control-label">Sinopsis</label>
+                            <textarea class="form-control @error('synopsis') border border-danger rounded-3 @enderror" name="synopsis"
+                                rows="3" placeholder="Sinopsis">{{ old('synopsis', $series->synopsis) }}</textarea>
+                            @error('synopsis')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ 'Simpan' }}</button>
+                </div>
+        </div>
     </div>
-    <div class="card-body pt-4 p-3">
-    <form action="{{ route('series.update', $series->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="name" class="form-control-label">Nama</label>
-                        <input class="form-control @error('name') border border-danger rounded-3 @enderror" type="text" placeholder="Nama Series" name="name" value="{{ old('name', $series->name) }}" autofocus>
-                        @error('name')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="slug" class="form-control-label">Slug</label>
-                        <input class="form-control @error('slug') border border-danger rounded-3 @enderror" type="text" placeholder="slug-series" name="slug" value="{{ old('slug', $series->slug) }}">
-                        @error('slug')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="next_series_id" class="form-control-label">Next Series</label>
-                        <select name="next_series_id" id="next_series_id" class="form-control select2 @error('next_series_id') border border-danger rounded-3 @enderror">
-                            <option value="">- Pilih Next Series -</option>
-                            @foreach($seriesOptions as $s)
-                                <option value="{{ $s->id }}" {{ (string) old('next_series_id', $series->next_series_id) === (string) $s->id ? 'selected' : '' }}>{{ $s->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('next_series_id')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="previous_series_id" class="form-control-label">Previous Series</label>
-                        <select name="previous_series_id" id="previous_series_id" class="form-control select2 @error('previous_series_id') border border-danger rounded-3 @enderror">
-                            <option value="">- Pilih Previous Series -</option>
-                            @foreach($seriesOptions as $s)
-                                <option value="{{ $s->id }}" {{ (string) old('previous_series_id', $series->previous_series_id) === (string) $s->id ? 'selected' : '' }}>{{ $s->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('previous_series_id')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="type" class="form-control-label">Tipe</label>
-                        <select name="type" class="form-control @error('type') border border-danger rounded-3 @enderror">
-                            <option value="tv" {{ old('type', $series->type) == 'tv' ? 'selected' : '' }}>TV</option>
-                            <option value="ona" {{ old('type', $series->type) == 'ona' ? 'selected' : '' }}>ONA</option>
-                            <option value="movie" {{ old('type', $series->type) == 'movie' ? 'selected' : '' }}>Movie</option>
-                            <option value="special" {{ old('type', $series->type) == 'special' ? 'selected' : '' }}>Special</option>
-                            <option value="ova" {{ old('type', $series->type) == 'ova' ? 'selected' : '' }}>OVA</option>
-                            <option value="pv" {{ old('type', $series->type) == 'pv' ? 'selected' : '' }}>PV</option>
-                        </select>
-                        @error('type')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="status" class="form-control-label">Status</label>
-                        <select name="status" class="form-control @error('status') border border-danger rounded-3 @enderror">
-                            <option value="ongoing" {{ old('status', $series->status) == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
-                            <option value="complete" {{ old('status', $series->status) == 'complete' ? 'selected' : '' }}>Complete</option>
-                            <option value="dropped" {{ old('status', $series->status) == 'dropped' ? 'selected' : '' }}>Dropped</option>
-                        </select>
-                        @error('status')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="genres" class="form-control-label">Genres</label>
-                        <select name="genres[]" id="genres" class="form-control select2 @error('genres') border border-danger rounded-3 @enderror" multiple>
-                            @foreach($genres as $g)
-                                <option value="{{ $g->id }}" {{ collect(old('genres', $series->genres->pluck('id')->toArray()))->contains($g->id) ? 'selected' : '' }}>{{ $g->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('genres')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="total_episodes" class="form-control-label">Total Episode</label>
-                        <input class="form-control @error('total_episodes') border border-danger rounded-3 @enderror" type="number" placeholder="12" name="total_episodes" value="{{ old('total_episodes', $series->total_episodes) }}">
-                        @error('total_episodes')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="duration" class="form-control-label">Duration</label>
-                        <input class="form-control @error('duration') border border-danger rounded-3 @enderror" type="number" placeholder="Duration in minutes" name="duration" value="{{ $series->duration }}">
-                        @error('duration')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="studios" class="form-control-label">Studios</label>
-                        <input class="form-control @error('studios') border border-danger rounded-3 @enderror" type="text" placeholder="Studios" name="studios" value="{{ $series->studios }}">
-                        @error('studios')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="rating" class="form-control-label">Rating</label>
-                        <input class="form-control @error('rating') border border-danger rounded-3 @enderror" type="number" step="0.1" min="0" max="10" placeholder="7.5" name="rating" value="{{ old('rating', $series->rating) }}">
-                        @error('rating')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="aliases" class="form-control-label">Aliases</label>
-                        <input class="form-control @error('aliases') border border-danger rounded-3 @enderror" type="text" placeholder="Pisah dengan koma (,)" name="aliases" value="{{ old('aliases', $series->aliases ? implode(', ', $series->aliases) : '') }}" autofocus>
-                        @error('aliases')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="release_date" class="form-control-label">Tanggal Rilis</label>
-                        <input class="form-control @error('release_date') border border-danger rounded-3 @enderror" type="date" placeholder="2025-08-01" name="release_date" value="{{ old('release_date', $series->release_date) }}">
-                        @error('release_date')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="thumbnail" class="form-control-label">Thumbnail</label>
-                        <input id="thumbnailInput" class="form-control @error('thumbnail') border border-danger rounded-3 @enderror" type="file" accept="image/*" name="thumbnail">
-                        @if($series->thumbnail)
-                            <img id="thumbPreview" src="{{ asset($series->thumbnail) }}" alt="thumb" style="display:block;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
-                        @else
-                            <img id="thumbPreview" alt="thumb" style="display:none;height:60px;width:auto;border-radius:6px;object-fit:cover;margin-top:6px;">
-                        @endif
-                        @error('thumbnail')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group has-validation">
-                        <label for="folder_id" class="form-control-label">Folder ID (drive)</label>
-                        <input class="form-control @error('folder_id') border border-danger rounded-3 @enderror" type="text" placeholder="Folder ID" name="folder_id" value="{{ old('folder_id', $series->folder_id) }}">
-                        @error('folder_id')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group has-validation">
-                        <label for="synopsis" class="form-control-label">Sinopsis</label>
-                        <textarea class="form-control @error('synopsis') border border-danger rounded-3 @enderror" name="synopsis" rows="3" placeholder="Sinopsis">{{ old('synopsis', $series->synopsis) }}</textarea>
-                        @error('synopsis')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ 'Simpan' }}</button>
-            </div>
-    </div>
-</div>
 @endsection
 
 @section('script')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        if (window.$ && $('#genres').length) {
-            $('#genres').select2({
-                width: '100%',
-                placeholder: '- Pilih Genre -'
-            });
-        }
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.$ && $('#genres').length) {
+                $('#genres').select2({
+                    width: '100%',
+                    placeholder: '- Pilih Genre -'
+                });
+            }
 
-        if (window.$ && $('#next_series_id').length) {
-            $('#next_series_id').select2({
-                width: '100%',
-                placeholder: '- Pilih Next Series -',
-                allowClear: true
-            });
-        }
+            if (window.$ && $('#next_series_id').length) {
+                $('#next_series_id').select2({
+                    width: '100%',
+                    placeholder: '- Pilih Next Series -',
+                    allowClear: true
+                });
+            }
 
-        if (window.$ && $('#previous_series_id').length) {
-            $('#previous_series_id').select2({
-                width: '100%',
-                placeholder: '- Pilih Previous Series -',
-                allowClear: true
-            });
-        }
+            if (window.$ && $('#previous_series_id').length) {
+                $('#previous_series_id').select2({
+                    width: '100%',
+                    placeholder: '- Pilih Previous Series -',
+                    allowClear: true
+                });
+            }
 
-        const nameInput = document.querySelector('input[name="name"]');
-        const slugInput = document.querySelector('input[name="slug"]');
-        function slugify(text){
-            return text
-                .toString()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .trim()
-                .replace(/[\s-]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-        }
-        if (nameInput && slugInput) {
-            nameInput.addEventListener('input', function(){
-                if (!slugInput.value || slugInput.value === slugify(slugInput.value)) {
-                    slugInput.value = slugify(nameInput.value);
-                }
-            });
-        }
+            const nameInput = document.querySelector('input[name="name"]');
+            const slugInput = document.querySelector('input[name="slug"]');
 
-        // preview selected thumbnail (same behavior as create)
-        const thumbInput = document.getElementById('thumbnailInput');
-        const prev = document.getElementById('thumbPreview');
-        if (thumbInput && prev) {
-            thumbInput.addEventListener('change', function (e) {
-                const file = e.target.files && e.target.files[0];
-                if (!file) return;
-                const url = URL.createObjectURL(file);
-                prev.src = url;
-                prev.style.display = 'block';
-            });
-        }
-    });
-</script>
+            function slugify(text) {
+                return text
+                    .toString()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .trim()
+                    .replace(/[\s-]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+            }
+            if (nameInput && slugInput) {
+                nameInput.addEventListener('input', function() {
+                    if (!slugInput.value || slugInput.value === slugify(slugInput.value)) {
+                        slugInput.value = slugify(nameInput.value);
+                    }
+                });
+            }
+
+            // preview selected thumbnail (same behavior as create)
+            const thumbInput = document.getElementById('thumbnailInput');
+            const prev = document.getElementById('thumbPreview');
+            if (thumbInput && prev) {
+                thumbInput.addEventListener('change', function(e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    const url = URL.createObjectURL(file);
+                    prev.src = url;
+                    prev.style.display = 'block';
+                });
+            }
+        });
+    </script>
 @endsection

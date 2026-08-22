@@ -97,6 +97,7 @@ class SeriesController extends Controller
             'synopsis' => 'nullable|string',
             'total_episodes' => 'nullable|numeric',
             'release_date' => 'nullable|string',
+            'release_day' => 'nullable|numeric|between:0,6',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'genres' => 'nullable|array',
             'folder_id' => 'nullable|string|max:255',
@@ -179,6 +180,7 @@ class SeriesController extends Controller
             'synopsis' => 'nullable|string',
             'total_episodes' => 'nullable|numeric|min:0',
             'release_date' => 'nullable|string',
+            'release_day' => 'nullable|numeric|between:0,6',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'folder_id' => 'nullable|string|max:255',
             'genres' => 'nullable|array',
@@ -201,6 +203,9 @@ class SeriesController extends Controller
             unset($validated['thumbnail']);
         }
 
+        if (!$request->boolean('update_timestamp')) {
+            $series->timestamps = false;
+        }
         $series->update($validated);
         $series->genres()->sync($request->input('genres', []));
 

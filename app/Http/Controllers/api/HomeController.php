@@ -26,6 +26,11 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        return response()->json(['series' => $series, 'movies' => $movies, 'heroSlides' => $heroSlides]);
+        $schedules = Series::whereNotNull('release_day')
+            ->with('latestEpisode')
+            ->get()
+            ->where('status', 'ongoing');
+
+        return response()->json(['series' => $series, 'movies' => $movies, 'heroSlides' => $heroSlides, 'schedules' => $schedules]);
     }
 }
