@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import SeriesList from "@/components/home/SeriesList";
 
-// 1. Sesuaikan Type Data
 type Series = {
   id: number;
   name: string;
@@ -15,12 +14,11 @@ type Series = {
   rating?: string;
   updated_at?: string;
   status?: string;
-  release_day?: string[]; // Sekarang menerima Array of Strings dari backend
-  mapped_release_days?: string[]; // Properti tambahan khusus untuk kebutuhan UI
+  release_day?: string[]; 
+  mapped_release_days?: string[]; 
 };
 
 export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: Series[] }) {
-  // Generate Hari dengan Data Selisih (diff)
   const scheduleDays = useMemo(() => {
     const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
     const shortDays = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
@@ -31,15 +29,14 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
 
     return weekDays.map((fullDay, index) => {
       const date = new Date(today);
-      const diff = index - adjustedTodayIndex; // - (Masa lalu), 0 (Hari ini), + (Masa depan)
+      const diff = index - adjustedTodayIndex; 
       date.setDate(today.getDate() + diff);
       
       return {
         fullDay,
         shortDay: shortDays[index],
         dateNum: date.getDate(),
-        isToday: diff === 0,
-        diff: diff 
+        isToday: diff === 0
       };
     });
   }, []);
@@ -48,21 +45,17 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
   const [activeDay, setActiveDay] = useState(initialToday);
   const [scheduleData, setScheduleData] = useState<Series[]>([]);
 
-  // 2. Logika Mapping Array Hari
   useEffect(() => {
     const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
     
     const mappedData = scheduleRawData.map((series) => {
       let mappedDays: string[] = [];
-
-      // Pastikan release_day adalah array yang valid sebelum di-map
       if (Array.isArray(series.release_day)) {
         mappedDays = series.release_day.map((dayStr) => {
           const dayIndex = parseInt(dayStr, 10);
           return !isNaN(dayIndex) && weekDays[dayIndex] ? weekDays[dayIndex] : "Unknown";
         });
       }
-
       return {
         ...series,
         mapped_release_days: mappedDays,
@@ -72,17 +65,11 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
     setScheduleData(mappedData);
   }, [scheduleRawData]);
 
-  // 3. Logika Filter Menggunakan .includes()
   const filteredSeries = scheduleData.filter((s) => 
     s.mapped_release_days?.includes(activeDay)
   );
-  
-  // Dapatkan info hari yang sedang aktif untuk logika episode
-  const activeDayInfo = scheduleDays.find((d) => d.fullDay === activeDay);
-  const activeDayDiff = activeDayInfo ? activeDayInfo.diff : 0;
 
   const scrollRef = useRef<HTMLDivElement>(null);
-
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
       const scrollAmount = direction === "left" ? -300 : 300;
@@ -90,7 +77,6 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
     }
   };
 
-  // Fungsi Pengecekan Update Hari Ini
   const isUpdatedToday = (dateString?: string) => {
     if (!dateString) return false;
     const updatedDate = new Date(dateString);
@@ -102,8 +88,10 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
     );
   };
 
-  // Engine Penentu Angka Episode
-  const getEpisodeDisplay = (series: Series, dayDiff: number) => {
+  // =====================================================================
+  // THE ULTIMATE ENGINE: ANCHOR-BASED CALCULATION
+  // =====================================================================
+  const getEpisodeDisplay = (series: Series, activeTabName: string) => {
     const currentEps = series.episodes_max_episode_number;
     if (!currentEps) return "New";
     
@@ -111,15 +99,54 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
       return `Eps ${currentEps}`;
     }
 
-    if (dayDiff < 0) {
-      return `Eps ${currentEps}`; // Hari lalu
-    } else if (dayDiff === 0) {
-      return isUpdatedToday(series.updated_at) 
-        ? `Eps ${currentEps}` 
-        : `Eps ${currentEps + 1}`; // Hari ini
-    } else {
-      return `Eps ${currentEps + 1}`; // Masa depan
+    if (!series.mapped_release_days || series.mapped_release_days.length === 0) {
+      return `Eps ${currentEps}`;
     }
+
+    const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+    
+    // Urutkan hari rilis donghua ini sesuai urutan minggu (Senin - Minggu)
+    const sortedReleases = [...series.mapped_release_days].sort(
+      (a, b) => weekDays.indexOf(a) - weekDays.indexOf(b)
+    );
+    
+    const todayInfo = scheduleDays.find(d => d.isToday);
+    const todayName = todayInfo ? todayInfo.fullDay : "Minggu";
+    const todayIndexInWeek = weekDays.indexOf(todayName);
+
+    let anchorDayName = null;
+    
+    // Tentukan HARI JANGKAR (Milik siapa episode di database saat ini?)
+    if (isUpdatedToday(series.updated_at)) {
+      if (sortedReleases.includes(todayName)) {
+        anchorDayName = todayName; // Update hari ini = milik hari ini
+      } else {
+        const pastReleases = sortedReleases.filter(day => weekDays.indexOf(day) <= todayIndexInWeek);
+        anchorDayName = pastReleases.length > 0 ? pastReleases[pastReleases.length - 1] : "PREVIOUS_WEEK";
+      }
+    } else {
+      // Belum update hari ini = milik rilis TERAKHIR sebelum hari ini
+      const pastReleases = sortedReleases.filter(day => weekDays.indexOf(day) < todayIndexInWeek);
+      anchorDayName = pastReleases.length > 0 ? pastReleases[pastReleases.length - 1] : "PREVIOUS_WEEK";
+    }
+
+    // Cari posisi tab yang sedang diklik user
+    const activeTabIndex = sortedReleases.indexOf(activeTabName);
+    if (activeTabIndex === -1) return `Eps ${currentEps}`;
+
+    let addition = 0;
+    
+    if (anchorDayName === "PREVIOUS_WEEK") {
+      // Jika rilis terakhir ada di minggu lalu, semua tab minggu ini nambah progresif
+      addition = activeTabIndex + 1;
+    } else {
+      // Hitung jarak (selisih langkah) antara Tab Aktif dengan Hari Jangkar
+      const anchorIndex = sortedReleases.indexOf(anchorDayName);
+      addition = activeTabIndex - anchorIndex; 
+      // Contoh: Klik Senin (index 0) - Jangkar Jumat (index 1) = -1. Episode: 207 + (-1) = 206!
+    }
+
+    return `Eps ${currentEps + addition}`;
   };
 
   return (
@@ -160,7 +187,8 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
                       fill 
                     />
                     <div className="dl-card-badge">
-                      {getEpisodeDisplay(series, activeDayDiff)}
+                      {/* Panggil Engine Cerdas di sini */}
+                      {getEpisodeDisplay(series, activeDay)}
                     </div>
                   </div>
                   <div className="dl-card-content">
