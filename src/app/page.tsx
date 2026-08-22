@@ -78,8 +78,8 @@ export default async function Home() {
           </section>
 
           {/* SCHEDULE SECTION DIMASUKKAN DI SINI */}
-          {data.series && (
-            <ScheduleSection seriesData={data.series} />
+          {data.schedules && (
+            <ScheduleSection scheduleRawData={data.schedules} />
           )}
 
           {/* Movies Section */}

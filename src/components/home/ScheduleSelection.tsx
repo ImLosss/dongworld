@@ -14,10 +14,10 @@ type Series = {
   rating?: string;
   updated_at?: string;
   status?: string;
-  release_day?: string; 
+  release_day?: number | string;
 };
 
-export default function ScheduleSection({ seriesData }: { seriesData: Series[] }) {
+export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: Series[] }) {
   // Generate hari & tanggal untuk minggu ini secara dinamis
   const scheduleDays = useMemo(() => {
     const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
@@ -48,14 +48,15 @@ export default function ScheduleSection({ seriesData }: { seriesData: Series[] }
   const [scheduleData, setScheduleData] = useState<Series[]>([]);
 
   useEffect(() => {
-    // Mock data sementara
     const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
-    const mappedData = seriesData.map((series) => ({
+    const mappedData = scheduleRawData.map((series) => ({
       ...series,
-      release_day: weekDays[(series.id || 0) % 7],
+      release_day: typeof series.release_day === 'number' && weekDays[series.release_day] 
+        ? weekDays[series.release_day] 
+        : "Unknown",
     }));
     setScheduleData(mappedData);
-  }, [seriesData]);
+  }, [scheduleRawData]);
 
   const filteredSeries = scheduleData.filter((s) => s.release_day === activeDay);
 
@@ -105,27 +106,27 @@ export default function ScheduleSection({ seriesData }: { seriesData: Series[] }
             <div className="dl-card-container dl-schedule-horizontal" ref={scrollRef}>
               {filteredSeries.map((series) => (
                 <SeriesList key={series.id} href={`/series/${series.slug}`}>
-                <div className="dl-card-img">
-                  <Image 
-                    src={`/api/image?path=${encodeURIComponent(series.thumbnail)}`} 
-                    sizes="368px" 
-                    alt={series.name} 
-                    fill 
-                  />
-                  <div className="dl-card-badge">
-                    {series.episodes_max_episode_number ? `Eps ${series.episodes_max_episode_number}` : "New"}
+                  <div className="dl-card-img">
+                    <Image 
+                      src={`/api/image?path=${encodeURIComponent(series.thumbnail)}`} 
+                      sizes="368px" 
+                      alt={series.name} 
+                      fill 
+                    />
+                    <div className="dl-card-badge">
+                      {series.episodes_max_episode_number ? `Eps ${series.episodes_max_episode_number}` : "New"}
+                    </div>
                   </div>
-                </div>
-                <div className="dl-card-content">
-                  <h3 className="dl-card-title">{series.name}</h3>
-                  <div className="dl-card-meta">
-                    <span>{series.episodes_max_episode_number || 0}/{series.total_episodes ? series.total_episodes : "?"} eps</span>
-                    <span className="dl-card-rating">
-                      <i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}
-                    </span>
+                  <div className="dl-card-content">
+                    <h3 className="dl-card-title">{series.name}</h3>
+                    <div className="dl-card-meta">
+                      <span>{series.episodes_max_episode_number || 0}/{series.total_episodes ? series.total_episodes : "?"} eps</span>
+                      <span className="dl-card-rating">
+                        <i className="fas fa-star"></i>{series.rating ? series.rating : "N/A"}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </SeriesList>
+                </SeriesList>
               ))}
             </div>
 
