@@ -19,7 +19,7 @@ class HomeController extends Controller
         $movies = Series::where('type', 'movie')
             ->latest('updated_at')
             ->withMax('episodes', 'episode_number')
-            ->take(6)
+            ->take(10)
             ->get();
 
         $heroSlides = Series::inRandomOrder()
@@ -27,9 +27,9 @@ class HomeController extends Controller
             ->get();
 
         $schedules = Series::whereNotNull('release_day')
-            ->with('latestEpisode')
-            ->get()
-            ->where('status', 'ongoing');
+            ->withMax('episodes', 'episode_number')
+            ->where('status', 'ongoing')
+            ->get();
 
         return response()->json(['series' => $series, 'movies' => $movies, 'heroSlides' => $heroSlides, 'schedules' => $schedules]);
     }
