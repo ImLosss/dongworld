@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import SeriesList from "@/components/home/SeriesList";
 
+// 1. Sesuaikan Type Data
 type Series = {
   id: number;
   name: string;
@@ -14,11 +15,12 @@ type Series = {
   rating?: string;
   updated_at?: string;
   status?: string;
-  release_day?: number | string;
+  release_day?: string[]; // Sekarang menerima Array of Strings dari backend
+  mapped_release_days?: string[]; // Properti tambahan khusus untuk kebutuhan UI
 };
 
 export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: Series[] }) {
-  // 1. Generate Hari dengan Data Selisih (diff)
+  // Generate Hari dengan Data Selisih (diff)
   const scheduleDays = useMemo(() => {
     const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
     const shortDays = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
@@ -46,18 +48,34 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
   const [activeDay, setActiveDay] = useState(initialToday);
   const [scheduleData, setScheduleData] = useState<Series[]>([]);
 
+  // 2. Logika Mapping Array Hari
   useEffect(() => {
     const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
-    const mappedData = scheduleRawData.map((series) => ({
-      ...series,
-      release_day: typeof series.release_day === 'number' && weekDays[series.release_day] 
-        ? weekDays[series.release_day] 
-        : "Unknown",
-    }));
+    
+    const mappedData = scheduleRawData.map((series) => {
+      let mappedDays: string[] = [];
+
+      // Pastikan release_day adalah array yang valid sebelum di-map
+      if (Array.isArray(series.release_day)) {
+        mappedDays = series.release_day.map((dayStr) => {
+          const dayIndex = parseInt(dayStr, 10);
+          return !isNaN(dayIndex) && weekDays[dayIndex] ? weekDays[dayIndex] : "Unknown";
+        });
+      }
+
+      return {
+        ...series,
+        mapped_release_days: mappedDays,
+      };
+    });
+    
     setScheduleData(mappedData);
   }, [scheduleRawData]);
 
-  const filteredSeries = scheduleData.filter((s) => s.release_day === activeDay);
+  // 3. Logika Filter Menggunakan .includes()
+  const filteredSeries = scheduleData.filter((s) => 
+    s.mapped_release_days?.includes(activeDay)
+  );
   
   // Dapatkan info hari yang sedang aktif untuk logika episode
   const activeDayInfo = scheduleDays.find((d) => d.fullDay === activeDay);
@@ -72,7 +90,7 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
     }
   };
 
-  // 2. Fungsi Pengecekan Update Hari Ini
+  // Fungsi Pengecekan Update Hari Ini
   const isUpdatedToday = (dateString?: string) => {
     if (!dateString) return false;
     const updatedDate = new Date(dateString);
@@ -84,7 +102,7 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
     );
   };
 
-  // 3. Engine Penentu Angka Episode
+  // Engine Penentu Angka Episode
   const getEpisodeDisplay = (series: Series, dayDiff: number) => {
     const currentEps = series.episodes_max_episode_number;
     if (!currentEps) return "New";
@@ -142,7 +160,6 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
                       fill 
                     />
                     <div className="dl-card-badge">
-                      {/* 4. Eksekusi Engine Episode di sini */}
                       {getEpisodeDisplay(series, activeDayDiff)}
                     </div>
                   </div>
