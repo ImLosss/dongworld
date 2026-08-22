@@ -278,15 +278,18 @@ button {
     color: var(--primary-color);
 }
 
-/* Hero Section */
+/* =========================================
+   HERO SECTION (STRUKTUR ORIGINAL)
+========================================= */
 .dl-hero-section {
-    height: 100vh;
+    height: 100vh; /* Struktur asli Anda (Aman di mobile) */
     min-height: 500px;
     position: relative;
-    /* margin-top: 50px; */
     overflow: hidden;
+    /* margin-top: 50px; */
 }
 
+/* Gradient bawah bawaan Anda agar menyatu dengan background */
 .dl-hero-section::after {
     content: "";
     position: absolute;
@@ -296,6 +299,7 @@ button {
     height: 120px;
     pointer-events: none;
     background: linear-gradient(to bottom, rgba(30,39,46,0) 0%, var(--dark-color) 100%);
+    z-index: 3; /* Pastikan di atas slide */
 }
 
 .dl-hero-slider {
@@ -305,7 +309,7 @@ button {
     width: 100%;
     height: 100%;
     display: flex;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Transisi lebih smooth */
 }
 
 .dl-hero-slide {
@@ -316,6 +320,7 @@ button {
     position: relative;
 }
 
+/* Overlay Gradient - Diperhalus agar sinematik tapi tetap gelap */
 .dl-hero-slide::after {
     content: '';
     position: absolute;
@@ -323,34 +328,50 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    z-index: 1;
 }
 
+/* Konten diletakkan di TENGGAH persis seperti CSS original Anda */
 .dl-hero-content {
     position: relative;
     z-index: 2;
     height: 100%;
     display: flex;
-    align-items: center;
+    align-items: center; /* Kunci kerangka asli Anda */
     padding: 0 5%;
 }
 
 .dl-hero-info {
-    max-width: 600px;
+    max-width: 650px;
+}
+
+/* =========================================
+   ANIMASI TEXT & TOMBOL
+========================================= */
+.dl-hero-title, 
+.dl-hero-synopsis, 
+.dl-hero-watch-btn {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .dl-hero-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    font-family: var(--font-secondary);
+    font-weight: 700;
     margin-bottom: 20px;
     line-height: 1.2;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+    color: var(--light-color);
 }
 
 .dl-hero-synopsis {
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin-bottom: 30px;
     color: var(--gray-color);
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -358,11 +379,33 @@ button {
 }
 
 .dl-hero-watch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 12px 30px;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    background-color: var(--primary-color);
+    color: white !important;
+    border-radius: 6px;
+    text-decoration: none;
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    transition: var(--transition);
 }
 
-/* Navigation Buttons */
+.dl-hero-watch-btn:hover {
+    background-color: var(--primary-dark);
+    transform: scale(1.05); /* Efek tombol membesar saat di-hover */
+}
+
+/* Trigger Animasi saat slide aktif */
+.dl-hero-slide.active .dl-hero-title { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+.dl-hero-slide.active .dl-hero-synopsis { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+.dl-hero-slide.active .dl-hero-watch-btn { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+
+/* =========================================
+   TOMBOL NAVIGASI (GLASSMORPHISM)
+========================================= */
 .dl-hero-prev,
 .dl-hero-next {
     position: absolute;
@@ -371,32 +414,39 @@ button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: rgba(0,0,0,0.5);
+    /* Desain kaca transparan (Glassmorphism) */
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
     z-index: 10;
-    border: none;
     cursor: pointer;
     transition: var(--transition);
+    opacity: 0; /* Hilang secara default */
+}
+
+/* Muncul saat kursor diarahkan ke slider */
+.dl-hero-section:hover .dl-hero-prev,
+.dl-hero-section:hover .dl-hero-next {
+    opacity: 1;
 }
 
 .dl-hero-prev:hover,
 .dl-hero-next:hover {
     background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
-.dl-hero-prev {
-    left: 20px;
-}
+.dl-hero-prev { left: 20px; }
+.dl-hero-next { right: 20px; }
 
-.dl-hero-next {
-    right: 20px;
-}
-
-/* Pagination */
+/* =========================================
+   PAGINATION (MODERN LINE STYLE)
+========================================= */
 .dl-hero-pagination {
     position: absolute;
     bottom: 30px;
@@ -404,22 +454,24 @@ button {
     right: 0;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     z-index: 10;
 }
 
 .dl-hero-pagination-bullet {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255,255,255,0.5);
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(255,255,255,0.4);
+    border: none;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.3s ease;
 }
 
+/* Titik memanjang menjadi garis merah saat aktif */
 .dl-hero-pagination-bullet.active {
+    width: 30px;
     background-color: var(--primary-color);
-    transform: scale(1.2);
 }
 
 /* Breadcrumb */
@@ -1143,6 +1195,14 @@ button {
     color: var(--primary-color);
 }
 
+.dl-sidebar-link {
+    text-decoration: none;
+}
+
+.dl-sidebar-link:hover {
+    color: var(--primary-color);
+}
+
 /* Modal */
 .dl-modal-backdrop {
     position: fixed;
@@ -1226,4 +1286,176 @@ button {
     display: block;
     color: #ff6b6b;
     font-size: 12px;
+}
+
+/* =========================================
+   SEGMENTED CONTROL SCHEDULE (MENYATU)
+========================================= */
+#schedule {
+  /* Sesuaikan nilainya dengan tinggi Navbar Anda (misal: 60px atau 80px) */
+  scroll-margin-top: 70px; 
+}
+
+.dl-schedule-segmented-wrapper {
+  margin-bottom: 24px;
+  width: 100%;
+  /* Memberikan kemampuan scroll jika layar sangat kecil (seperti iPhone SE) */
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dl-schedule-segmented-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* Balok utama yang membungkus semua hari */
+.dl-schedule-segmented {
+  display: flex;
+  min-width: 320px; /* Memastikan kotak tidak terlalu kurus di mobile */
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px; /* Melengkung hanya di ujung luar */
+  overflow: hidden; /* Kunci agar isi menyatu dengan rapi */
+}
+
+/* Ruas kotak per hari */
+.dl-segment-item {
+  flex: 1; /* Lebar merata untuk ke-7 hari */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px;
+  cursor: pointer;
+  border-right: 1px solid rgba(255, 255, 255, 0.05); /* Garis pembatas tipis antar hari */
+  transition: background-color 0.2s ease;
+}
+
+/* Menghilangkan garis pembatas di kotak paling kanan (Minggu) */
+.dl-segment-item:last-child {
+  border-right: none;
+}
+
+/* Teks Hari (Sen, Sel, dll) */
+.dl-segment-day {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #71717a; /* Warna abu-abu redup */
+  margin-bottom: 2px;
+}
+
+/* Teks Tanggal Angka (17, 18, dll) */
+.dl-segment-date {
+  font-size: 16px;
+  font-weight: 700;
+  color: #a1a1aa;
+}
+
+/* ------------------------------------------------
+   TAMPILAN KHUSUS (AKTIF & HARI INI)
+------------------------------------------------ */
+
+/* Saat Hari Diklik (Aktif) */
+.dl-segment-item.active {
+  background-color: var(--primary-color); /* Warna solid primary */
+}
+
+/* Mengubah warna teks menjadi putih mutlak saat aktif */
+.dl-segment-item.active .dl-segment-day,
+.dl-segment-item.active .dl-segment-date {
+  color: #ffffff;
+}
+
+/* 
+   Warna khusus untuk tanggal "Hari Ini" 
+   (Hanya berlaku jika hari ini TIDAK SEDANG AKTIF diklik) 
+*/
+.dl-segment-item.today:not(.active) .dl-segment-date {
+  color: var(--primary-color); /* Tanggal hari ini diberi warna tema agar mudah dikenali */
+}
+
+/* Animasi transisi konten */
+.dl-schedule-body {
+  animation: tabFade 0.25s ease-out forwards;
+}
+
+.dl-schedule-empty {
+  text-align: center;
+  padding: 30px 0;
+  color: #71717a;
+  font-size: 14px;
+}
+
+@keyframes tabFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dl-schedule-horizontal {
+  display: flex !important;
+  flex-wrap: nowrap !important; /* Paksa agar card tidak turun ke bawah */
+  gap: 16px;
+  overflow-x: auto; /* Aktifkan scroll kanan-kiri */
+  padding-bottom: 15px; /* Beri ruang agar shadow/hover efek tidak terpotong */
+  
+  /* Smooth scrolling native untuk perangkat sentuh (iOS/Android) */
+  -webkit-overflow-scrolling: touch;
+  
+  /* Sembunyikan scrollbar agar terlihat bersih seperti aplikasi mobile */
+  scrollbar-width: none; /* Firefox */
+}
+
+.dl-schedule-horizontal::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+/* Memastikan setiap card di dalamnya tidak menyusut dan punya lebar tetap */
+.dl-schedule-horizontal > * {
+  flex: 0 0 auto;
+  /* Sesuaikan lebar card ini dengan desain asli web Anda. 
+     Biasanya 140px - 160px sangat ideal untuk cover rasio memanjang di HP */
+  width: 150px; 
+}
+
+.dl-relative-container {
+  position: relative;
+  /* Mencegah tombol keluar dari batas */
+  margin: 0 -10px; 
+  padding: 0 10px;
+}
+
+/* Tombol Scroll Horizontal */
+.dl-scroll-btn {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(30, 39, 46, 0.9);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0; /* Sembunyikan default */
+}
+
+.dl-scroll-left { left: 5px; }
+.dl-scroll-right { right: 5px; }
+
+/* Tampilkan saat di-hover pada desktop */
+.dl-relative-container:hover .dl-scroll-btn {
+  opacity: 1;
+}
+
+.dl-scroll-btn:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-50%) scale(1.1);
 }

@@ -3,6 +3,7 @@ import SeriesList from "@/components/home/SeriesList";
 import HeroSection from "@/components/home/HeroSection";
 import Link from "next/link";
 import HistorySection from "@/components/home/HistorySection";
+import ScheduleSection from "@/components/home/ScheduleSelection";
 
 type Slide = {
   name: string;
@@ -75,6 +76,11 @@ export default async function Home() {
               })}
             </div>
           </section>
+
+          {/* SCHEDULE SECTION DIMASUKKAN DI SINI */}
+          {data.series && (
+            <ScheduleSection seriesData={data.series} />
+          )}
 
           {/* Movies Section */}
           <section id="movies" className="dl-section">

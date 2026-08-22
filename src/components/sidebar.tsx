@@ -41,12 +41,19 @@ export default function Sidebar() {
         <div className="dl-sidebar-backdrop" onClick={() => setActive(false)}/>
       )}
       <div className={`dl-mobile-menu ${active ? "dl-active" : ""}`}>
-        <Link href="/" onClick={() => setActive(false)}>
+        <Link className="dl-sidebar-link" href="/" style={{ textDecoration: "none" }} onClick={() => setActive(false)}>
           <i className="fas fa-home"></i> Beranda
         </Link>
+        
+        <Link className="dl-sidebar-link" href="/#schedule" style={{ textDecoration: "none" }} onClick={() => setActive(false)}>
+          <i className="fas fa-calendar-alt"></i> Jadwal Rilis
+        </Link>
+
         <button className="dl-vip-btn" onClick={() => { setShowVipModal(true); setActive(false); }}>
           <i className="fas fa-crown"></i> Hilangkan Iklan
         </button>
+        
+        {/* Menu tambahan lainnya yang dikomentari bisa diaktifkan kembali nanti */}
         {/* <Link href="#top">
           <i className="fas fa-crown"></i> Top Donghua
         </Link>
@@ -57,11 +64,14 @@ export default function Sidebar() {
           <i className="fas fa-film"></i> Movie
         </Link> */}
       </div>
-    {/* VIP Modal */}
+
+      {/* VIP Modal */}
       {showVipModal && (
         <div className="dl-modal-backdrop" onClick={() => setShowVipModal(false)}>
           <div className="dl-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Masukkan VIP Code yang didapat dari bot telegram <Link href="https://t.me/dongworld_bot?start=vip" target="_blank">dongworld</Link> setelah berlangganan</h3>
+            <h3>
+              Masukkan VIP Code yang didapat dari bot telegram <Link href="https://t.me/dongworld_bot?start=vip" target="_blank">dongworld</Link> setelah berlangganan
+            </h3>
             <form onSubmit={handleVipSubmit}>
               <input
                 type="text"

@@ -11,17 +11,16 @@ export type Slide = {
 };
 
 export default function HeroSection({ slides }: { slides: Slide[] }) {
-  const safeSlides =
-    slides?.length
-      ? slides
-      : [
-          {
-            name: "DongWorld",
-            synopsis: "Tidak ada data hero saat ini.",
-            thumbnail: "/images/image2.jpg",
-            slug: "#home",
-          },
-        ];
+  const safeSlides = slides?.length
+    ? slides
+    : [
+        {
+          name: "DongWorld",
+          synopsis: "Tidak ada data hero saat ini.",
+          thumbnail: "/images/image2.jpg",
+          slug: "#home",
+        },
+      ];
 
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -36,7 +35,7 @@ export default function HeroSection({ slides }: { slides: Slide[] }) {
 
     intervalRef.current = window.setInterval(() => {
       setIndex((cur) => (cur + 1) % safeSlides.length);
-    }, 5000);
+    }, 5000); // 5 Detik
 
     return () => {
       if (intervalRef.current) window.clearInterval(intervalRef.current);
@@ -53,26 +52,36 @@ export default function HeroSection({ slides }: { slides: Slide[] }) {
       onTouchStart={() => setPaused(true)}
       onTouchEnd={() => setPaused(false)}
     >
-      <div className="dl-hero-slider" style={{ transform: `translateX(-${index * 100}%)` }}>
-        {safeSlides.map((s, i) => (
-          <div
-            key={i}
-            className="dl-hero-slide"
-            style={{ backgroundImage: `url('${`/api/image?path=${encodeURIComponent(s.thumbnail)}`}')` }}
-          >
-            <div className="dl-hero-content">
-              <div className="dl-hero-info">
-                <h1 className="dl-hero-title">{s.name}</h1>
-                <p className="dl-hero-synopsis">{s.synopsis}</p>
-                <Link href={`/series/${s.slug}`} className="dl-btn-primary dl-hero-watch-btn" style={{ textDecoration: "none", color: "white" }}>
-                  Mulai Nonton
-                </Link>
+      <div 
+        className="dl-hero-slider" 
+        style={{ transform: `translateX(-${index * 100}%)` }}
+      >
+        {safeSlides.map((s, i) => {
+          const isActive = i === index;
+          return (
+            <div
+              key={i}
+              // Tambahkan class 'active' untuk trigger animasi CSS
+              className={`dl-hero-slide ${isActive ? "active" : ""}`}
+              style={{
+                backgroundImage: `url('${`/api/image?path=${encodeURIComponent(s.thumbnail)}`}')`,
+              }}
+            >
+              <div className="dl-hero-content">
+                <div className="dl-hero-info">
+                  <h1 className="dl-hero-title">{s.name}</h1>
+                  <p className="dl-hero-synopsis">{s.synopsis}</p>
+                  <Link href={`/series/${s.slug}`} className="dl-btn-primary dl-hero-watch-btn">
+                    <i className="fas fa-play"></i> Mulai Nonton
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
+      {/* Navigasi Kiri / Kanan */}
       <button type="button" className="dl-hero-prev" onClick={prev} aria-label="Previous slide">
         <i className="fas fa-chevron-left" />
       </button>
@@ -80,6 +89,7 @@ export default function HeroSection({ slides }: { slides: Slide[] }) {
         <i className="fas fa-chevron-right" />
       </button>
 
+      {/* Pagination / Titik Indikator Bawah */}
       <div className="dl-hero-pagination">
         {safeSlides.map((_, i) => (
           <button

@@ -22,10 +22,6 @@
         display: block;
     }
     
-    .dl-hero-content h1 {
-        font-size: 2.5rem;
-    }
-    
     .dl-footer-container {
         grid-template-columns: 1fr;
         gap: 30px;
@@ -74,29 +70,29 @@
     .dl-logo {
         margin-right: 0;
     }
-    
-    .dl-hero-section {
-        height: auto;
-        padding: 100px 0 60px;
-    }
-    
-    .dl-hero-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
 
+    .dl-hero-section {
+        height: 70vh; /* Agar tidak terlalu makan layar penuh di HP modern */
+        min-height: 450px;
+    }
+    
     .dl-hero-title {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     
     .dl-hero-synopsis {
-        font-size: 1rem;
-        line-clamp: 4;
-        -webkit-line-clamp: 4;
+        font-size: 0.9rem;
     }
-    
-    .dl-hero-controls {
-        bottom: 20px;
+
+    .dl-hero-watch-btn {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+    }
+
+    /* Sembunyikan panah di mobile agar layar bersih */
+    .dl-hero-prev,
+    .dl-hero-next {
+        display: none;
     }
     
     .dl-section {
@@ -187,6 +183,10 @@
     .dl-server-content span {
         font-size: 0.8rem;
     }
+
+    .dl-scroll-btn {
+        display: none !important;
+    }
 }
 
 /* Small Mobile Devices */
@@ -210,28 +210,6 @@
     
     .dl-mobile-search-container.dl-active {
         display: block;
-    }
-    
-    .dl-hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .dl-hero-content p {
-        font-size: 1rem;
-    }
-
-    .dl-hero-title {
-        font-size: 1.8rem;
-    }
-    
-    .dl-hero-synopsis {
-        line-clamp: 3;
-        -webkit-line-clamp: 3;
-    }
-    
-    .dl-hero-watch-btn {
-        padding: 10px 20px;
-        font-size: 1rem;
     }
     
     .dl-card-container {
@@ -278,4 +256,10 @@
     .dl-filter-chips {
         font-size: 12px;
     }
+}
+
+@media (min-width: 768px) {
+  .dl-schedule-horizontal > * {
+    width: 200px;
+  }
 }
