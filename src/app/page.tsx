@@ -47,6 +47,11 @@ export default async function Home() {
       <HeroSection slides={heroSlides} />
       <div className="row">
         <div className="col-12 col-md-9">
+          {/* SCHEDULE SECTION DIMASUKKAN DI SINI */}
+          {data.schedules && (
+            <ScheduleSection scheduleRawData={data.schedules} />
+          )}
+          
           {/* Rilis Section */}
           <section id="trending" className="dl-section">
             <div className="dl-section-header">
@@ -76,11 +81,6 @@ export default async function Home() {
               })}
             </div>
           </section>
-
-          {/* SCHEDULE SECTION DIMASUKKAN DI SINI */}
-          {data.schedules && (
-            <ScheduleSection scheduleRawData={data.schedules} />
-          )}
 
           {/* Movies Section */}
           <section id="movies" className="dl-section">
