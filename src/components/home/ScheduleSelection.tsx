@@ -114,7 +114,7 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
                       fill 
                     />
                     <div className="dl-card-badge">
-                      {series.episodes_max_episode_number ? `Eps ${series.episodes_max_episode_number}` : "New"}
+                      {series.episodes_max_episode_number ? `Eps ${series.episodes_max_episode_number + 1}` : "New"}
                     </div>
                   </div>
                   <div className="dl-card-content">
