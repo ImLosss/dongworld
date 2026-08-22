@@ -18,31 +18,30 @@ type Series = {
 };
 
 export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: Series[] }) {
-  // Generate hari & tanggal untuk minggu ini secara dinamis
+  // 1. Generate Hari dengan Data Selisih (diff)
   const scheduleDays = useMemo(() => {
     const weekDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
     const shortDays = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
     
     const today = new Date();
-    const currentDayIndex = today.getDay(); // 0 (Minggu) - 6 (Sabtu)
-    // Sesuaikan agar Senin = 0, Minggu = 6
+    const currentDayIndex = today.getDay(); 
     const adjustedTodayIndex = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
 
     return weekDays.map((fullDay, index) => {
       const date = new Date(today);
-      const diff = index - adjustedTodayIndex;
+      const diff = index - adjustedTodayIndex; // - (Masa lalu), 0 (Hari ini), + (Masa depan)
       date.setDate(today.getDate() + diff);
       
       return {
         fullDay,
         shortDay: shortDays[index],
         dateNum: date.getDate(),
-        isToday: diff === 0
+        isToday: diff === 0,
+        diff: diff 
       };
     });
   }, []);
 
-  // Default aktif adalah hari ini
   const initialToday = scheduleDays.find(d => d.isToday)?.fullDay || "Minggu";
   const [activeDay, setActiveDay] = useState(initialToday);
   const [scheduleData, setScheduleData] = useState<Series[]>([]);
@@ -59,26 +58,58 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
   }, [scheduleRawData]);
 
   const filteredSeries = scheduleData.filter((s) => s.release_day === activeDay);
+  
+  // Dapatkan info hari yang sedang aktif untuk logika episode
+  const activeDayInfo = scheduleDays.find((d) => d.fullDay === activeDay);
+  const activeDayDiff = activeDayInfo ? activeDayInfo.diff : 0;
 
-  // Tambahkan useRef untuk wadah scroll
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Fungsi untuk menggeser secara manual
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -300 : 300; // Jarak geser (px)
+      const scrollAmount = direction === "left" ? -300 : 300;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  // 2. Fungsi Pengecekan Update Hari Ini
+  const isUpdatedToday = (dateString?: string) => {
+    if (!dateString) return false;
+    const updatedDate = new Date(dateString);
+    const today = new Date();
+    return (
+      updatedDate.getDate() === today.getDate() &&
+      updatedDate.getMonth() === today.getMonth() &&
+      updatedDate.getFullYear() === today.getFullYear()
+    );
+  };
+
+  // 3. Engine Penentu Angka Episode
+  const getEpisodeDisplay = (series: Series, dayDiff: number) => {
+    const currentEps = series.episodes_max_episode_number;
+    if (!currentEps) return "New";
+    
+    if (series.status?.toLowerCase() === 'complete' || series.status?.toLowerCase() === 'completed') {
+      return `Eps ${currentEps}`;
+    }
+
+    if (dayDiff < 0) {
+      return `Eps ${currentEps}`; // Hari lalu
+    } else if (dayDiff === 0) {
+      return isUpdatedToday(series.updated_at) 
+        ? `Eps ${currentEps}` 
+        : `Eps ${currentEps + 1}`; // Hari ini
+    } else {
+      return `Eps ${currentEps + 1}`; // Masa depan
     }
   };
 
   return (
     <section id="schedule" className="dl-section">
-      {/* Navigasi Kotak Menyatu (Segmented Control) */}
       <div className="dl-schedule-segmented-wrapper">
         <div className="dl-schedule-segmented">
           {scheduleDays.map((item) => {
             const isActive = activeDay === item.fullDay;
-            
             return (
               <div
                 key={item.fullDay}
@@ -93,16 +124,13 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
         </div>
       </div>
 
-      {/* Konten Card Series dengan Tombol Scroll */}
       <div className="dl-schedule-body dl-relative-container" key={activeDay}>
         {filteredSeries.length > 0 ? (
           <>
-            {/* Tombol Kiri (Desktop Only) */}
             <button className="dl-scroll-btn dl-scroll-left" onClick={() => scroll("left")}>
               <i className="fas fa-chevron-left"></i>
             </button>
 
-            {/* Container dihubungkan dengan ref */}
             <div className="dl-card-container dl-schedule-horizontal" ref={scrollRef}>
               {filteredSeries.map((series) => (
                 <SeriesList key={series.id} href={`/series/${series.slug}`}>
@@ -114,7 +142,8 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
                       fill 
                     />
                     <div className="dl-card-badge">
-                      {series.episodes_max_episode_number ? `Eps ${series.episodes_max_episode_number + 1}` : "New"}
+                      {/* 4. Eksekusi Engine Episode di sini */}
+                      {getEpisodeDisplay(series, activeDayDiff)}
                     </div>
                   </div>
                   <div className="dl-card-content">
@@ -130,7 +159,6 @@ export default function ScheduleSection({ scheduleRawData }: { scheduleRawData: 
               ))}
             </div>
 
-            {/* Tombol Kanan (Desktop Only) */}
             <button className="dl-scroll-btn dl-scroll-right" onClick={() => scroll("right")}>
               <i className="fas fa-chevron-right"></i>
             </button>
