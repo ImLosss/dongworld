@@ -97,13 +97,15 @@ class SeriesController extends Controller
             'synopsis' => 'nullable|string',
             'total_episodes' => 'nullable|numeric',
             'release_date' => 'nullable|string',
-            'release_day' => 'nullable|numeric|between:0,6',
+            'release_day' => 'nullable|array',
+            'release_day.*' => 'integer|min:0|max:6',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'genres' => 'nullable|array',
             'folder_id' => 'nullable|string|max:255',
             'genres.*' => 'exists:genres,id',
         ]);
         $validated['aliases'] = array_filter(array_map('trim', explode(';', $request->aliases)));
+        $validated['release_day'] = $request->input('release_day', []);
 
         // dd($validated);
 
@@ -180,13 +182,15 @@ class SeriesController extends Controller
             'synopsis' => 'nullable|string',
             'total_episodes' => 'nullable|numeric|min:0',
             'release_date' => 'nullable|string',
-            'release_day' => 'nullable|numeric|between:0,6',
+            'release_day' => 'nullable|array',
+            'release_day.*' => 'integer|min:0|max:6',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'folder_id' => 'nullable|string|max:255',
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
         ]);
         $validated['aliases'] = array_filter(array_map('trim', explode(';', $request->aliases)));
+        $validated['release_day'] = $request->input('release_day', []);
 
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name']);

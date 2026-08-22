@@ -10,6 +10,7 @@ class Series extends Model
 
     protected $casts = [
         'aliases' => 'array',
+        'release_day' => 'array',
     ];
 
     public function genres() {

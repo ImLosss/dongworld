@@ -210,30 +210,15 @@
                     <div class="col-md-6">
                         <div class="form-group has-validation">
                             <label for="release_day" class="form-control-label">Hari Rilis</label>
-                            <select class="form-control @error('release_day') border border-danger rounded-3 @enderror"
-                                name="release_day" id="release_day">
-                                <option value="" selected disabled>Pilih Hari</option>
-                                <option value="0"
-                                    {{ old('release_day') === 0 ? 'selected' : '' }}>Senin
-                                </option>
-                                <option value="1"
-                                    {{ old('release_day') === 1 ? 'selected' : '' }}>Selasa
-                                </option>
-                                <option value="2"
-                                    {{ old('release_day') === 2 ? 'selected' : '' }}>Rabu
-                                </option>
-                                <option value="3"
-                                    {{ old('release_day') === 3 ? 'selected' : '' }}>Kamis
-                                </option>
-                                <option value="4"
-                                    {{ old('release_day') === 4 ? 'selected' : '' }}>Jumat
-                                </option>
-                                <option value="5"
-                                    {{ old('release_day') === 5 ? 'selected' : '' }}>Sabtu
-                                </option>
-                                <option value="6"
-                                    {{ old('release_day') === 6 ? 'selected' : '' }}>Minggu
-                                </option>
+                            <select name="release_day[]" id="release_day" class="form-control @error('release_day') border border-danger rounded-3 @enderror" multiple>
+                                <option value="">Pilih Hari</option>
+                                <option value="0" {{ in_array('0', old('release_day', [])) ? 'selected' : '' }}>Senin</option>
+                                <option value="1" {{ in_array('1', old('release_day', [])) ? 'selected' : '' }}>Selasa</option>
+                                <option value="2" {{ in_array('2', old('release_day', [])) ? 'selected' : '' }}>Rabu</option>
+                                <option value="3" {{ in_array('3', old('release_day', [])) ? 'selected' : '' }}>Kamis</option>
+                                <option value="4" {{ in_array('4', old('release_day', [])) ? 'selected' : '' }}>Jumat</option>
+                                <option value="5" {{ in_array('5', old('release_day', [])) ? 'selected' : '' }}>Sabtu</option>
+                                <option value="6" {{ in_array('6', old('release_day', [])) ? 'selected' : '' }}>Minggu</option>
                             </select>
                         </div>
                     </div>
@@ -504,6 +489,13 @@
                 $('#genres').select2({
                     width: '100%',
                     placeholder: '- Pilih Genre -'
+                });
+            }
+
+            if (window.$ && $('#release_day').length) {
+                $('#release_day').select2({
+                    width: '100%',
+                    placeholder: '- Pilih Hari -'
                 });
             }
 

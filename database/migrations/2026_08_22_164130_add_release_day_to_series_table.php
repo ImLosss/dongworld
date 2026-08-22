@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('series', function (Blueprint $table) {
-            $table->integer('release_day')->nullable()->after('release_date');
+            $table->json('release_day')->nullable()->after('release_date');
         });
     }
 
