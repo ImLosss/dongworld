@@ -214,25 +214,25 @@
                                 name="release_day" id="release_day">
                                 <option value="" selected disabled>Pilih Hari</option>
                                 <option value="0"
-                                    {{ old('release_day') === 0 ? 'selected' : '' }}>Minggu
+                                    {{ old('release_day') === 0 ? 'selected' : '' }}>Senin
                                 </option>
                                 <option value="1"
-                                    {{ old('release_day') === 1 ? 'selected' : '' }}>Senin
+                                    {{ old('release_day') === 1 ? 'selected' : '' }}>Selasa
                                 </option>
                                 <option value="2"
-                                    {{ old('release_day') === 2 ? 'selected' : '' }}>Selasa
+                                    {{ old('release_day') === 2 ? 'selected' : '' }}>Rabu
                                 </option>
                                 <option value="3"
-                                    {{ old('release_day') === 3 ? 'selected' : '' }}>Rabu
+                                    {{ old('release_day') === 3 ? 'selected' : '' }}>Kamis
                                 </option>
                                 <option value="4"
-                                    {{ old('release_day') === 4 ? 'selected' : '' }}>Kamis
+                                    {{ old('release_day') === 4 ? 'selected' : '' }}>Jumat
                                 </option>
                                 <option value="5"
-                                    {{ old('release_day') === 5 ? 'selected' : '' }}>Jumat
+                                    {{ old('release_day') === 5 ? 'selected' : '' }}>Sabtu
                                 </option>
                                 <option value="6"
-                                    {{ old('release_day') === 6 ? 'selected' : '' }}>Sabtu
+                                    {{ old('release_day') === 6 ? 'selected' : '' }}>Minggu
                                 </option>
                             </select>
                         </div>

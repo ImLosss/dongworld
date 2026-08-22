@@ -221,13 +221,13 @@
                             <select class="form-control @error('release_day') border border-danger rounded-3 @enderror"
                                 name="release_day" id="release_day">
                                 <option value="">Pilih Hari</option>
-                                <option value="0" {{ (string) old('release_day', $series->release_day ?? '') === '0' ? 'selected' : '' }}>Minggu</option>
-                                <option value="1" {{ (string) old('release_day', $series->release_day ?? '') === '1' ? 'selected' : '' }}>Senin</option>
-                                <option value="2" {{ (string) old('release_day', $series->release_day ?? '') === '2' ? 'selected' : '' }}>Selasa</option>
-                                <option value="3" {{ (string) old('release_day', $series->release_day ?? '') === '3' ? 'selected' : '' }}>Rabu</option>
-                                <option value="4" {{ (string) old('release_day', $series->release_day ?? '') === '4' ? 'selected' : '' }}>Kamis</option>
-                                <option value="5" {{ (string) old('release_day', $series->release_day ?? '') === '5' ? 'selected' : '' }}>Jumat</option>
-                                <option value="6" {{ (string) old('release_day', $series->release_day ?? '') === '6' ? 'selected' : '' }}>Sabtu</option>
+                                <option value="0" {{ (string) old('release_day', $series->release_day ?? '') === '0' ? 'selected' : '' }}>Senin</option>
+                                <option value="1" {{ (string) old('release_day', $series->release_day ?? '') === '1' ? 'selected' : '' }}>Selasa</option>
+                                <option value="2" {{ (string) old('release_day', $series->release_day ?? '') === '2' ? 'selected' : '' }}>Rabu</option>
+                                <option value="3" {{ (string) old('release_day', $series->release_day ?? '') === '3' ? 'selected' : '' }}>Kamis</option>
+                                <option value="4" {{ (string) old('release_day', $series->release_day ?? '') === '4' ? 'selected' : '' }}>Jumat</option>
+                                <option value="5" {{ (string) old('release_day', $series->release_day ?? '') === '5' ? 'selected' : '' }}>Sabtu</option>
+                                <option value="6" {{ (string) old('release_day', $series->release_day ?? '') === '6' ? 'selected' : '' }}>Minggu</option>
                             </select>
                         </div>
                     </div>
