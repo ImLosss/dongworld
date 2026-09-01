@@ -5,6 +5,7 @@ import SeriesFilters from "@/components/series/SeriesFilters";
 import { notFound } from "next/navigation";
 import HistorySection from "@/components/home/HistorySection";
 import { Suspense } from "react";
+import TopDonation from "@/components/home/topDonation";
 
 export default async function Series({ searchParams }: { searchParams: Promise<{ search?: string; type?: string; genre?: string; status?: string, page?: string }>; }) {
     const params = await searchParams;
@@ -155,6 +156,8 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
                     </section>
                 </div>
                 <div className="col-12 col-md-3">
+                    <TopDonation />
+                    
                     {/* Watch History Section */}
                     <HistorySection />
 

@@ -13,6 +13,7 @@ import StreamNotificationRotator from "@/components/StreamNotificationRotater";
 import { Fragment } from "react/jsx-dev-runtime";
 import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
+import TopDonation from "@/components/home/topDonation";
 
 interface Params {
   params: { slug: string };
@@ -150,6 +151,8 @@ export default async function SeriesDetail({ params }: Params) {
           <div className="dl-episode-sidebar d-none d-lg-block">
             <EpisodeSectionDesktop slug={slug} initialEpisodes={data.episodes} />
           </div>
+
+          <TopDonation />
 
           {/* Watch History Section */}
           <HistorySection />

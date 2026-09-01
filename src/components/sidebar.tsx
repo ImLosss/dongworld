@@ -49,6 +49,10 @@ export default function Sidebar() {
           <i className="fas fa-calendar-alt"></i> Jadwal Rilis
         </Link>
 
+        <Link className="dl-sidebar-link" href="/recent-comments" style={{ textDecoration: "none" }} onClick={() => setActive(false)}>
+          <i className="fas fa-comments"></i> Komentar Terbaru
+        </Link>
+
         <button className="dl-vip-btn" onClick={() => { setShowVipModal(true); setActive(false); }}>
           <i className="fas fa-crown"></i> Hilangkan Iklan
         </button>

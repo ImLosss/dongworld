@@ -15,6 +15,7 @@ import Link from "next/dist/client/link";
 import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
 import DownloadSection from "@/components/watch/DownloadSection";
+import TopDonation from "@/components/home/topDonation";
 
 interface Params {
   params: { slug: string };
@@ -157,6 +158,8 @@ export default async function StreamPage({ params } : Params) {
                     <div className="dl-episode-sidebar d-none d-lg-block">
                         <EpisodeSectionDesktop slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     </div>
+
+                    <TopDonation />
 
                     {/* Watch History Section */}
                     <HistorySection />

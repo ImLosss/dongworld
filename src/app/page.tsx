@@ -4,6 +4,7 @@ import HeroSection from "@/components/home/HeroSection";
 import Link from "next/link";
 import HistorySection from "@/components/home/HistorySection";
 import ScheduleSection from "@/components/home/ScheduleSelection";
+import TopDonation from "@/components/home/topDonation";
 
 type Slide = {
   name: string;
@@ -124,6 +125,8 @@ export default async function Home() {
           </section>
         </div>
         <div className="col-12 col-md-3">
+          <TopDonation />
+          
           {/* Watch History Section */}
           <HistorySection />
 
