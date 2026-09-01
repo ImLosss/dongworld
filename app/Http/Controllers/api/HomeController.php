@@ -38,7 +38,7 @@ class HomeController extends Controller
     public function recentComment()
     {
         // Tambahkan 'parent' ke dalam array with()
-        $comments = Comment::with(['series', 'episode', 'parent'])
+        $comments = Comment::with(['series', 'episode', 'replyTo'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
@@ -59,8 +59,8 @@ class HomeController extends Controller
                 'is_admin'   => $comment->is_admin,
                 'created_at' => $comment->created_at,
                 'srcComment' => $srcComment,
-                'replyTo'    => $comment->reply_to_comment_id && $comment->parent
-                    ? $comment->parent->name
+                'replyTo'    => $comment->reply_to_comment_id && $comment->replyTo
+                    ? $comment->replyTo->name
                     : null,
 
                 'source_name' => $comment->episode_id
