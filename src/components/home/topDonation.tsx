@@ -4,9 +4,6 @@ export default async function TopDonation() {
     let donatorsList: { name: string; amount: number }[] = [];
 
     try {
-        // Mengambil data dari endpoint
-        // Menggunakan next: { revalidate: 300 } agar cache diperbarui tiap 5 menit 
-        // (Anda bisa ganti 'cache: "no-store"' jika ingin 100% real-time terus)
         const response = await fetch('http://212.85.25.245:2050/top-donatur', {
             headers: {
                 'sb-webhook-token': 'sbwhook-lwatbodiymchocuj2fdbt1qs'
@@ -15,24 +12,25 @@ export default async function TopDonation() {
         });
 
         if (!response.ok) {
-            return null; // Gagal fetch, batalkan render
+            return null; 
         }
 
         const data = await response.json();
 
-        // Mengubah format Objek { "Nama": 1000 } menjadi Array [{ name: "Nama", amount: 1000 }]
-        donatorsList = Object.entries(data).map(([name, amount]) => ({
-            name,
-            amount: Number(amount)
-        }));
+        // Mengubah format Objek ke Array, mengurutkan dari yang terbesar, lalu ambil 10 teratas
+        donatorsList = Object.entries(data)
+            .map(([name, amount]) => ({
+                name,
+                amount: Number(amount)
+            }))
+            .sort((a, b) => b.amount - a.amount) // Urutkan dari tertinggi ke terendah
+            .slice(0, 10); // Potong, ambil hanya indeks 0 sampai 9 (Top 10)
 
-        // Jika data dari API kosong, batalkan render
         if (donatorsList.length === 0) {
             return null;
         }
 
     } catch (error) {
-        // Jika server API mati / gagal terhubung, jangan tampilkan apa-apa
         return null;
     }
 
@@ -61,7 +59,6 @@ export default async function TopDonation() {
                         const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-normal';
                         
                         return (
-                            // Menggunakan kombinasi nama dan index sebagai key untuk mencegah error duplikat
                             <div key={`${donator.name}-${index}`} className={`dl-donator-item ${rankClass}`}>
                                 <div className="dl-donator-rank">
                                     {rank}
