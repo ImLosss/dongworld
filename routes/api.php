@@ -27,6 +27,7 @@ Route::group(
         });
 
         Route::get('/all-series', [HomeController::class, 'getSeries']);
+        Route::get('/recent-comments', [HomeController::class, 'recentComment']);
         Route::get('/series/{slug}', [SeriesController::class, 'getSeriesDetail']);
         Route::get('/series', [SearchController::class, 'search']);
         Route::get('/genres', [SearchController::class, 'getFilters']);
