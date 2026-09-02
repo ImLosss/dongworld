@@ -1,4 +1,4 @@
-const SMARTLINK_URL = "https://omg10.com/4/11110538";
+const SMARTLINK_URL = "https://www.profitableratecpmnetwork.com/xx3z06hf1?key=bd214403dcbfedf7a86ad57ef67b0d9f";
 
 const MINUTE = 25 * 1000;
 const HOUR = 60 * 60 * 1000;
