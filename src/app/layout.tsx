@@ -82,16 +82,17 @@ export default function RootLayout({
             <Script src="/js/search.js" strategy="afterInteractive" />
             <Script
               id="aclib"
+              type="text/javascript"
               src="//acscdn.com/script/aclib.js"
-              strategy="afterInteractive"
-              onLoad={() => {
-                if (window.aclib?.runPop) {
-                  window.aclib.runPop({
-                    zoneId: "12099398",
-                  });
-                }
-              }}
             />
+
+            <Script id="aclib-pop" type="text/javascript">
+              {`
+                aclib.runPop({
+                  zoneId: '12099398',
+                });
+              `}
+            </Script>
           </main>
         </div>
       </body>
