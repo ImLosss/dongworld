@@ -80,19 +80,22 @@ export default function RootLayout({
             {children}
             <Footer />
             <Script src="/js/search.js" strategy="afterInteractive" />
-            <Script
+            <script
               id="aclib"
               type="text/javascript"
               src="//acscdn.com/script/aclib.js"
             />
 
-            <Script id="aclib-pop" type="text/javascript">
-              {`
-                aclib.runPop({
-                  zoneId: '12099398',
-                });
-              `}
-            </Script>
+            <script
+              type="text/javascript"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  aclib.runPop({
+                    zoneId: '12099398',
+                  });
+                `,
+              }}
+            />
           </main>
         </div>
       </body>
