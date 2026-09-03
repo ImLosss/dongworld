@@ -85,7 +85,7 @@ export default function RootLayout({
               src="//acscdn.com/script/aclib.js"
               strategy="afterInteractive"
               onLoad={() => {
-                if (typeof window !== "undefined" && window.aclib) {
+                if (window.aclib?.runPop) {
                   window.aclib.runPop({
                     zoneId: "12099398",
                   });
