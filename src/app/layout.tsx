@@ -12,6 +12,14 @@ import { Suspense } from "react";
 import SmartlinkAd from "@/components/Smartlink Ads";
 import NextTopLoader from "nextjs-toploader";
 
+declare global {
+  interface Window {
+    aclib?: {
+      runPop: (options: { zoneId: string }) => void;
+    };
+  }
+}
+
 const uiFont = Roboto({
   variable: "--font-primary",
   subsets: ["latin"],
@@ -72,14 +80,18 @@ export default function RootLayout({
             {children}
             <Footer />
             <Script src="/js/search.js" strategy="afterInteractive" />
-            <Script id="aclib" src="//acscdn.com/script/aclib.js" strategy="afterInteractive" />
-            <Script id="aclib-pop" strategy="afterInteractive">
-              {`
-                aclib.runPop({
-                  zoneId: '12099398',
-                });
-              `}
-            </Script>
+            <Script
+              id="aclib"
+              src="//acscdn.com/script/aclib.js"
+              strategy="afterInteractive"
+              onLoad={() => {
+                if (typeof window !== "undefined" && window.aclib) {
+                  window.aclib.runPop({
+                    zoneId: "12099398",
+                  });
+                }
+              }}
+            />
           </main>
         </div>
       </body>
