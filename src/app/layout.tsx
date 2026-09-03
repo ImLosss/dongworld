@@ -57,6 +57,22 @@ export default function RootLayout({
         <meta name="author" content="DongWorld Team" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous" />
+
+        {/* Adcash library */}
+        <Script
+          id="aclib"
+          type="text/javascript"
+          src="//acscdn.com/script/aclib.js"
+        />
+
+        {/* Adcash zone */}
+        <Script id="aclib-pop" type="text/javascript">
+          {`
+            aclib.runPop({
+              zoneId: '12099398',
+            });
+          `}
+        </Script>
       </head>
       <body className={`${uiFont.variable}`}>
         <NextTopLoader 
@@ -80,21 +96,6 @@ export default function RootLayout({
             {children}
             <Footer />
             <Script src="/js/search.js" strategy="afterInteractive" />
-            {/* Adcash library */}
-            <Script
-              id="aclib"
-              type="text/javascript"
-              src="//acscdn.com/script/aclib.js"
-            />
-
-            {/* Adcash zone */}
-            <Script id="aclib-pop" type="text/javascript">
-              {`
-                aclib.runPop({
-                  zoneId: '12099398',
-                });
-              `}
-            </Script>
           </main>
         </div>
       </body>
