@@ -80,12 +80,14 @@ export default function RootLayout({
             {children}
             <Footer />
             <Script src="/js/search.js" strategy="afterInteractive" />
+            {/* Adcash library */}
             <Script
               id="aclib"
               type="text/javascript"
               src="//acscdn.com/script/aclib.js"
             />
 
+            {/* Adcash zone */}
             <Script id="aclib-pop" type="text/javascript">
               {`
                 aclib.runPop({
