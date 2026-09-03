@@ -5,6 +5,7 @@ const HOUR = 60 * 60 * 1000;
 const MAX_PER_HOUR = 3;
 
 export function openSmartlink() {
+    return;
     console.log("openSmartlink called");
     if (typeof window === "undefined") return;
 
