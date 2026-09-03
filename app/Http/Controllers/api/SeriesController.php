@@ -22,6 +22,17 @@ class SeriesController extends Controller
             ], 404);
         }
 
+        if (!$series) {
+            return response()->json([
+                'message' => 'Series not found'
+            ], 404);
+        }
+
+        if ($series->episodes_max_episode_number !== null) {
+            $series->episodes_max_episode_number =
+                (float) $series->episodes_max_episode_number;
+        }
+
         $series->genres_string = $series->genres->pluck('name')->implode(', ');
         $series->views = $series->views()->sum('views');
 
@@ -65,6 +76,10 @@ class SeriesController extends Controller
         ->get()
         ->each(function ($s) {
             $s->views = (int) ($s->views_sum_views ?? 0);
+            if ($s->episodes_max_episode_number !== null) {
+                $s->episodes_max_episode_number =
+                    (float) $s->episodes_max_episode_number;
+            }
         });
 
         return response()->json([

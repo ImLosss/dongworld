@@ -30,7 +30,7 @@
                 <div class="col-md-6">
                     <div class="form-group has-validation">
                         <label for="episode_number" class="form-control-label">Episode Number</label>
-                        <input class="form-control @error('episode_number') border border-danger rounded-3 @enderror" type="number" min="1" placeholder="1" name="episode_number" value="{{ old('episode_number', $episode->episode_number) }}" autofocus>
+                        <input class="form-control @error('episode_number') border border-danger rounded-3 @enderror" type="number" min="1" step="0.01" placeholder="1" name="episode_number" value="{{ old('episode_number', $episode->episode_number) }}" autofocus>
                         @error('episode_number')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror

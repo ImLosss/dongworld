@@ -40,7 +40,7 @@ class EpisodeController extends Controller
         $validated = $request->validate([
             'episode_number' => [
                 'required',
-                'integer',
+                'numeric',
                 Rule::unique('episodes', 'episode_number')
                     ->where(fn ($q) => $q->where('series_id', $series->id)),
             ],
@@ -149,7 +149,7 @@ class EpisodeController extends Controller
             if($request->episode_number == $episode->episode_number) $slug = $episode->slug;
             $rules['episode_number'] = [
                 'required',
-                'integer',
+                'numeric',
                 Rule::unique('episodes', 'episode_number')
                     ->where(fn ($q) => $q->where('series_id', $series->id))
                     ->ignore($episode->id),

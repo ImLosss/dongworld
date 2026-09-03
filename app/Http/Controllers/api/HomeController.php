@@ -15,13 +15,25 @@ class HomeController extends Controller
         $series = Series::latest('updated_at')
             ->withMax('episodes', 'episode_number')
             ->take(10)
-            ->get();
+            ->get()
+            ->each(function ($item) {
+                if ($item->episodes_max_episode_number !== null) {
+                    $item->episodes_max_episode_number =
+                        (float) $item->episodes_max_episode_number;
+                }
+            });
 
         $movies = Series::where('type', 'movie')
             ->latest('updated_at')
             ->withMax('episodes', 'episode_number')
             ->take(10)
-            ->get();
+            ->get()
+            ->each(function ($item) {
+                if ($item->episodes_max_episode_number !== null) {
+                    $item->episodes_max_episode_number =
+                        (float) $item->episodes_max_episode_number;
+                }
+            });
 
         $heroSlides = Series::inRandomOrder()
             ->take(3)
@@ -30,7 +42,13 @@ class HomeController extends Controller
         $schedules = Series::whereNotNull('release_day')
             ->withMax('episodes', 'episode_number')
             ->where('status', 'ongoing')
-            ->get();
+            ->get()
+            ->each(function ($item) {
+                if ($item->episodes_max_episode_number !== null) {
+                    $item->episodes_max_episode_number =
+                        (float) $item->episodes_max_episode_number;
+                }
+            });
 
         return response()->json(['series' => $series, 'movies' => $movies, 'heroSlides' => $heroSlides, 'schedules' => $schedules]);
     }

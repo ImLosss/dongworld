@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Episode extends Model
@@ -39,5 +40,12 @@ class Episode extends Model
     public function downloads()
     {
         return $this->hasMany(Download::class);
+    }
+
+    protected function episodeNumber(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => (float) $value,
+        );
     }
 }
