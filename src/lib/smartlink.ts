@@ -5,24 +5,23 @@ const HOUR = 60 * 60 * 1000;
 const MAX_PER_HOUR = 3;
 
 export function openSmartlink() {
-    return;
-    console.log("openSmartlink called");
-    if (typeof window === "undefined") return;
+    // console.log("openSmartlink called");
+    // if (typeof window === "undefined") return;
 
-    if (!canOpenSmartlink()) return;
+    // if (!canOpenSmartlink()) return;
 
-    window.open(SMARTLINK_URL, "_blank", "noopener,noreferrer");
+    // window.open(SMARTLINK_URL, "_blank", "noopener,noreferrer");
 
-    const now = Date.now();
+    // const now = Date.now();
 
-    const raw = localStorage.getItem("smartlink_clicks");
-    const clicks: number[] = raw ? JSON.parse(raw) : [];
-    const recent = clicks.filter((t) => now - t < HOUR);
+    // const raw = localStorage.getItem("smartlink_clicks");
+    // const clicks: number[] = raw ? JSON.parse(raw) : [];
+    // const recent = clicks.filter((t) => now - t < HOUR);
 
-    recent.push(now);
+    // recent.push(now);
 
-    localStorage.setItem("smartlink_clicks", JSON.stringify(recent));
-    localStorage.setItem("smartlink_last_click", now.toString());
+    // localStorage.setItem("smartlink_clicks", JSON.stringify(recent));
+    // localStorage.setItem("smartlink_last_click", now.toString());
 }
 
 function canOpenSmartlink() {
