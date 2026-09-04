@@ -64,4 +64,38 @@ class SeriesController extends Controller
             'series' => $seriesList,
         ]);
     }
+
+    public function getReleaseDay()
+    {
+        // 1. Buat kerangka default agar semua hari tetap muncul meskipun tidak ada series
+        $defaultSchedule = collect([
+            'senin'  => [],
+            'selasa' => [],
+            'rabu'   => [],
+            'kamis'  => [],
+            'jumat'  => [],
+            'sabtu'  => [],
+            'minggu' => []
+        ]);
+
+        // 2. Ambil data dari database
+        $schedules = Series::whereNotNull('release_day')
+            ->where('status', 'ongoing')
+            ->get()
+            ->groupBy(function ($item) {
+                // Kelompokkan berdasarkan hari (dijadikan huruf kecil agar cocok dengan key default)
+                return strtolower($item->release_day);
+            })
+            ->map(function ($group) {
+                // Ambil hanya kolom 'name' dari masing-masing series dan jadikan array
+                return $group->pluck('name')->toArray();
+            });
+
+        // 3. Gabungkan template default dengan data dari database
+        // Jika ada hari yang kosong dari DB, akan tergantikan oleh array kosong dari $defaultSchedule
+        $result = $defaultSchedule->merge($schedules);
+
+        // 4. Return sebagai JSON
+        return response()->json($result);
+    }
 }
