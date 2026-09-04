@@ -65,10 +65,10 @@ class SeriesController extends Controller
         ]);
     }
 
-    public function getReleaseDay()
+    public function getRelaseDay()
     {
-        // 1. Buat kerangka default agar semua hari tetap muncul meskipun tidak ada series
-        $defaultSchedule = collect([
+        // 1. Buat kerangka default jadwal
+        $schedule = [
             'senin'  => [],
             'selasa' => [],
             'rabu'   => [],
@@ -76,26 +76,29 @@ class SeriesController extends Controller
             'jumat'  => [],
             'sabtu'  => [],
             'minggu' => []
-        ]);
+        ];
 
-        // 2. Ambil data dari database
-        $schedules = Series::whereNotNull('release_day')
+        // 2. Ambil data series dari database
+        $series = Series::whereNotNull('release_day')
             ->where('status', 'ongoing')
-            ->get()
-            ->groupBy(function ($item) {
-                // Kelompokkan berdasarkan hari (dijadikan huruf kecil agar cocok dengan key default)
-                return strtolower($item->release_day);
-            })
-            ->map(function ($group) {
-                // Ambil hanya kolom 'name' dari masing-masing series dan jadikan array
-                return $group->pluck('name')->toArray();
-            });
+            ->get(['name', 'release_day']); // Ambil field yang diperlukan saja
 
-        // 3. Gabungkan template default dengan data dari database
-        // Jika ada hari yang kosong dari DB, akan tergantikan oleh array kosong dari $defaultSchedule
-        $result = $defaultSchedule->merge($schedules);
+        // 3. Masukkan nama series ke masing-masing hari rilisnya
+        foreach ($series as $item) {
+            // Pastikan release_day tidak null dan memang array
+            if (is_array($item->release_day)) {
+                foreach ($item->release_day as $day) {
+                    $dayKey = strtolower($day); // Ubah ke huruf kecil ('Senin' -> 'senin')
+
+                    // Pastikan harinya valid dan ada di kerangka default
+                    if (array_key_exists($dayKey, $schedule)) {
+                        $schedule[$dayKey][] = $item->name;
+                    }
+                }
+            }
+        }
 
         // 4. Return sebagai JSON
-        return response()->json($result);
+        return response()->json($schedule);
     }
 }
