@@ -26,6 +26,11 @@ class WatchController extends Controller
             ], 404);
         }
 
+        if ($detailEpisode->series->episodes_max_episode_number !== null) {
+            $detailEpisode->series->episodes_max_episode_number =
+                (float) $detailEpisode->series->episodes_max_episode_number;
+        }
+
         $episodes = Episode::where('series_id', $detailEpisode->series_id)
             ->orderBy('episode_number')
             ->get();

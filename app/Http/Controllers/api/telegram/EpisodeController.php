@@ -75,7 +75,7 @@ class EpisodeController extends Controller
             'series_id' => 'required|integer|exists:series,id',
             'episode_number' => [
                 'required',
-                'integer'
+                'numeric'
             ]
         ]);
 
@@ -122,7 +122,7 @@ class EpisodeController extends Controller
 
     public function deleteServerLink(Request $request) {
         $request->validate([
-            'episode_id' => 'required|integer|exists:episodes,id',
+            'episode_id' => 'required|numeric|exists:episodes,id',
             'server_id' => 'required|integer|exists:servers,id'
         ]);
 
