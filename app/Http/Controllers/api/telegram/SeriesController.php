@@ -78,27 +78,39 @@ class SeriesController extends Controller
             'minggu' => []
         ];
 
-        // 2. Ambil data series dari database
+        // 2. Buat mapping angka (dari database) ke nama hari
+        $dayMap = [
+            '0' => 'senin',
+            '1' => 'selasa',
+            '2' => 'rabu',
+            '3' => 'kamis',
+            '4' => 'jumat',
+            '5' => 'sabtu',
+            '6' => 'minggu'
+        ];
+
+        // 3. Ambil data series dari database
         $series = Series::whereNotNull('release_day')
             ->where('status', 'ongoing')
-            ->get(['name', 'release_day']); // Ambil field yang diperlukan saja
+            ->get(['name', 'release_day']);
 
-        // 3. Masukkan nama series ke masing-masing hari rilisnya
+        // 4. Masukkan nama series ke masing-masing hari rilisnya
         foreach ($series as $item) {
-            // Pastikan release_day tidak null dan memang array
             if (is_array($item->release_day)) {
-                foreach ($item->release_day as $day) {
-                    $dayKey = strtolower($day); // Ubah ke huruf kecil ('Senin' -> 'senin')
+                foreach ($item->release_day as $dayValue) {
+                    // Pastikan value adalah string angka untuk mengecek ke $dayMap
+                    $val = (string) $dayValue;
 
-                    // Pastikan harinya valid dan ada di kerangka default
-                    if (array_key_exists($dayKey, $schedule)) {
-                        $schedule[$dayKey][] = $item->name;
+                    // Cek apakah angka tersebut ada di mapping kita
+                    if (isset($dayMap[$val])) {
+                        $dayName = $dayMap[$val]; // ubah '0' jadi 'senin', dst.
+                        $schedule[$dayName][] = $item->name;
                     }
                 }
             }
         }
 
-        // 4. Return sebagai JSON
+        // 5. Return sebagai JSON
         return response()->json($schedule);
     }
 }
