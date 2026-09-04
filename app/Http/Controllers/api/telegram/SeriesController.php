@@ -65,7 +65,7 @@ class SeriesController extends Controller
         ]);
     }
 
-    public function getRelaseDay()
+    public function getReleaseDay()
     {
         // 1. Buat kerangka default jadwal
         $schedule = [
