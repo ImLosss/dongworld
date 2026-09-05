@@ -13,13 +13,21 @@ export default function Sidebar() {
   const VIP_CODE = "VIP123";
 
   useEffect(() => {
-    const btn = document.querySelector(".dl-sidebar-toggle");
-    if (!btn) return;
+    // Fungsi untuk menangani semua klik di layar
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // Jika yang diklik adalah elemen dengan class .dl-sidebar-toggle ATAU elemen di dalamnya (seperti ikon)
+      if (target.closest(".dl-sidebar-toggle")) {
+        setActive((prev) => !prev);
+      }
+    };
 
-    const onClick = () => setActive((v) => !v);
-    btn.addEventListener("click", onClick);
+    // Pasang pendengar klik secara global di dokumen
+    document.addEventListener("click", handleGlobalClick);
 
-    return () => btn.removeEventListener("click", onClick);
+    // Bersihkan saat komponen dilepas
+    return () => document.removeEventListener("click", handleGlobalClick);
   }, []);
 
   const handleVipSubmit = (e: React.FormEvent) => {
