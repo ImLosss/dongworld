@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import './style.css';
-import "@/styles/stream.css";
-import "@/styles/series.css";
 import { checkTransactionStatus, createQrisTransaction } from "./action";
 
 export default function DonatePage() {
