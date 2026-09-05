@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import './style.css';
+import "@/styles/stream.css";
+import "@/styles/series.css";
 import { checkTransactionStatus, createQrisTransaction } from "./action";
 
 export default function DonatePage() {
@@ -138,23 +140,11 @@ export default function DonatePage() {
                             <button onClick={() => window.location.reload()} className="dl-btn-primary" style={{ marginTop: '20px' }}>Donasi Lagi</button>
                         </div>
                     ) : qrData ? (
-                        <div className="dl-qr-section">
-                            <h3>Scan QRIS</h3>
-                            <p style={{ color: 'var(--gray-color)', fontSize: '0.9rem' }}>Scan menggunakan aplikasi M-Banking atau E-Wallet Anda (Gopay, Ovo, Dana, dll)</p>
-                            
-                            <div className="dl-qr-image">
-                                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData.payment_number)}`} alt="QRIS" />
-                            </div>
-
-                            <div className="dl-qr-total">
-                                Rp {new Intl.NumberFormat('id-ID').format(qrData.total_payment)}
-                            </div>
-                            <p style={{ color: '#FFD700', fontSize: '0.8rem' }}>*Nominal di atas sudah termasuk biaya layanan (fee)</p>
-
-                            <div className="dl-checking-status">
-                                <div className="dl-spinner-small"></div>
-                                Menunggu pembayaran...
-                            </div>
+                        <div className="dl-success-state">
+                            <i className="fas fa-check-circle"></i>
+                            <h3>Donasi Berhasil!</h3>
+                            <p style={{ color: 'var(--gray-color)', marginTop: '10px' }}>Terima kasih banyak atas dukungan Anda.</p>
+                            <button onClick={() => window.location.reload()} className="dl-btn-primary" style={{ marginTop: '20px' }}>Donasi Lagi</button>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit}>
