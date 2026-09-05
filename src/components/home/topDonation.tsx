@@ -78,7 +78,9 @@ export default async function TopDonation() {
                 </div>
 
                 <div className="dl-donation-footer">
-                    <a href="https://sociabuzz.com/dongworld/tribe" target="_blank" rel="noopener noreferrer" className="dl-btn-primary dl-btn-donate-full">
+                    <a href="/donate"
+                    // target="_blank" 
+                    rel="noopener noreferrer" className="dl-btn-primary dl-btn-donate-full">
                         <i className="fas fa-heart" style={{ marginRight: '5px' }}></i> Donate
                     </a>
                 </div>

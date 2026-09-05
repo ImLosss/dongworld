@@ -112,7 +112,9 @@ export default async function RecentComments() {
                     </section>
 
                     <section id="donation" className="dl-section">
-                        <a className="dl-side-card dl-side-card--donation" href="/donate" target="_blank" rel="noopener noreferrer">
+                        <a className="dl-side-card dl-side-card--donation" href="/donate"
+                        // target="_blank" 
+                        rel="noopener noreferrer">
                             <div className="dl-side-card-text">
                                 <h2>Donasi</h2>
                                 <div className="dl-side-card-subtitle">Dukung DongWorld</div>

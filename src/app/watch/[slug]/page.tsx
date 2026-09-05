@@ -169,7 +169,7 @@ export default async function StreamPage({ params } : Params) {
                         <a
                             className="dl-side-card dl-side-card--community"
                             href="https://t.me/dongworld"
-                            target="_blank"
+                            // target="_blank"
                             rel="noopener noreferrer"
                         >
                             <div className="dl-side-card-text">
@@ -187,7 +187,7 @@ export default async function StreamPage({ params } : Params) {
                         <a
                             className="dl-side-card dl-side-card--donation"
                             href="/donate"
-                            target="_blank"
+                            // target="_blank"
                             rel="noopener noreferrer"
                         >
                             <div className="dl-side-card-text">

@@ -154,7 +154,7 @@ export default async function Home() {
             <a
               className="dl-side-card dl-side-card--donation"
               href="/donate"
-              target="_blank"
+              // target="_blank"
               rel="noopener noreferrer"
               style={{ color: "inherit", textDecoration: "none" }}
             >
