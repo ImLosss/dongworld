@@ -1,0 +1,198 @@
+/* =========================================
+   HALAMAN DONASI (QRIS)
+   ========================================= */
+
+.dl-donate-container {
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.dl-donate-header {
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 20px;
+}
+
+.dl-donate-header h2 {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.dl-donate-header p {
+    color: var(--gray-color);
+    font-size: 0.9rem;
+}
+
+/* Form Styles */
+.dl-form-group {
+    margin-bottom: 20px;
+}
+
+.dl-form-label {
+    display: block;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.dl-form-input, .dl-form-textarea {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.dl-form-input:focus, .dl-form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dl-form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Nominal Chips */
+.dl-nominal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.dl-nominal-chip {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--gray-color);
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.dl-nominal-chip:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.dl-nominal-chip.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Checkbox Styles */
+.dl-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.dl-checkbox-wrapper input[type="checkbox"] {
+    accent-color: var(--primary-color);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.dl-checkbox-wrapper label {
+    color: var(--gray-color);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* Alert / Notes */
+.dl-donate-note {
+    background-color: rgba(255, 215, 0, 0.1);
+    border-left: 4px solid #FFD700;
+    padding: 12px 15px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.dl-donate-note i {
+    color: #FFD700;
+    margin-top: 3px;
+}
+
+/* QR Code Section */
+.dl-qr-section {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--darker-color);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dl-qr-image {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    display: inline-block;
+    margin: 15px 0;
+}
+
+.dl-qr-image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.dl-qr-total {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 10px 0;
+}
+
+.dl-checking-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--gray-color);
+    font-size: 0.9rem;
+    margin-top: 15px;
+}
+
+.dl-spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-left-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Success State */
+.dl-success-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.dl-success-state i {
+    font-size: 4rem;
+    color: #4cd137;
+    margin-bottom: 15px;
+}

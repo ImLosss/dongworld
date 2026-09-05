@@ -183,7 +183,7 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
                     <section id="donation" className="dl-section">
                     <a
                         className="dl-side-card dl-side-card--donation"
-                        href="https://sociabuzz.com/dongworld/tribe"
+                        href="/donate"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
