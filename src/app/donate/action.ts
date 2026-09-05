@@ -69,7 +69,7 @@ export async function checkTransactionStatus(data: {
                 };
 
                 // Kirim ke endpoint express secara diam-diam dari server
-                await fetch('http://212.85.25.245:2050/sociabuzz', {
+                await fetch('http://212.85.25.245:2045/sociabuzz', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
