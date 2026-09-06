@@ -3,7 +3,7 @@ import DonateForm from "./DonateForm";
 
 export default function DonatePage() {
     return (
-        <div className="row" style={{ marginTop: '70px', padding: '0 15px' }}>
+        <div className="row" style={{ marginTop: '70px' }}>
             {/* Bagian Kiri: Form Donasi */}
             <div className="col-12 col-lg-8">
                 <DonateForm />

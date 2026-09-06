@@ -140,7 +140,7 @@ export default function DonateForm() {
     }, [qrData, isSuccess]);
 
     return (
-        <>
+        <section id="donate-form" className="dl-section">
             <div className="dl-donate-note">
                 <i className="fas fa-info-circle"></i>
                 <div>
@@ -256,6 +256,6 @@ export default function DonateForm() {
                     </form>
                 )}
             </div>
-        </>
+        </section>
     );
 }
