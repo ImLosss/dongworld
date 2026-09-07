@@ -62,7 +62,7 @@ export async function checkTransactionStatus(data: {
             if (checkData.transaction.status === 'completed') {
                 const webhookPayload = {
                     supporter: data.supporter,
-                    amount: data.total_payment, 
+                    amount: data.amount, 
                     message: data.message,
                     email: data.email,
                     currency: 'IDR'

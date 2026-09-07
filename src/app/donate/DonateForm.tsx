@@ -112,31 +112,43 @@ export default function DonateForm() {
 
     // Polling Interval Cek Status
     useEffect(() => {
-        let intervalId: NodeJS.Timeout;
+        let isMounted = true;
+        let timeoutId: NodeJS.Timeout;
+
+        const pollStatus = async () => {
+            if (!isMounted || !qrData || isSuccess) return;
+
+            try {
+                const statusData = await checkTransactionStatus({
+                    order_id: qrData.order_id,
+                    amount: qrData.amount, 
+                    supporter: qrData.supporter,
+                    email: qrData.email,
+                    message: qrData.message,
+                    total_payment: qrData.total_payment
+                });
+                
+                if (statusData.status === "completed") {
+                    setIsSuccess(true);
+                    return; 
+                }
+            } catch (error) {
+                console.error("Check error", error);
+            }
+
+            if (isMounted && !isSuccess) {
+                timeoutId = setTimeout(pollStatus, 5000);
+            }
+        };
 
         if (qrData && !isSuccess) {
-            intervalId = setInterval(async () => {
-                try {
-                    const statusData = await checkTransactionStatus({
-                        order_id: qrData.order_id,
-                        amount: qrData.amount, 
-                        supporter: qrData.supporter,
-                        email: qrData.email,
-                        message: qrData.message,
-                        total_payment: qrData.total_payment
-                    });
-                    
-                    if (statusData.status === "completed") {
-                        setIsSuccess(true);
-                        clearInterval(intervalId);
-                    }
-                } catch (error) {
-                    console.error("Check error", error);
-                }
-            }, 5000);
+            pollStatus();
         }
 
-        return () => clearInterval(intervalId);
+        return () => {
+            isMounted = false;
+            clearTimeout(timeoutId);
+        };
     }, [qrData, isSuccess]);
 
     return (
