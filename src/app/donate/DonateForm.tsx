@@ -61,14 +61,12 @@ export default function DonateForm() {
         setAmount(Number(val));
     };
 
-    // Fungsi handle checkbox Anonim
     const handleAnonimChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const checked = e.target.checked;
         setIsAnonim(checked);
         if (checked) {
             setName("Someone");
         } else {
-            // Kembalikan nama dari localStorage jika checkbox dilepas
             setName(localStorage.getItem("commenterName") || ""); 
         }
     };
@@ -78,7 +76,6 @@ export default function DonateForm() {
         if (amount < 1000) return alert("Minimal donasi Rp 1.000");
         if (!email) return alert("Email wajib diisi!");
 
-        // Simpan inputan ke LocalStorage
         if (!isAnonim) localStorage.setItem("commenterName", name);
         localStorage.setItem("donateEmail", email);
         localStorage.setItem("donateMessage", message);
@@ -189,9 +186,26 @@ export default function DonateForm() {
                         </div>
                         <p style={{ color: '#FFD700', fontSize: '0.8rem' }}>*Nominal di atas sudah termasuk biaya layanan (fee)</p>
 
-                        <div className="dl-checking-status">
-                            <div className="dl-spinner-small"></div>
-                            Menunggu pembayaran...
+                        <div className="dl-checking-status" style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                                <div className="dl-spinner-small"></div>
+                                <span>Menunggu pembayaran...</span>
+                            </div>
+                            
+                            {/* Kotak Instruksi Penting (Pendek & Ringkas) */}
+                            <div className="dl-donate-note" style={{ 
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+                                borderLeft: '4px solid var(--primary-color)', 
+                                margin: '0 auto',
+                                maxWidth: '100%',
+                                textAlign: 'left',
+                                padding: '10px 15px'
+                            }}>
+                                <i className="fas fa-exclamation-triangle" style={{ color: 'var(--primary-color)' }}></i>
+                                <div>
+                                    <strong>Penting:</strong> Jangan tutup halaman ini! Harap kembali ke browser setelah melakukan pembayaran untuk konfirmasi donasi anda.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ) : (
