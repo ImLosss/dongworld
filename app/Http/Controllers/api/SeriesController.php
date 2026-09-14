@@ -61,8 +61,11 @@ class SeriesController extends Controller
 
     public function getRecomendation()
     {
-        $start = now()->subDays(6)->startOfDay();
-        $end = now()->endOfDay();
+        // $start = now()->subDays(6)->startOfDay();
+        // $end = now()->endOfDay();
+
+        $start = now()->subDay();
+        $end = now();
 
         $series = Series::with(['genres'])
         ->withSum([
