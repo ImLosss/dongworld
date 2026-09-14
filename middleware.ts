@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
       hour12: false,
     });
 
-    console.log(
+    console.error(
       `[PAGE] ${waktu} WITA | ${request.method} ${request.nextUrl.pathname} | UA=${request.headers.get("user-agent")}`
     );
   }
