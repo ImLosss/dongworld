@@ -30,7 +30,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     });
 
     if (!res.ok) {
-        return { title: "Not Found" };
+        return {
+            title: "Not Found | DongWorld",
+            description: "Halaman tidak ditemukan."
+        };
     }
 
     const data = await res.json();

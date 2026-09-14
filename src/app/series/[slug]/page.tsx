@@ -35,6 +35,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { slug } = await params;
 
     const data = await getSeriesData(slug, { revalidate: 300 });
+
+    if (!data || !data.series) {
+        return {
+            title: "Not Found | DongWorld",
+            description: "Halaman tidak ditemukan."
+        };
+    }
+    
     const series = data.series;
 
     const title = `${series.name} | DongWorld`;
