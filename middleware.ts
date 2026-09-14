@@ -27,8 +27,7 @@ export function middleware(request: NextRequest) {
       `Sec-Speculation-Tags=${request.headers.get("sec-speculation-tags") ?? "-"} | ` +
       `Next-Router-Prefetch=${request.headers.get("next-router-prefetch") ?? "-"} | ` +
       `Accept=${request.headers.get("accept") ?? "-"} | ` +
-      `Referer=${request.headers.get("referer") ?? "-"} | ` +
-      `User-Agent=${request.headers.get("user-agent") ?? "-"}`
+      `Referer=${request.headers.get("referer") ?? "-"} | `
     );
   }
 
