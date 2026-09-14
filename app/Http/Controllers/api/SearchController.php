@@ -31,11 +31,11 @@ class SearchController extends Controller
 
             $query->where(function ($q) use ($search) {
                 $q->whereRaw("LOWER(name) LIKE ?", ['%' . $search . '%'])
-                ->orWhereRaw("
+                    ->orWhereRaw("
                     EXISTS (
-                    SELECT 1
-                    FROM JSON_TABLE(aliases, '$[*]' COLUMNS(alias VARCHAR(255) PATH '$')) jt
-                    WHERE LOWER(jt.alias) LIKE ?
+                        SELECT 1
+                        FROM JSON_TABLE(aliases, '$[*]' COLUMNS(alias VARCHAR(255) PATH '$')) jt
+                        WHERE LOWER(jt.alias) LIKE ?
                     )
                 ", ['%' . $search . '%']);
             });
@@ -61,8 +61,17 @@ class SearchController extends Controller
 
         $query->withMax('episodes', 'episode_number');
 
+        $results = $query->paginate(10);
+
+        $results->getCollection()->each(function ($item) {
+            if ($item->episodes_max_episode_number !== null) {
+                $item->episodes_max_episode_number =
+                    (int) $item->episodes_max_episode_number;
+            }
+        });
+
         return response()->json([
-            'data' => $query->paginate(10),
+            'data' => $results,
         ]);
     }
 }
