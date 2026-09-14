@@ -14,7 +14,9 @@ export function middleware(request: NextRequest) {
         pathname.startsWith("/api/") ||
         pathname.startsWith("/_next/") ||
         pathname.startsWith("/js/") ||
-        pathname === "/favicon.ico" ||
+        pathname.startsWith("/favicon") ||
+        pathname.startsWith("/phpinfo") ||
+        pathname.endsWith(".php") ||
         nextUrl !== null 
     ) {
         return NextResponse.next();
