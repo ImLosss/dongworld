@@ -23,7 +23,10 @@ class EpisodeController extends Controller
                 Rule::unique('episodes', 'episode_number')
                     ->where(fn ($q) => $q->where('series_id', $request->input('series_id'))),
             ],
-            'drive' => 'nullable|string',
+            'downloads' => 'nullable|array',
+            'downloads.*.link' => 'required|string',
+            'downloads.*.server' => 'required|string',
+            'downloads.*.quality' => 'nullable|string',
         ]);
 
         $series = Series::findOrFail($request->input('series_id'));
@@ -37,12 +40,17 @@ class EpisodeController extends Controller
             'user_id' => null
         ]);
 
-        Download::create([
-            'episode_id' => $episode->id,
-            'link' => $request->input('drive'),
-            'quality' => '1080P',
-            'server' => 'drive'
-        ]);
+        $downloads = $request->input('downloads', []);
+        foreach ($downloads as $download) {
+            if (!empty($download['link'])) {
+                Download::create([
+                    'episode_id' => $episode->id,
+                    'link' => $download['link'],
+                    'quality' => $download['quality'],
+                    'server' => $download['server'],
+                ]);
+            }
+        }
 
         $series->update(['updated_at' => now()]);
 
