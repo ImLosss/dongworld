@@ -20,7 +20,15 @@ export function middleware(request: NextRequest) {
     });
 
     console.error(
-      `[PAGE] ${waktu} WITA | ${request.method} ${pathname}`
+      `[REQUEST] ${waktu} WITA | ` +
+      `${request.method} ${pathname} | ` +
+      `RSC=${request.headers.get("rsc") ?? "-"} | ` +
+      `Sec-Purpose=${request.headers.get("sec-purpose") ?? "-"} | ` +
+      `Sec-Speculation-Tags=${request.headers.get("sec-speculation-tags") ?? "-"} | ` +
+      `Next-Router-Prefetch=${request.headers.get("next-router-prefetch") ?? "-"} | ` +
+      `Accept=${request.headers.get("accept") ?? "-"} | ` +
+      `Referer=${request.headers.get("referer") ?? "-"} | ` +
+      `User-Agent=${request.headers.get("user-agent") ?? "-"}`
     );
   }
 
