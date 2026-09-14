@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import './style.css';
 import { checkTransactionStatus, createQrisTransaction } from "./action";
+import Image from "next/dist/shared/lib/image-external";
 
 export default function DonateForm() {
     const [amount, setAmount] = useState<number>(25000);
@@ -178,7 +179,7 @@ export default function DonateForm() {
                         <p style={{ color: 'var(--gray-color)', fontSize: '0.9rem' }}>Scan menggunakan aplikasi M-Banking atau E-Wallet Anda (Gopay, Ovo, Dana, dll)</p>
                         
                         <div className="dl-qr-image">
-                            <img src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData.payment_number)}`} alt="QRIS" />
+                            <Image src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData.payment_number)}`} alt="QRIS" width={300} height={300} />
                         </div>
 
                         <div className="dl-qr-total">
