@@ -26,6 +26,11 @@ class Series extends Model
         return $this->hasOne(Episode::class)->ofMany('episode_number', 'max');
     }
 
+    public function mainEpisodes()
+    {
+        return $this->hasMany(Episode::class)->where('is_preview', false);
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);

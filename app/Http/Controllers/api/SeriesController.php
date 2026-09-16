@@ -15,12 +15,10 @@ class SeriesController extends Controller
 {
     public function getSeriesDetail($slug)
     {
-        $series = Series::with(['genres', 'comments.replies', 'nextSeries', 'previousSeries'])->where('slug', $slug)->withMax('episodes', 'episode_number')->first();
-        if (!$series) {
-            return response()->json([
-                'message' => 'Series not found'
-            ], 404);
-        }
+        $series = Series::with(['genres', 'comments.replies', 'nextSeries', 'previousSeries', 'episodes'])
+        ->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number')
+        ->where('slug', $slug)
+        ->first();
 
         if (!$series) {
             return response()->json([
@@ -28,10 +26,7 @@ class SeriesController extends Controller
             ], 404);
         }
 
-        if ($series->episodes_max_episode_number !== null) {
-            $series->episodes_max_episode_number =
-                (float) $series->episodes_max_episode_number;
-        }
+        if ($series->episodes_max_episode_number !== null) $series->episodes_max_episode_number = (float) $series->episodes_max_episode_number;
 
         $series->genres_string = $series->genres->pluck('name')->implode(', ');
         $series->views = $series->views()->sum('views');
@@ -52,9 +47,20 @@ class SeriesController extends Controller
             );
         });
 
+        // 1. Pisahkan Episode Utama
+        $mainEpisodes = $series->episodes->where('is_preview', false)->values();
+
+        // 2. Pisahkan Episode PV (Hanya tampilkan jika belum terlewati oleh episode utama)
+        $maxMainEpisode = $series->episodes_max_episode_number ?? 0;
+        $pvEpisodes = $series->episodes->where('is_preview', true)
+            ->where('episode_number', '>=', $maxMainEpisode)
+            ->values();
+
+        $episodes = $mainEpisodes->merge($pvEpisodes)->sortBy('episode_number')->values();
+
         return response()->json([
             'series' => $series,
-            'episodes' => $series->episodes()->orderBy('episode_number')->get(),
+            'episodes' => $episodes,
             'comments' => $comments ? $comments : []
         ]);
     }
@@ -73,7 +79,7 @@ class SeriesController extends Controller
                 $q->whereBetween('created_at', [$start, $end]);
             }
         ], 'views')
-        ->withMax('episodes', 'episode_number')
+        ->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number')
         ->orderByDesc('views_sum_views')
         ->take(5)
         ->get()

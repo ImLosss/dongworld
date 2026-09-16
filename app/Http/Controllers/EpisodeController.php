@@ -37,13 +37,19 @@ class EpisodeController extends Controller
      */
     public function store(Request $request, Series $series)
     {
+        $isPreview = $request->boolean('is_preview');
+
         $validated = $request->validate([
             'episode_number' => [
                 'required',
                 'numeric',
-                Rule::unique('episodes', 'episode_number')
-                    ->where(fn ($q) => $q->where('series_id', $series->id)),
+                $isPreview
+                    ? null
+                    : Rule::unique('episodes', 'episode_number')
+                        ->where(fn ($q) => $q->where('series_id', $series->id)->where('is_preview', false)),
             ],
+            'is_preview' => ['nullable', 'boolean'],
+            'name' => ['nullable', 'string'],
             'downloads' => ['nullable', 'array'],
             'downloads.*.link' => ['nullable', 'string'],
             'downloads.*.quality' => ['nullable', 'string'],
@@ -53,20 +59,22 @@ class EpisodeController extends Controller
         // slug logic
         $prefix = Str::lower(Str::random(5));
         $seriesNameSlug = Str::slug($prefix . '-' . $series->name);
+        $episode = (int) ($request->input('episode_number') ?? 1);
         if ($series->type === 'movie') {
             $slug = $seriesNameSlug . '-movie';
-            $validated['episode_number'] = null;
+            $validated['episode_number'] = $episode;
         } else {
-            $episode = (int) ($request->input('episode_number') ?? 1);
             $slug = $seriesNameSlug . '-' . $episode;
             $validated['episode_number'] = $episode;
         }
 
         $episode = Episode::create([
+            'name' => $validated['name'] ?? null,
             'series_id' => $series->id,
             'episode_number' => $validated['episode_number'] ?? null,
             'slug' => $slug,
             'user_id' => $request->user()->id,
+            'is_preview' => $validated['is_preview'] ?? false,
         ]);
 
         $series->update(['updated_at' => now()]);
@@ -138,6 +146,8 @@ class EpisodeController extends Controller
     {
         $rules = [];
 
+        $isPreview = $request->boolean('is_preview');
+
         // slug logic
         $prefix = Str::lower(Str::random(5));
         $seriesNameSlug = Str::slug($prefix . '-' . $series->name);
@@ -150,12 +160,15 @@ class EpisodeController extends Controller
             $rules['episode_number'] = [
                 'required',
                 'numeric',
-                Rule::unique('episodes', 'episode_number')
-                    ->where(fn ($q) => $q->where('series_id', $series->id))
+                $isPreview
+                ? null
+                : Rule::unique('episodes', 'episode_number')
+                    ->where(fn ($q) => $q->where('series_id', $series->id)->where('is_preview', false))
                     ->ignore($episode->id),
             ];
         }
 
+        $rules['name'] = ['nullable', 'string'];
         $rules['downloads'] = ['nullable', 'array'];
         $rules['downloads.*.link'] = ['nullable', 'string'];
         $rules['downloads.*.quality'] = ['nullable', 'string'];
@@ -166,6 +179,8 @@ class EpisodeController extends Controller
         $episode->update([
             'episode_number' => $validated['episode_number'] ?? null,
             'slug' => $slug,
+            'name' => $validated['name'] ?? null,
+            'is_preview' => $isPreview,
             'user_id' => $request->user()->id,
         ]);
 

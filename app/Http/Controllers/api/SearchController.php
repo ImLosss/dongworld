@@ -59,7 +59,7 @@ class SearchController extends Controller
             }
         }
 
-        $query->withMax('episodes', 'episode_number');
+        $query->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number');
 
         $results = $query->paginate(10);
 

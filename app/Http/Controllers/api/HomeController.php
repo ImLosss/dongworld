@@ -13,7 +13,7 @@ class HomeController extends Controller
     public function getSeries()
     {
         $series = Series::latest('updated_at')
-            ->withMax('episodes', 'episode_number')
+            ->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number')
             ->take(10)
             ->get()
             ->each(function ($item) {
@@ -25,7 +25,7 @@ class HomeController extends Controller
 
         $movies = Series::where('type', 'movie')
             ->latest('updated_at')
-            ->withMax('episodes', 'episode_number')
+            ->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number')
             ->take(10)
             ->get()
             ->each(function ($item) {
@@ -40,7 +40,7 @@ class HomeController extends Controller
             ->get();
 
         $schedules = Series::whereNotNull('release_day')
-            ->withMax('episodes', 'episode_number')
+            ->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number')
             ->where('status', 'ongoing')
             ->get()
             ->each(function ($item) {

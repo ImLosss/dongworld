@@ -11,7 +11,8 @@ class WatchController extends Controller
     public function watch($slug)
     {
         $detailEpisode = Episode::with([
-            'series' => fn ($q) => $q->withMax('episodes', 'episode_number')->with('genres'),
+            'series' => fn ($q) => $q
+                ->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number')->with('genres'),
             'links.server',
             'user',
             'comments.replies',
@@ -37,11 +38,13 @@ class WatchController extends Controller
 
         $nextEpisode = Episode::where('series_id', $detailEpisode->series_id)
             ->where('episode_number', '>', $detailEpisode->episode_number)
+            ->where('is_preview', false)
             ->orderBy('episode_number', 'asc')
             ->first();
 
         $prevEpisode = Episode::where('series_id', $detailEpisode->series_id)
             ->where('episode_number', '<', $detailEpisode->episode_number)
+            ->where('is_preview', false)
             ->orderBy('episode_number', 'desc')
             ->first();
 
@@ -64,6 +67,17 @@ class WatchController extends Controller
                     ->values()
             );
         });
+
+        // 1. Pisahkan Episode Utama
+        $mainEpisodes = $episodes->where('is_preview', false)->values();
+
+        // 2. Pisahkan Episode PV (Hanya tampilkan jika belum terlewati oleh episode utama)
+        $maxMainEpisode = $detailEpisode->series->episodes_max_episode_number ?? 0;
+        $pvEpisodes = $episodes->where('is_preview', true)
+            ->where('episode_number', '>=', $maxMainEpisode)
+            ->values();
+
+        $episodes = $mainEpisodes->merge($pvEpisodes)->sortBy('episode_number')->values();
 
         return response()->json([
             'detail-episode' => $detailEpisode,

@@ -25,7 +25,6 @@
         <form action="{{ route('episode.update', [$series->id, $episode->id]) }}" method="POST">
             @csrf
             @method('PUT')
-            @if($series->type !== 'movie')
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group has-validation">
@@ -36,9 +35,28 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group has-validation">
+                        <label for="name" class="form-control-label">Name</label>
+                        <input class="form-control @error('name') border border-danger rounded-3 @enderror" type="text" placeholder="Enter episode name" name="name" value="{{ old('name', $episode->name) }}" autofocus>
+                        @error('name')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
-            @endif
-
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_preview"
+                            id="is_preview" value="1"
+                            {{ old('is_preview', $episode->is_preview) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_preview">
+                            Is Preview
+                        </label>
+                    </div>
+                </div>
+            </div>
             @php
                 $oldDownloads = old('downloads');
                 if (!is_array($oldDownloads) || count($oldDownloads) === 0) {
