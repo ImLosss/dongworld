@@ -71,8 +71,12 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
                     {pageEpisodes.length > 0 ? (
                         pageEpisodes.map((episode: any) => (
                             <Link key={episode.id} href={'/watch/' + episode.slug} className="dl-episode-item" onClick={openSmartlink}>
-                                <span className="dl-episode-number">Episode {episode.episode_number}</span>
-                                <span className="dl-episode-title">{episode.title}</span>
+                                <span className="dl-episode-number">
+                                    {episode.name 
+                                        ? episode.name 
+                                        : `${episode.is_preview ? 'PV' : 'Episode'} ${episode.episode_number}`}
+                                </span>
+                                {/* <span className="dl-episode-title">{episode.title}</span> */}
                                 <span className="dl-episode-duration">{dayjs(episode.created_at).format("DD MMM YYYY")}</span>
                             </Link>
                         ))

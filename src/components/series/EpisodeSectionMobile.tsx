@@ -69,7 +69,9 @@ export default function EpisodeSection({ slug, initialEpisodes }: { slug: string
           {pageEpisodes.length > 0 ? (
             pageEpisodes.map((episode: any) => (
               <a key={episode.id} href={'/watch/' + episode.slug} className="dl-mobile-episode-item" onClick={openSmartlink}>
-                Episode {episode.episode_number}
+                {episode.name 
+                  ? episode.name 
+                  : `${episode.is_preview ? 'PV' : 'Episode'} ${episode.episode_number}`}
               </a>
             ))
           ) : (

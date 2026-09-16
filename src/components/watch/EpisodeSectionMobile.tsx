@@ -2,7 +2,7 @@
 import { openSmartlink } from "@/lib/smartlink";
 import { useState, useEffect, useCallback, useRef } from "react";
 
-export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEpisode }: { slugSeries: string, initialEpisodes: any, selectedEpisode: any }) {
+export default function EpisodeSection({ slugSeries, slugEpisode, initialEpisodes, selectedEpisode }: { slugSeries: string, slugEpisode: string, initialEpisodes: any, selectedEpisode: any }) {
   const pageSize = 25;
   const storageKey = `episode_page_${slugSeries}`;
   const episodeList = Array.isArray(initialEpisodes) ? initialEpisodes : (initialEpisodes?.data || []);
@@ -66,8 +66,10 @@ export default function EpisodeSection({ slugSeries, initialEpisodes, selectedEp
         <div className="dl-mobile-episode-list">
           {pageEpisodes.length > 0 ? (
             pageEpisodes.map((episode: any) => (
-              <a key={episode.id} href={'/watch/' + episode.slug} className={selectedEpisode === episode.episode_number ? "dl-mobile-episode-item active" : "dl-mobile-episode-item"} onClick={openSmartlink}>
-                Episode {episode.episode_number}
+              <a key={episode.id} href={'/watch/' + episode.slug} className={slugEpisode === episode.slug ? "dl-mobile-episode-item active" : "dl-mobile-episode-item"} onClick={openSmartlink}>
+                {episode.name 
+                  ? episode.name 
+                  : `${episode.is_preview ? 'PV' : 'Episode'} ${episode.episode_number}`}
               </a>
             ))
           ) : (

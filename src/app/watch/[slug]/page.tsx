@@ -73,6 +73,8 @@ export default async function StreamPage({ params } : Params) {
         cache: 'no-store'
     });
 
+    console.log("Fetching data for slug:", slug, "Status:", res.status);
+
     const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}api/recommendations`, {
         headers: {
         'X-API-KEY': process.env.APIKEY_BACKEND as string,
@@ -126,7 +128,7 @@ export default async function StreamPage({ params } : Params) {
                     <StreamPlayer detail={detail} nextEpisodeSlug={nextEpisodeSlug} prevEpisodeSlug={prevEpisodeSlug} />
                     {/* Download Section */}
                     <DownloadSection downloads={detail.downloads} episodeNumber={detail.episode_number} />
-                    <EpisodeSectionMobile slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
+                    <EpisodeSectionMobile slugSeries={detail.series.slug} slugEpisode={slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     {/* Donghua Details */}
                     <section className="dl-donghua-details">
                         <div className="dl-details-content">
@@ -159,7 +161,7 @@ export default async function StreamPage({ params } : Params) {
                 
                 <div className="col-12 col-lg-4">
                     <div className="dl-episode-sidebar d-none d-lg-block">
-                        <EpisodeSectionDesktop slugSeries={detail.series.slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
+                        <EpisodeSectionDesktop slugSeries={detail.series.slug} slugEpisode={slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />
                     </div>
 
                     <TopDonation />
