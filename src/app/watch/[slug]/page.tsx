@@ -77,8 +77,6 @@ export default async function StreamPage({ params } : Params) {
         cache: 'no-store'
     });
 
-    console.log("Fetching data for slug:", slug, "Status:", res.status);
-
     const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}api/recommendations`, {
         headers: {
         'X-API-KEY': process.env.APIKEY_BACKEND as string,
