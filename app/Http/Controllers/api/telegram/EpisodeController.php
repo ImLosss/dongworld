@@ -21,7 +21,7 @@ class EpisodeController extends Controller
                 'required',
                 'numeric',
                 Rule::unique('episodes', 'episode_number')
-                    ->where(fn ($q) => $q->where('series_id', $request->input('series_id'))),
+                    ->where(fn ($q) => $q->where('series_id', $request->input('series_id')))->where('is_preview', false),
             ],
             'downloads' => 'nullable|array',
             'downloads.*.link' => 'required|string',
