@@ -10,7 +10,7 @@ class SeriesController extends Controller
 {
     public function getSeriesDetail($id)
     {
-        $series = Series::where('id', $id)->first();
+        $series = Series::where('id', $id)->where('is_preview', false)->first();
         if (!$series) {
             return response()->json([
                 'message' => 'Series not found'
@@ -24,7 +24,7 @@ class SeriesController extends Controller
 
     public function getAllEps($id)
     {
-        $series = Series::with('episodes.links')->where('id', $id)->first();
+        $series = Series::with('episodes.links')->where('id', $id)->where('is_preview', false)->first();
         if (!$series) {
             return response()->json([
                 'message' => 'Series not found'
