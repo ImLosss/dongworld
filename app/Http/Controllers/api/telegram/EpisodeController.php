@@ -89,6 +89,7 @@ class EpisodeController extends Controller
 
         $episode = Episode::with(['downloads', 'series'])
             ->where('series_id', $request->input('series_id'))
+            ->where('is_preview', false)
             ->where('episode_number', $request->input('episode_number'))
             ->first();
 
