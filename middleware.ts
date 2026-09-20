@@ -27,9 +27,9 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // console.error(
-    //     `[${request.method}] ${waktu} WITA | IP: ${clientIp} | ${pathname}`
-    // );
+    console.log(
+        `[${request.method}] ${waktu} WITA | IP: ${clientIp} | ${pathname}`
+    );
 
     return NextResponse.next();
 }
