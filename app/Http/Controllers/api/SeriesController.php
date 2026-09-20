@@ -126,10 +126,34 @@ class SeriesController extends Controller
 
     public function postComment(Request $request)
     {
+        $badWords = ['babi', 'kontol', 'anjing', 'bangsat', 'memek', 'ngentot', 'jembut', 'anak haram', 'test'];
+
         $request->validate([
             'slug' => 'required|string',
-            'name' => 'required|string|max:30',
-            'comment' => 'required|string|max:250',
+            'name' => [
+                'required',
+                'string',
+                'max:30',
+                function ($attribute, $value, $fail) use ($badWords) {
+                    foreach ($badWords as $word) {
+                        if (stripos($value, $word) !== false) {
+                            $fail("Nama Anda mengandung kata yang tidak pantas: '{$word}'.");
+                        }
+                    }
+                },
+            ],
+            'comment' => [
+                'required',
+                'string',
+                'max:250',
+                function ($attribute, $value, $fail) use ($badWords) {
+                    foreach ($badWords as $word) {
+                        if (stripos($value, $word) !== false) {
+                            $fail("Komentar Anda mengandung kata yang tidak pantas: '{$word}'.");
+                        }
+                    }
+                },
+            ],
             'reply_to_comment_id' => 'nullable|integer|exists:comments,id',
         ]);
 
