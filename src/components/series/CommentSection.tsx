@@ -12,13 +12,22 @@ function formatRelativeTime(date: string) {
     const days = Math.floor(diff / 86400000);
     const weeks = Math.floor(diff / 604800000);
 
-    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+    try {
+        // Coba gunakan fitur bawaan browser
+        const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
-    if (minutes < 1) return rtf.format(-1, "minute");
-    if (minutes < 60) return rtf.format(-minutes, "minute");
-    if (hours < 24) return rtf.format(-hours, "hour");
-    if (days < 7) return rtf.format(-days, "day");
-    return rtf.format(-weeks, "week");
+        if (minutes < 1) return rtf.format(-1, "minute");
+        if (minutes < 60) return rtf.format(-minutes, "minute");
+        if (hours < 24) return rtf.format(-hours, "hour");
+        if (days < 7) return rtf.format(-days, "day");
+        return rtf.format(-weeks, "week");
+    } catch (e) {
+        if (minutes < 1) return "just now";
+        if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+        return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    }
 }
 
 // 1. Tambahkan property "replies" pada tipe Comment
