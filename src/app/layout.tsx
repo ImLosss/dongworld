@@ -9,7 +9,6 @@ import Script from "next/script";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { Suspense } from "react";
-import SmartlinkAd from "@/components/Smartlink Ads";
 import NextTopLoader from "nextjs-toploader";
 
 declare global {
