@@ -78,7 +78,6 @@ export default function RootLayout({
             <Sidebar />
             {children}
             <Footer />
-            <Script src="/js/search.js" strategy="afterInteractive" />
           </main>
         </div>
       </body>
