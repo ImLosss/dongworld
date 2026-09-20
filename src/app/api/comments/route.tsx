@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
 
   const payload = {
     name: String(body.name ?? "").trim(),
+    reply_to_comment_id: body.reply_to_comment_id ?? null,
     comment: String(body.comment ?? "").trim(),
     slug: String(body.slug ?? "").trim(),
     turnstile: String(body.cf_turnstile_response ?? "").trim(),
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
       "Accept": "application/json",
       "X-API-KEY": process.env.APIKEY_BACKEND as string,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   });
 
   const data = await backendRes.json();

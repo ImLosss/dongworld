@@ -48,6 +48,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
     const [loading, setLoading] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState<string>("");
     const turnstileRef = useRef<TurnstileInstance>(null);
+    const [totalCount, setTotalCount] = useState(() => comments.reduce((total, comment) => total + 1 + (comment.replies?.length || 0), 0));
     
     // State membalas ke ID Root
     const [replyingTo, setReplyingTo] = useState<{ rootId: number; name: string; content: string } | null>(null);
@@ -109,7 +110,11 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
             const data = await res.json();
 
             if (!res.ok) {
-                alert(data.message || "Gagal mengirim komentar.");
+                const validationError = data.errors?.comment?.[0] || data.errors?.name?.[0];
+                
+                const errorMessage = validationError || data.message || "Gagal mengirim komentar.";
+                
+                alert(errorMessage);
                 return;
             }
 
@@ -133,6 +138,8 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                     return rootComment;
                 });
             });
+
+            setTotalCount(prev => prev + 1);
             
             // Reset state
             setCommentText("");
@@ -199,7 +206,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
             <div className="dl-comments-header-form">
                 <div className="dl-comments-header">
                     <h2>Komentar</h2>
-                    <span className="dl-comments-count">{comments.length} Komentar</span>
+                    <span className="dl-comments-count">{totalCount} Komentar</span>
                 </div>
 
                 <div className="dl-comment-form">
