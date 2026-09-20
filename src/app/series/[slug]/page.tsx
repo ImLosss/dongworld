@@ -10,7 +10,7 @@ import CommentSection from "@/components/series/CommentSection";
 import HistorySection from "@/components/home/HistorySection";
 import { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
 import StreamNotificationRotator from "@/components/StreamNotificationRotater";
-import { Fragment } from "react/jsx-dev-runtime";
+import { Fragment } from "react";
 import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
 import TopDonation from "@/components/home/topDonation";
