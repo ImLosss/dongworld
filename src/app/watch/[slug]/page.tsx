@@ -115,7 +115,7 @@ export default async function StreamPage({ params } : Params) {
                     Skip iklan dengan menutup tab/pop-up iklan, lalu kembali ke halaman ini untuk
                     melanjutkan menonton. Kami hanya membatasi iklan muncul 3x setiap 1 jam.
                 </Fragment>,
-                <Fragment key="ads-warning">
+                <Fragment key="telegram-channel">
                     Join channel telegram kami agar tidak ketinggalan update dan pemberitahuan lainnya,{" "}
                     <Link href="https://t.me/dongworld" target="_blank">
                     klik disini
