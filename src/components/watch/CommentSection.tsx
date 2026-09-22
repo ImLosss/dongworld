@@ -20,7 +20,7 @@ function formatRelativeTime(date: string) {
         if (hours < 24) return rtf.format(-hours, "hour");
         if (days < 7) return rtf.format(-days, "day");
         return rtf.format(-weeks, "week");
-    } catch (e) {
+    } catch {
         if (minutes < 1) return "just now";
         if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
         if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;

@@ -46,7 +46,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
   }
 
-  const { series, episodes } = await getSitemapData();
+  // const { series, episodes } = await getSitemapData();
+  const { series } = await getSitemapData();
 
   return [
     { url: `${SITE_URL}/`, lastModified: new Date() },

@@ -5,7 +5,6 @@ import "@/styles/style.css";
 import "@/styles/responsive.css";
 // import "@/styles/series.css";
 import Footer from "@/components/footer";
-import Script from "next/script";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { Suspense } from "react";

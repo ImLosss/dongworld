@@ -117,7 +117,7 @@ export default function DonateForm() {
             } else {
                 alert("Gagal memuat QRIS: " + result.error);
             }
-        } catch (error) {
+        } catch {
             alert("Terjadi kesalahan sistem.");
         } finally {
             setLoading(false);

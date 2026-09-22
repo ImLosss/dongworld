@@ -30,6 +30,7 @@ export async function createQrisTransaction(data: { amount: number }) {
         }
 
     } catch (error: any) {
+        console.error("Terjadi kesalahan saat membuat transaksi QRIS:", error);
         return { success: false, error: "Terjadi kesalahan server." };
     }
 }

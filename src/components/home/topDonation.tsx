@@ -30,7 +30,7 @@ export default async function TopDonation() {
             return null;
         }
 
-    } catch (error) {
+    } catch {
         return null;
     }
 

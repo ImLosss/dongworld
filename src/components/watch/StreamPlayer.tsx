@@ -17,7 +17,6 @@ type HistoryItem = {
 type HistoryMap = Record<string, HistoryItem>;
 
 export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
-    const BASE_EMBED_URL = "http://player.websiteku.space/embed?url=";
     const sortedLinks = [...(detail.links || [])]
         .sort((a: any, b: any) => {
             const aOkru = (a.server?.name || "").toLowerCase() === "okru";
@@ -80,7 +79,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
             let history: HistoryMap = {};
             try {
                 history = raw ? JSON.parse(raw) : {};
-            } catch (parseError) {
+            } catch {
                 console.warn("Data history rusak, mengulang dari kosong.");
             }
 
