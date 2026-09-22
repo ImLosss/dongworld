@@ -142,6 +142,13 @@ return [
         'index-settings' => [
             \App\Models\Series::class => [
                 'filterableAttributes' => ['type', 'status', 'genres'],
+                'typoTolerance' => [
+                    'enabled' => true,
+                    'minWordSizeForTypos' => [
+                        'oneTypo' => 3,
+                        'twoTypos' => 6,
+                    ],
+                ],
             ],
             // 'users' => [
             //     'filterableAttributes' => ['id', 'name', 'email'],
