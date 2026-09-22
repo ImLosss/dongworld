@@ -44,6 +44,32 @@
         width: 100px;
         height: auto;
     }
+
+    .dl-search-dropdown {
+        margin-top: 0px;
+        max-height: 300px; /* Lebih pendek sedikit agar tidak tembus ke bawah layar HP */
+        border-radius: 6px;
+    }
+    
+    /* Memastikan modal di mobile mengikuti lebar kotak pencarian mobile yang aktif */
+    .dl-mobile-search-container .dl-search-dropdown {
+        width: auto; 
+        left: 15px;  
+        right: 15px;
+    }
+
+    .dl-search-dropdown-item {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .dl-dropdown-info h4 {
+        font-size: 0.85rem; /* Ukuran font judul sedikit dikecilkan untuk HP */
+    }
+    
+    .dl-dropdown-info span {
+        font-size: 0.7rem;
+    }
 }
 
 /* Mobile Devices */
