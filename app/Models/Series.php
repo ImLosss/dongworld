@@ -3,15 +3,36 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Series extends Model
 {
+    use Searchable;
+
     protected $guarded = ['id'];
 
     protected $casts = [
         'aliases' => 'array',
         'release_day' => 'array',
     ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => (int) $this->id,
+            'name' => $this->name,
+            'aliases' => $this->aliases, // Array JSON akan otomatis terbaca oleh Meilisearch
+            'type' => $this->type,
+            'status' => $this->status,
+            // Ambil semua nama genre ke dalam bentuk array string, contoh: ["Action", "Comedy"]
+            'genres' => $this->genres->pluck('name')->toArray(),
+        ];
+    }
+
+    protected function makeAllSearchableUsing($query)
+    {
+        return $query->with('genres');
+    }
 
     public function genres() {
         return $this->belongsToMany(Genre::class, 'genre_series', 'series_id', 'genre_id');

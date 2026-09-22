@@ -24,49 +24,52 @@ class SearchController extends Controller
 
     public function search(Request $request)
     {
-        $query = Series::query();
+        // Tangkap keyword pencarian (bisa kosong)
+        $searchQuery = $request->filled('search') ? $request->search : '';
 
-        if ($request->filled('search')) {
-            $search = strtolower($request->search);
+        // Lakukan pencarian dengan Callback Khusus ke Meilisearch
+        $scout = Series::search($searchQuery, function (\MeiliSearch\Endpoints\Indexes $meiliSearch, $query, $options) use ($request) {
 
-            $query->where(function ($q) use ($search) {
-                $q->whereRaw("LOWER(name) LIKE ?", ['%' . $search . '%'])
-                    ->orWhereRaw("
-                    EXISTS (
-                        SELECT 1
-                        FROM JSON_TABLE(aliases, '$[*]' COLUMNS(alias VARCHAR(255) PATH '$')) jt
-                        WHERE LOWER(jt.alias) LIKE ?
-                    )
-                ", ['%' . $search . '%']);
-            });
-        }
+            // Siapkan array untuk menampung filter
+            $filters = [];
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('genre')) {
-            $genres = array_filter(array_map('trim', explode(',', $request->genre)));
-
-            foreach ($genres as $genre) {
-                $query->whereHas('genres', function ($q) use ($genre) {
-                    $q->where('name', $genre);
-                });
+            if ($request->filled('type')) {
+                $filters[] = 'type = "' . $request->type . '"';
             }
-        }
 
-        $query->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number');
+            if ($request->filled('status')) {
+                $filters[] = 'status = "' . $request->status . '"';
+            }
 
-        $results = $query->paginate(10);
+            if ($request->filled('genre')) {
+                $genres = array_filter(array_map('trim', explode(',', $request->genre)));
+                foreach ($genres as $genre) {
+                    // Logic AND: Harus memiliki genre A dan genre B
+                    $filters[] = 'genres = "' . $genre . '"';
+                }
+            }
+
+            // Jika ada filter, gabungkan menggunakan AND
+            if (!empty($filters)) {
+                $options['filter'] = implode(' AND ', $filters);
+            }
+
+            // Eksekusi ke Meilisearch
+            return $meiliSearch->search($query, $options);
+        });
+
+        // Bagian query() akan dijalankan ke MySQL SETELAH hasil ID didapatkan dari Meilisearch
+        // Ini cocok untuk mengambil data relasi (seperti aggregate episode)
+        $scout->query(function ($query) {
+            $query->withMax('mainEpisodes as episodes_max_episode_number', 'episode_number');
+        });
+
+        // Hasil pencarian & paginasi akan aman dan sangat akurat
+        $results = $scout->paginate(10);
 
         $results->getCollection()->each(function ($item) {
             if ($item->episodes_max_episode_number !== null) {
-                $item->episodes_max_episode_number =
-                    (int) $item->episodes_max_episode_number;
+                $item->episodes_max_episode_number = (int) $item->episodes_max_episode_number;
             }
         });
 

@@ -126,7 +126,7 @@ class SeriesController extends Controller
 
     public function postComment(Request $request)
     {
-        $badWords = ['babi', 'kontol', 'anjing', 'bangsat', 'memek', 'ngentot', 'jembut', 'anak haram', 'test'];
+        $badWords = ['babi', 'kontol', 'anjing', 'bangsat', 'memek', 'ngentot', 'jembut', 'anak haram'];
 
         $request->validate([
             'slug' => 'required|string',
