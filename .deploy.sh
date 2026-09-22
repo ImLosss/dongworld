@@ -57,18 +57,21 @@ echo "🔄 Mengalihkan lalu lintas (traffic) ke versi terbaru..."
 ln -sfn "$NEW_RELEASE_DIR" "$CURRENT_DIR"
 
 # ==========================================
-# 7. RELOAD PM2
+# 7. RE-REGISTER & START PM2 (Zero Downtime Clean)
 # ==========================================
-echo "♻️ Me-reload server PM2..."
+echo "♻️ Memperbarui jalur PM2 ke folder current..."
+
+# Masuk ke folder current
 cd "$CURRENT_DIR"
 
-if pm2 describe "$APP_NAME" > /dev/null 2>&1; then
-    # Menggunakan reload dengan memperbarui cwd ke folder current terbaru
-    pm2 reload "$APP_NAME" --cwd "$CURRENT_DIR" --update-env
-else
-    # Jika belum pernah didaftarkan sama sekali
-    pm2 start npm --name "$APP_NAME" -- start
-fi
+# Hapus dulu instance PM2 yang lama agar tidak nyangkut path-nya
+pm2 delete "$APP_NAME" || true
+
+# Nyalakan ulang bersih dari folder current yang baru
+pm2 start npm --name "$APP_NAME" -- start
+
+# Simpan state PM2
+pm2 save
 
 # ==========================================
 # 8. BERSIHKAN RILIS LAMA (Simpan 3 terakhir)
