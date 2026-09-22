@@ -57,15 +57,16 @@ echo "🔄 Mengalihkan lalu lintas (traffic) ke versi terbaru..."
 ln -sfn "$NEW_RELEASE_DIR" "$CURRENT_DIR"
 
 # ==========================================
-# 7. RELOAD PM2 GRACEFULLY
+# 7. RELOAD PM2
 # ==========================================
 echo "♻️ Me-reload server PM2..."
-# Mengecek apakah aplikasi PM2 sudah berjalan
-if pm2 show "$APP_NAME" > /dev/null; then
-    pm2 reload "$APP_NAME"
+cd "$CURRENT_DIR"
+
+if pm2 describe "$APP_NAME" > /dev/null 2>&1; then
+    # Menggunakan reload dengan memperbarui cwd ke folder current terbaru
+    pm2 reload "$APP_NAME" --cwd "$CURRENT_DIR" --update-env
 else
-    # Jika PM2 belum jalan, mulai baru dari folder current
-    cd "$CURRENT_DIR"
+    # Jika belum pernah didaftarkan sama sekali
     pm2 start npm --name "$APP_NAME" -- start
 fi
 

@@ -117,14 +117,23 @@ export default function SearchBehavior() {
             setShowDropdown(false);
             return;
         }
+
+        let ignore = false; // ⬅️ guard
+
         const timeoutId = setTimeout(async () => {
             setIsSearching(true);
             setShowDropdown(true);
             const results = await fetchLiveSearch(query);
-            setLiveResults(results);
-            setIsSearching(false);
+            if (!ignore) {           // ⬅️ hanya update state kalau masih relevan
+                setLiveResults(results);
+                setIsSearching(false);
+            }
         }, 500);
-        return () => clearTimeout(timeoutId);
+
+        return () => {
+            ignore = true;           // ⬅️ set true saat cleanup (query/pathname berubah atau unmount)
+            clearTimeout(timeoutId);
+        };
     }, [query, pathname]);
 
     const DropdownContent = () => {
@@ -142,9 +151,14 @@ export default function SearchBehavior() {
                             onClick={() => {
                                 setShowDropdown(false);
                                 setActive(false);
-                                document
-                                    .getElementById("dl-mobile-search-container")
-                                    ?.classList.remove("dl-active");
+                                setQuery("");
+                                setLiveResults([]);
+                                document.getElementById("dl-mobile-search-container")?.classList.remove("dl-active");
+
+                                const desktopInput = document.getElementById("dl-search-input") as HTMLInputElement | null;
+                                const mobileInput = document.getElementById("dl-mobile-search-input") as HTMLInputElement | null;
+                                if (desktopInput) desktopInput.value = "";
+                                if (mobileInput) mobileInput.value = "";
                             }}
                             style={{ textDecoration: "none", color: "inherit" }}
                         >
