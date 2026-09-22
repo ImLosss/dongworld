@@ -15,9 +15,9 @@ import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
 import TopDonation from "@/components/home/topDonation";
 
-interface Params {
-  params: { slug: string };
-}
+type Params = {
+  params: Promise<{ slug: string }>;
+};
 
 async function getSeriesData(slug: string, options?: { revalidate?: number }) {
   const res = await fetch(`${process.env.BASE_URL_BACKEND}api/series/${slug}`, {

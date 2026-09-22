@@ -17,9 +17,9 @@ import { createCsrfToken } from "@/lib/csrfToken";
 import DownloadSection from "@/components/watch/DownloadSection";
 import TopDonation from "@/components/home/topDonation";
 
-interface Params {
-  params: { slug: string };
-}
+type Params = {
+  params: Promise<{ slug: string }>;
+};
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { slug } = await params;
