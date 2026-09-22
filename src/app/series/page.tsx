@@ -105,7 +105,7 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
                                 return (
                                     <SeriesList key={series.id} href={`/series/${series.slug}`}>
                                         <div className="dl-card-img">
-                                            <Image src={process.env.NEXT_PUBLIC_BASE_URL_BACKEND + series.thumbnail} sizes="368px" alt={series.name} fill />
+                                            <Image src={`/api/image?path=${encodeURIComponent(series.thumbnail)}`} sizes="368px" alt={series.name} fill />
                                             {/* <div className="dl-card-badge">NEW</div> */}
                                         </div>
                                         <div className="dl-card-content">
