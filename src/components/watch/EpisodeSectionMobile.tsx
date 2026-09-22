@@ -38,7 +38,7 @@ export default function EpisodeSection({ slugSeries, slugEpisode, initialEpisode
     didInit.current = true;
 
     const initialPage = getPageFromSelectedEpisode();
-    localStorage.setItem(storageKey, String(initialPage));
+    try { localStorage.setItem(storageKey, String(initialPage)); } catch (error) { console.warn("localStorage is blocked or unavailable:", error); }
   }, [getPageFromSelectedEpisode, storageKey]);
 
   const startIndex = (page - 1) * pageSize;
@@ -46,7 +46,7 @@ export default function EpisodeSection({ slugSeries, slugEpisode, initialEpisode
   const pageEpisodes = sortedEpisodes.slice(startIndex, endIndex);
 
   const handlePageChange = (nextPage: number) => {
-    localStorage.setItem(storageKey, nextPage.toString());
+    try { localStorage.setItem(storageKey, nextPage.toString()); } catch (error) { console.warn("localStorage is blocked or unavailable:", error); }
     setLoading(true);
     setPage(nextPage);
     setTimeout(() => setLoading(false), 150);

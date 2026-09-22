@@ -23,11 +23,21 @@ export default function DonateForm() {
 
     // Load data dari LocalStorage saat halaman dimuat
     useEffect(() => {
-        const savedName = localStorage.getItem("commenterName");
-        const savedEmail = localStorage.getItem("donateEmail");
-        const savedMessage = localStorage.getItem("donateMessage");
-        const savedAnonim = localStorage.getItem("donateAnonim");
-        const savedHideEmail = localStorage.getItem("donateHideEmail");
+        let savedName = null;
+        let savedEmail = null;
+        let savedMessage = null;
+        let savedAnonim = null;
+        let savedHideEmail = null;
+
+        try {
+            savedName = localStorage.getItem("commenterName");
+            savedEmail = localStorage.getItem("donateEmail");
+            savedMessage = localStorage.getItem("donateMessage");
+            savedAnonim = localStorage.getItem("donateAnonim");
+            savedHideEmail = localStorage.getItem("donateHideEmail");
+        } catch (error) {
+            console.warn("Akses localStorage diblokir oleh browser:", error);
+        }
 
         if (savedAnonim === "true") {
             setIsAnonim(true);
@@ -68,7 +78,9 @@ export default function DonateForm() {
         if (checked) {
             setName("Someone");
         } else {
-            setName(localStorage.getItem("commenterName") || ""); 
+            let savedName = "";
+            try { savedName = localStorage.getItem("commenterName") || ""; } catch (error) { console.warn("Akses localStorage diblokir:", error); }
+            setName(savedName); 
         }
     };
 
@@ -77,11 +89,15 @@ export default function DonateForm() {
         if (amount < 1000) return alert("Minimal donasi Rp 1.000");
         if (!email) return alert("Email wajib diisi!");
 
-        if (!isAnonim) localStorage.setItem("commenterName", name);
-        localStorage.setItem("donateEmail", email);
-        localStorage.setItem("donateMessage", message);
-        localStorage.setItem("donateAnonim", isAnonim.toString());
-        localStorage.setItem("donateHideEmail", hideEmail.toString());
+        try {
+            if (!isAnonim) localStorage.setItem("commenterName", name);
+            localStorage.setItem("donateEmail", email);
+            localStorage.setItem("donateMessage", message);
+            localStorage.setItem("donateAnonim", isAnonim.toString());
+            localStorage.setItem("donateHideEmail", hideEmail.toString());
+        } catch (error) {
+            console.warn("Gagal menyimpan data donasi ke localStorage:", error);
+        }
 
         setLoading(true);
 

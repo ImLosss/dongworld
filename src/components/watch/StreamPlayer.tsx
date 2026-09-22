@@ -25,20 +25,6 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
             return Number(bOkru) - Number(aOkru);
         });
 
-    const getServerUrl = () => {
-        const saved = localStorage.getItem("server");
-
-        if (!saved) {
-            return sortedLinks[0]?.url || "";
-        }
-
-        const match = sortedLinks.find(
-            link => link.server.name === saved
-        );
-
-        return match?.url || sortedLinks[0]?.url || "";
-    };
-
     const [selectedServer, setSelectedServer] = useState(sortedLinks[0]?.server.name || "");
     const [saved, setSaved] = useState(false);
     const serverTabsRef = useRef<HTMLDivElement>(null);
@@ -48,10 +34,13 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
         sortedLinks[0];
 
     useEffect(() => {
-        const saved = localStorage.getItem("server");
-
-        if (saved) {
-            setSelectedServer(saved);
+        try {
+            const saved = localStorage.getItem("server");
+            if (saved) {
+                setSelectedServer(saved);
+            }
+        } catch (error) {
+            console.warn("Akses localStorage diblokir:", error);
         }
 
         setTimeout(() => {
@@ -77,7 +66,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
     }, [detail.slug]);
 
     const handleServerChange = (serverName: string) => {
-        localStorage.setItem("server", serverName);
+        try { localStorage.setItem("server", serverName); } catch (error) { console.warn("localStorage is blocked or unavailable:", error); }
         setSelectedServer(serverName);
     };
 
@@ -85,26 +74,35 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
         if (saved) return;
         setSaved(true);
 
-        const key = "history";
-        const raw = localStorage.getItem(key);
-        const history: HistoryMap = raw ? JSON.parse(raw) : {};
+        try {
+            const key = "history";
+            const raw = localStorage.getItem(key);
+            let history: HistoryMap = {};
+            try {
+                history = raw ? JSON.parse(raw) : {};
+            } catch (parseError) {
+                console.warn("Data history rusak, mengulang dari kosong.");
+            }
 
-        const seriesSlug = detail.series?.slug || detail.slug;
+            const seriesSlug = detail.series?.slug || detail.slug;
 
-        history[seriesSlug] = {
-            slugEpisode: detail.slug,
-            episodeNumber: detail.episode_number,
-            title: `${detail.series?.name}`,
-            watchedAt: new Date().toISOString(),
-        };
+            history[seriesSlug] = {
+                slugEpisode: detail.slug,
+                episodeNumber: detail.episode_number,
+                title: `${detail.series?.name}`,
+                watchedAt: new Date().toISOString(),
+            };
 
-        const pruned = Object.entries(history)
-            .sort((a, b) => new Date(b[1].watchedAt).getTime() - new Date(a[1].watchedAt).getTime())
-            .slice(0, 20);
+            const pruned = Object.entries(history)
+                .sort((a, b) => new Date(b[1].watchedAt).getTime() - new Date(a[1].watchedAt).getTime())
+                .slice(0, 20);
 
-        const limitedHistory = Object.fromEntries(pruned);
+            const limitedHistory = Object.fromEntries(pruned);
 
-        localStorage.setItem(key, JSON.stringify(limitedHistory));
+            localStorage.setItem(key, JSON.stringify(limitedHistory));
+        } catch (error) {
+            console.warn("Gagal mengakses localStorage untuk menyimpan riwayat:", error);
+        }
     };
 
     return (

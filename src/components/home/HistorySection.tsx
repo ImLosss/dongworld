@@ -35,23 +35,31 @@ export default function HistorySection() {
     const [history, setHistory] = useState<HistoryMap>({});
 
     useEffect(() => {
-        const saved = localStorage.getItem("history");
-        setHistory(saved ? JSON.parse(saved) : {});
+        try {
+            // Safely attempt to read from localStorage
+            const saved = window.localStorage.getItem("history");
+            setHistory(saved ? JSON.parse(saved) : {});
+        } catch (error) {
+            console.warn("localStorage is blocked or unavailable:", error);
+            setHistory({}); // Fallback to empty state
+        }
     }, []);
 
     const clearHistory = () => {
-        localStorage.removeItem("history");
-        // localStorage.clear();
+        try {
+            window.localStorage.removeItem("history");
+        } catch (error) {
+            console.warn("localStorage is blocked or unavailable:", error);
+        }
         setHistory({});
     };
 
     const items = Object.entries(history);
 
     return (
-
         <section id="history" className="dl-section">
             <div className="dl-history-container">
-                {/* Header (tidak ikut scroll) */}
+                {/* Header */}
                 <div className="dl-history-header">
                     <h2 className="dl-history-title">Riwayat Nonton</h2>
                     <button
@@ -70,7 +78,7 @@ export default function HistorySection() {
                     </div>
                 </div>
 
-                {/* List (scroll) */}
+                {/* List */}
                 <div className="dl-history-list">
                     {items.length > 0 && items.map(([slug, item]) => (
                         <Link href={`/watch/${item.slugEpisode}`} key={slug} style={{ textDecoration: "none", color: "inherit" }}>

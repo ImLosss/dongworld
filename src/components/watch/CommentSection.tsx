@@ -43,8 +43,14 @@ export type Comment = {
 export default function CommentSection({ comments, slug, csrfToken }: { comments: Comment[], slug: string, csrfToken: string }) {
     const getCommenterName = () => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem(`commenterName`);
-            return saved ? saved : "";
+            try {
+                // 2. Coba ambil data (mencegah error Incognito/Security browser)
+                const saved = localStorage.getItem('commenterName');
+                return saved ? saved : "";
+            } catch (error) {
+                console.warn("Akses localStorage diblokir oleh browser.");
+                return "";
+            }
         }
         return "";
     };
@@ -94,7 +100,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        localStorage.setItem("commenterName", name);
+        try { localStorage.setItem("commenterName", name); } catch (error) { console.warn("localStorage is blocked or unavailable:", error); }
         if (!turnstileToken) {
             alert("Mohon tunggu verifikasi keamanan selesai.");
             return;
