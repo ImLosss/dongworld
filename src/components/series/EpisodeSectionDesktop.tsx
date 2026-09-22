@@ -25,13 +25,21 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
 
     const getSavedPage = useCallback((totalPages: number) => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem(storageKey);
-            const savedPage = saved ? parseInt(saved) : 1;
-            const validPage = Math.min(Math.max(savedPage, 1), totalPages);
-            if (savedPage !== validPage) {
-                localStorage.setItem(storageKey, validPage.toString());
+            try {
+                const saved = localStorage.getItem(storageKey);
+                const savedPage = saved ? parseInt(saved) : 1;
+                const validPage = Math.min(Math.max(savedPage, 1), totalPages);
+                
+                if (savedPage !== validPage) {
+                    localStorage.setItem(storageKey, validPage.toString());
+                }
+                
+                return validPage;
+            } catch (error) {
+                console.warn("Akses localStorage diblokir:", error);
+                // Jika diblokir, tetap kembalikan halaman 1 agar aplikasi bisa berlanjut
+                return 1; 
             }
-            return validPage;
         }
         return 1;
     }, [storageKey]);
@@ -50,7 +58,7 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
     const pageEpisodes = sortedEpisodes.slice(startIndex, endIndex);
 
     const handlePageChange = (nextPage: number) => {
-        localStorage.setItem(storageKey, nextPage.toString());
+        try { localStorage.setItem(storageKey, nextPage.toString()); } catch (error) { console.warn("Akses localStorage diblokir:", error); }
         setLoading(true);
         setPage(nextPage);
         setTimeout(() => setLoading(false), 150);
