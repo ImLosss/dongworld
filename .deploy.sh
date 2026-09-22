@@ -6,7 +6,7 @@ set -e
 # 1. KONFIGURASI (Ubah sesuai dengan server Anda)
 # ==========================================
 APP_NAME="dongworld"
-GIT_REPO="git@github.com:ImLosss/dongworld.git" # Gunakan URL Git Repo Anda
+GIT_REPO="https://github.com/ImLosss/dongworld.git" # Gunakan URL Git Repo Anda
 BRANCH="react"
 
 BASE_DIR="/home/react/web/react.websiteku.space/public_html"

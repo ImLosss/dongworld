@@ -47,7 +47,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                 // 2. Coba ambil data (mencegah error Incognito/Security browser)
                 const saved = localStorage.getItem('commenterName');
                 return saved ? saved : "";
-            } catch (error) {
+            } catch {
                 console.warn("Akses localStorage diblokir oleh browser.");
                 return "";
             }
