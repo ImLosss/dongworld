@@ -12,23 +12,23 @@ export default function GlobalError({
   reset: () => void;
 }) {
   const [isNonChrome, setIsNonChrome] = useState(false);
+  
+  const isChunkError = 
+    error?.message?.toLowerCase().includes("failed to load chunk") || 
+    error?.name === "ChunkLoadError";
 
   useEffect(() => {
-    // Sentry sekarang akan terpanggil dengan sukses
     Sentry.captureException(error);
 
-    // Deteksi browser: Memeriksa apakah browser BUKAN Google Chrome asli
     const userAgent = navigator.userAgent;
     const vendor = navigator.vendor;
     
-    // Chrome asli biasanya memiliki string "Chrome" di UA dan "Google Inc" di vendor.
-    // Pengecekan vendor menghindari deteksi salah pada Edge atau peramban lain yang memakai basis Chromium.
     const isChrome = /Chrome/i.test(userAgent) && /Google Inc/i.test(vendor);
     
     if (!isChrome) {
       setIsNonChrome(true);
     }
-  }, [error]);
+  }, [error, isChunkError]);
 
   return (
     <html lang="id">
@@ -59,19 +59,19 @@ export default function GlobalError({
             }}
           >
             <div style={{ fontSize: "4rem", color: "var(--primary-color)", marginBottom: "20px" }}>
-              <i className="fas fa-exclamation-triangle"></i>
+              <i className={isChunkError ? "fas fa-sync-alt fa-spin" : "fas fa-exclamation-triangle"}></i>
             </div>
 
             <h2 style={{ marginBottom: "15px", fontSize: "1.6rem", fontWeight: 700 }}>
-              Waduh, Halaman Crash!
+              {isChunkError ? "Sistem Diperbarui!" : "Waduh, Halaman Crash!"}
             </h2>
 
             <p style={{ color: "var(--gray-color)", marginBottom: "20px", fontSize: "0.95rem", lineHeight: "1.6" }}>
-              Terjadi kesalahan saat memuat tampilan halaman ini.
-              Jangan khawatir, kami telah mencatat masalah ini secara otomatis.
+              {isChunkError 
+                ? "Kami baru saja melakukan pembaruan sistem ke versi terbaru. Silakan muat ulang (Reload) halaman ini. Jika halaman masih bermasalah, mohon bersihkan riwayat Cache browser Anda (Clear Cache), lalu coba lagi." 
+                : "Terjadi kesalahan saat memuat tampilan halaman ini. Jangan khawatir, kami telah mencatat masalah ini secara otomatis."}
             </p>
 
-            {/* Peringatan Browser Tambahan */}
             {isNonChrome && (
               <div style={{
                 backgroundColor: "rgba(255, 204, 0, 0.1)",
@@ -89,7 +89,11 @@ export default function GlobalError({
             )}
 
             <div style={{ display: "flex", gap: "15px", justifyContent: "center", flexWrap: "wrap", marginTop: !isNonChrome ? "10px" : "0" }}>
-              <button onClick={() => reset()} className="dl-btn dl-btn-primary">
+              {/* 4. Ubah Action Button: Refresh Penuh untuk ChunkError, Reset React untuk Error Biasa */}
+              <button 
+                onClick={() => isChunkError ? window.location.reload() : reset()} 
+                className="dl-btn dl-btn-primary"
+              >
                 <i className="fas fa-sync-alt" style={{ marginRight: "8px" }}></i> Muat Ulang
               </button>
 
