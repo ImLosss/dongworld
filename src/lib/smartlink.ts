@@ -1,4 +1,4 @@
-const SMARTLINK_URL = "https://colinsidewaychancy.com/xx3z06hf1?key=bd214403dcbfedf7a86ad57ef67b0d9f";
+const SMARTLINK_URL = "https://colinsidewaychancy.com/uzzidy7zm?key=0686edc81069f4bc7f46464260e1bdf8";
 
 const MINUTE = 25 * 1000;
 const HOUR = 60 * 60 * 1000;
