@@ -58,6 +58,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
     const [turnstileToken, setTurnstileToken] = useState<string>("");
     const turnstileRef = useRef<TurnstileInstance>(null);
     const [totalCount, setTotalCount] = useState(() => comments.reduce((total, comment) => total + 1 + (comment.replies?.length || 0), 0));
+    const [mounted, setMounted] = useState(false);
     
     // State membalas ke ID Root
     const [replyingTo, setReplyingTo] = useState<{ rootId: number; name: string; content: string } | null>(null);
@@ -73,6 +74,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
 
     useEffect(() => {
         setName(getCommenterName());
+        setMounted(true);
     }, []);
 
     const handleScroll = () => {
@@ -264,11 +266,13 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                             maxLength={250}
                             required
                         ></textarea>
-                        <Turnstile
-                            ref={turnstileRef} 
-                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ""}
-                            onSuccess={(token) => setTurnstileToken(token)}
-                        />
+                        {mounted && (
+                            <Turnstile
+                                ref={turnstileRef} 
+                                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ""}
+                                onSuccess={(token) => setTurnstileToken(token)}
+                            />
+                        )}
                         <button type="submit" className="dl-btn-primary" disabled={loading || !turnstileToken}>{loading ? "Mengirim..." : "Kirim"}</button>
                     </form>
                 </div>
