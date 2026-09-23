@@ -55,7 +55,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
         return "";
     };
 
-    const [name, setName] = useState(getCommenterName());
+    const [name, setName] = useState("");
     const [commentText, setCommentText] = useState("");
     const [displayedComments, setDisplayedComments] = useState<Comment[]>([]);
     const [currentIndex, setCurrentIndex] = useState(10);
@@ -75,6 +75,10 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
     useEffect(() => {
         setDisplayedComments(comments.slice(0, 10));
     }, [comments]);
+
+    useEffect(() => {
+        setName(getCommenterName());
+    }, []);
 
     const handleScroll = () => {
         if (!listRef.current) return;
@@ -200,7 +204,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
                         {comment.name}
                         {comment.is_admin && <i className="fas fa-crown" style={{ marginLeft: "5px", color: "gold" }}></i>}
                     </span>
-                    <span className="dl-comment-date">{formatRelativeTime(comment.created_at)}</span>
+                    <span className="dl-comment-date" suppressHydrationWarning>{formatRelativeTime(comment.created_at)}</span>
                 </div>
                 <div className="dl-comment-text">{comment.content}</div>
                 <div className="dl-comment-actions">

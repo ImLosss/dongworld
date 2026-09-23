@@ -122,7 +122,7 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
                 <div className="dl-stream-info">
                     <h1 className="dl-stream-title">{detail.name ? detail.name : `${detail.is_preview ? `PV ${detail.series.name} Episode` : `${detail.series.name} Episode`} ${detail.episode_number} ${detail.is_preview ? '' : 'Subtitle Indonesia'}`}</h1>
                     <div className="dl-stream-meta">
-                        <span>
+                        <span suppressHydrationWarning>
                             Diposting oleh <b>{detail.uploader || 'Admin'}</b> pada {new Date(detail.created_at).toLocaleDateString('id-ID')} |
                             Series <b><a href={`/series/${detail.series.slug}`}>{detail.series.name}</a></b>
                         </span>
