@@ -43,13 +43,13 @@ export type Comment = {
 
 export default function CommentSection({ comments, slug, csrfToken }: { comments: Comment[], slug: string, csrfToken: string }) {
     const getCommenterName = () => {
-        if (typeof window !== 'undefined' && window.localStorage) {
+        if (typeof window !== 'undefined') {
             try {
-                const saved = window.localStorage.getItem(`commenterName`);
+                // 2. Coba ambil data (mencegah error Incognito/Security browser)
+                const saved = localStorage.getItem('commenterName');
                 return saved ? saved : "";
-            } catch (error) {
-                // Fails silently if localStorage is blocked by privacy settings
-                console.warn("localStorage access denied by browser settings.");
+            } catch {
+                console.warn("Akses localStorage diblokir oleh browser.");
                 return "";
             }
         }

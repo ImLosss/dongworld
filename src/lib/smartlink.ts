@@ -45,7 +45,7 @@ function canOpenSmartlink() {
                 recent.length >= MAX_PER_HOUR
             );
         }
-    } catch (error) {
+    } catch {
         console.warn("localStorage diblokir oleh browser.");
         return false; 
     }
