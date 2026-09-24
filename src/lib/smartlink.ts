@@ -26,16 +26,29 @@ export function openSmartlink() {
 function canOpenSmartlink() {
     const now = Date.now();
 
-    const raw = localStorage.getItem("smartlink_clicks");
-    const clicks: number[] = raw ? JSON.parse(raw) : [];
-    const recent = clicks.filter((t) => now - t < HOUR);
+    try {
+        if (window.localStorage) {
+            const raw = window.localStorage.getItem("smartlink_clicks");
+            let clicks: number[] = [];
+            if (raw) {
+                clicks = JSON.parse(raw);
+            }
+            
+            const recent = clicks.filter((t) => now - t < HOUR);
 
-    const lastClick = Number(
-        localStorage.getItem("smartlink_last_click") ?? 0
-    );
+            const lastClick = Number(
+                window.localStorage.getItem("smartlink_last_click") ?? 0
+            );
 
-    return !(
-        now - lastClick < MINUTE ||
-        recent.length >= MAX_PER_HOUR
-    );
+            return !(
+                now - lastClick < MINUTE ||
+                recent.length >= MAX_PER_HOUR
+            );
+        }
+    } catch (error) {
+        console.warn("localStorage diblokir oleh browser.");
+        return false; 
+    }
+    
+    return false; 
 }

@@ -43,9 +43,15 @@ export type Comment = {
 
 export default function CommentSection({ comments, slug, csrfToken }: { comments: Comment[], slug: string, csrfToken: string }) {
     const getCommenterName = () => {
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem(`commenterName`);
-            return saved ? saved : "";
+        if (typeof window !== 'undefined' && window.localStorage) {
+            try {
+                const saved = window.localStorage.getItem(`commenterName`);
+                return saved ? saved : "";
+            } catch (error) {
+                // Fails silently if localStorage is blocked by privacy settings
+                console.warn("localStorage access denied by browser settings.");
+                return "";
+            }
         }
         return "";
     };
@@ -101,7 +107,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        localStorage.setItem("commenterName", name);
+        try { localStorage.setItem("commenterName", name); } catch (error) { console.warn("localStorage access denied by browser settings."); }
         if (!turnstileToken) {
             alert("Mohon tunggu verifikasi keamanan selesai.");
             return;
