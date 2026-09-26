@@ -16,6 +16,14 @@ import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
 import DownloadSection from "@/components/watch/DownloadSection";
 import TopDonation from "@/components/home/topDonation";
+import {
+  SITE_NAME,
+  absoluteUrl,
+  imageProxyUrl,
+  truncate,
+  episodeJsonLd,
+  breadcrumbJsonLd,
+} from "@/lib/seo";
 
 type Params = {
   params: Promise<{ slug: string }>;
@@ -24,15 +32,16 @@ type Params = {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { slug } = await params;
 
-    const res = await fetch(`${process.env.BASE_URL_BACKEND}api/watch/${slug}`, {
+    const res = await fetch(`${process.env.BASE_URL_BACKEND}/watch/${slug}`, {
         headers: { "X-API-KEY": process.env.APIKEY_BACKEND as string },
         next: { revalidate: 300 },
     });
 
     if (!res.ok) {
         return {
-            title: "Not Found | DongWorld",
-            description: "Halaman tidak ditemukan."
+            title: "Not Found",
+            description: "Halaman tidak ditemukan.",
+            robots: { index: false, follow: false },
         };
     }
 
@@ -43,25 +52,29 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         ? detail.name 
         : `${detail.is_preview ? `PV ${detail.series.name} Episode` : `${detail.series.name} Episode`} ${detail.episode_number} ${detail.is_preview ? '' : 'Subtitle Indonesia'}`.trim();
 
-    const title = `${baseTitle} | DongWorld`;
-    const description = detail.series.synopsis?.slice(0, 160) || "Tonton donghua terbaru di DongWorld.";
-    const image = process.env.BASE_URL_BACKEND + detail.series.thumbnail;
-    const url = `${process.env.NEXT_PUBLIC_SITE_URL}/watch/${detail.slug}`;
+    const title = baseTitle;
+    const description = detail.series.synopsis
+      ? truncate(detail.series.synopsis, 160)
+      : `Nonton ${detail.series.name} episode ${detail.episode_number} subtitle Indonesia kualitas HD di ${SITE_NAME}.`;
+    const image = imageProxyUrl(detail.series.thumbnail);
+    const url = absoluteUrl(`/watch/${detail.slug}`);
 
     return {
         title,
         description,
         alternates: { canonical: url },
         openGraph: {
-            title,
+            title: `${baseTitle} | ${SITE_NAME}`,
             description,
             url,
-            images: [{ url: image }],
+            siteName: SITE_NAME,
+            locale: "id_ID",
+            images: [{ url: image, alt: detail.series.name }],
             type: "video.episode",
         },
         twitter: {
             card: "summary_large_image",
-            title,
+            title: `${baseTitle} | ${SITE_NAME}`,
             description,
             images: [image],
         },
@@ -70,14 +83,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function StreamPage({ params } : Params) {
     const { slug } = await params
-    const res = await fetch(`${process.env.BASE_URL_BACKEND}api/watch/${slug}`, {
+    const res = await fetch(`${process.env.BASE_URL_BACKEND}/watch/${slug}`, {
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
         },
         cache: 'no-store'
     });
 
-    const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}api/recommendations`, {
+    const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}/recommendations`, {
         headers: {
         'X-API-KEY': process.env.APIKEY_BACKEND as string,
         },
@@ -96,7 +109,7 @@ export default async function StreamPage({ params } : Params) {
     const nextEpisodeSlug = data.nextEpisodeSlug;
     const prevEpisodeSlug = data.prevEpisodeSlug;
 
-    fetch(`${process.env.BASE_URL_BACKEND}api/view-series/${detail.series.slug}`, {
+    fetch(`${process.env.BASE_URL_BACKEND}/view-series/${detail.series.slug}`, {
         method: 'POST',
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
@@ -107,6 +120,19 @@ export default async function StreamPage({ params } : Params) {
     })
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify([
+                        episodeJsonLd(detail),
+                        breadcrumbJsonLd([
+                            { name: "Beranda", path: "/" },
+                            { name: detail.series.name, path: `/series/${detail.series.slug}` },
+                            { name: `Episode ${detail.episode_number}`, path: `/watch/${detail.slug}` },
+                        ]),
+                    ]),
+                }}
+            />
             {/* Stream Notification */}
             <StreamNotificationRotator
                 intervalMs={15_000}
@@ -135,7 +161,7 @@ export default async function StreamPage({ params } : Params) {
                     <section className="dl-donghua-details">
                         <div className="dl-details-content">
                             <div className="dl-details-poster">
-                                <Image src={process.env.BASE_URL_BACKEND + detail.series.thumbnail} alt={detail.series.name} width={600} height={600} priority />
+                                <Image src={`/api/image?path=${encodeURIComponent(detail.series.thumbnail)}`} alt={detail.series.name} width={600} height={600} priority />
                             </div>
                             <div className="dl-details-info">
                                 <h1 className="dl-details-title">{detail.series.name}</h1>

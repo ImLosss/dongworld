@@ -5,6 +5,20 @@ import Link from "next/link";
 import HistorySection from "@/components/home/HistorySection";
 import ScheduleSection from "@/components/home/ScheduleSelection";
 import TopDonation from "@/components/home/topDonation";
+import type { Metadata } from "next";
+import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: `${SITE_NAME} - Streaming Donghua Subtitle Indonesia`,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: `${SITE_NAME} - Streaming Donghua Subtitle Indonesia`,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    type: "website",
+  },
+};
 
 type Slide = {
   name: string;
@@ -16,13 +30,14 @@ type Slide = {
 export default async function Home() {
   let heroSlides: Slide[] = [];
 
-  const response = await fetch(`${process.env.BASE_URL_BACKEND}api/all-series`, {
+  const response = await fetch(`${process.env.BASE_URL_BACKEND}/all-series`, {
     headers: {
       'X-API-KEY': process.env.APIKEY_BACKEND as string,
     },
     cache: 'no-store'
   });
   const data = await response.json();
+
   heroSlides = data?.heroSlides ?? data?.data ?? [];
 
   const isToday = (dateStr?: string) => {

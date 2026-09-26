@@ -6,7 +6,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const page = searchParams.get("page") || 1;
 
   const backendRes = await fetch(
-    `${process.env.BASE_URL_BACKEND}api/series/${slug}?page=${page}`,
+    `${process.env.BASE_URL_BACKEND}/series/${slug}?page=${page}`,
     {
       headers: { 'X-API-KEY': process.env.APIKEY_BACKEND as string }
     }

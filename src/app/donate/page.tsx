@@ -1,5 +1,13 @@
 import TopDonation from "@/components/home/topDonation";
 import DonateForm from "./DonateForm";
+import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/seo";
+
+export const metadata: Metadata = {
+    title: "Donasi",
+    description: `Dukung ${SITE_NAME} agar tetap online dan terus menyediakan streaming donghua subtitle Indonesia gratis.`,
+    alternates: { canonical: "/donate" },
+};
 
 export default function DonatePage() {
     return (

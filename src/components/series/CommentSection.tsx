@@ -107,7 +107,7 @@ export default function CommentSection({ comments, slug, csrfToken }: { comments
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try { localStorage.setItem("commenterName", name); } catch (error) { console.warn("localStorage access denied by browser settings."); }
+        try { localStorage.setItem("commenterName", name); } catch { console.warn("localStorage access denied by browser settings."); }
         if (!turnstileToken) {
             alert("Mohon tunggu verifikasi keamanan selesai.");
             return;

@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.0",
     "@marsidev/react-turnstile": "^1.6.0",
     "@sentry/nextjs": "^10.75.0",
+    "bootstrap": "^4.6.2",
     "dayjs": "^1.11.18",
     "next": "15.5.9",
     "nextjs-toploader": "^3.9.17",

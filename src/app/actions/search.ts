@@ -4,7 +4,7 @@ export async function fetchLiveSearch(query: string) {
     if (!query) return [];
 
     try {
-        const response = await fetch(`${process.env.BASE_URL_BACKEND}api/series?search=${encodeURIComponent(query)}&limit=5`, {
+        const response = await fetch(`${process.env.BASE_URL_BACKEND}/series?search=${encodeURIComponent(query)}&limit=5`, {
             headers: {
                 'X-API-KEY': process.env.APIKEY_BACKEND as string,
             },

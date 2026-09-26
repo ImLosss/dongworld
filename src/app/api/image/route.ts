@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-const BACKEND = process.env.BASE_URL_BACKEND!;
+const BACKEND = process.env.BASE_URL_IMAGE!;
 
 export async function GET(req: NextRequest) {
   const path = req.nextUrl.searchParams.get("path");
@@ -10,6 +10,8 @@ export async function GET(req: NextRequest) {
   }
 
   const res = await fetch(`${BACKEND}${path}`);
+
+  console.log(`Fetching image from: ${BACKEND}${path}, Status: ${res.status}`);
 
   if (!res.ok) {
     return new Response("Image not found", { status: 404 });

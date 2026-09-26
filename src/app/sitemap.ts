@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/seo";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const API_BASE = process.env.BASE_URL_BACKEND || "";
 const API_KEY = process.env.APIKEY_BACKEND || "";
 
@@ -31,7 +31,7 @@ const fetchJson = async (url: string) => {
 };
 
 const getSitemapData = async (): Promise<{ series: SeriesItem[]; episodes: EpisodeItem[] }> => {
-  const data = await fetchJson(`${API_BASE}api/sitemap`);
+  const data = await fetchJson(`${API_BASE}/sitemap`);
   return {
     series: data?.series || [],
     episodes: data?.episodes || [],
@@ -39,26 +39,57 @@ const getSitemapData = async (): Promise<{ series: SeriesItem[]; episodes: Episo
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE_URL}/`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1,
+    },
+    {
+      url: `${SITE_URL}/series`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/recent-comments`,
+      lastModified: new Date(),
+      changeFrequency: "hourly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/donate`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+  ];
+
   if (!API_BASE || !API_KEY) {
-    return [
-      { url: `${SITE_URL}/`, lastModified: new Date() },
-      { url: `${SITE_URL}/series`, lastModified: new Date() },
-    ];
+    return staticRoutes;
   }
 
-  // const { series, episodes } = await getSitemapData();
-  const { series } = await getSitemapData();
+  try {
+    const { series, episodes } = await getSitemapData();
 
-  return [
-    { url: `${SITE_URL}/`, lastModified: new Date() },
-    { url: `${SITE_URL}/series`, lastModified: new Date() },
-    ...series.map((item) => ({
-      url: `${SITE_URL}/series/${item.slug}`,
-      lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
-    })),
-    // ...episodes.map((item) => ({
-    //   url: `${SITE_URL}/watch/${item.slug}`,
-    //   lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
-    // })),
-  ];
+    return [
+      ...staticRoutes,
+      ...series.map((item) => ({
+        url: `${SITE_URL}/series/${item.slug}`,
+        lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      })),
+      ...episodes.map((item) => ({
+        url: `${SITE_URL}/watch/${item.slug}`,
+        lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      })),
+    ];
+  } catch {
+    // If the backend is unreachable, still return the static routes.
+    return staticRoutes;
+  }
 }

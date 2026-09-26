@@ -4,11 +4,21 @@ import "./globals.css";
 import "@/styles/style.css";
 import "@/styles/responsive.css";
 // import "@/styles/series.css";
+// Self-hosted vendor CSS (avoids third-party CDN requests blocked by browser tracking prevention)
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { Suspense } from "react";
 import NextTopLoader from "nextjs-toploader";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  websiteJsonLd,
+} from "@/lib/seo";
 
 declare global {
   interface Window {
@@ -26,18 +36,63 @@ const uiFont = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "DongWorld - Streaming Donghua Berkualitas",
-  description: "Nonton donghua favoritmu dengan kualitas HD dan subtitle Indonesia",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} - Streaming Donghua Subtitle Indonesia`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  applicationName: SITE_NAME,
+  authors: [{ name: `${SITE_NAME} Team` }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "entertainment",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "DongWorld - Streaming Donghua Berkualitas",
-    description: "Nonton donghua favoritmu dengan kualitas HD dan subtitle Indonesia",
+    title: `${SITE_NAME} - Streaming Donghua Subtitle Indonesia`,
+    description: SITE_DESCRIPTION,
     type: "website",
-    url: "https://dongworld.top",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    locale: "id_ID",
+    images: [
+      {
+        url: "/favicon.png",
+        width: 512,
+        height: 512,
+        alt: SITE_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} - Streaming Donghua Subtitle Indonesia`,
+    description: SITE_DESCRIPTION,
+    images: ["/favicon.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
   },
 };
 
@@ -51,10 +106,11 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="keywords" content="donghua, anime china, streaming donghua, watch donghua online" />
-        <meta name="author" content="DongWorld Team" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossOrigin="anonymous" />
+        <meta name="theme-color" content="#ff3d4d" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
+        />
       </head>
       <body className={`${uiFont.variable}`} suppressHydrationWarning>
         <NextTopLoader 

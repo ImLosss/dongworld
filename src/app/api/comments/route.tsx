@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const backendRes = await fetch(`${process.env.BASE_URL_BACKEND}api/comments`, {
+  const backendRes = await fetch(`${process.env.BASE_URL_BACKEND}/comments`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

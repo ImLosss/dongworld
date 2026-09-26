@@ -4,6 +4,14 @@ import './style.css';
 import "@/styles/stream.css";
 import "@/styles/series.css";
 import TopDonation from "@/components/home/topDonation";
+import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/seo";
+
+export const metadata: Metadata = {
+    title: "Komentar Terbaru",
+    description: `Lihat komentar terbaru dari komunitas ${SITE_NAME} seputar donghua subtitle Indonesia.`,
+    alternates: { canonical: "/recent-comments" },
+};
 
 const getInitials = (name: string) => {
     if (!name) return "U";

@@ -9,7 +9,7 @@ type Props = {
     
 export default function SeriesList({ children, href }: Props) {
     return (
-        <div className="dl-card">
+        <div className="dl-card" suppressHydrationWarning={true}>
             <Link href={href} style={{ display: "block", color: "inherit", textDecoration: "none" }} onClick={openSmartlink}>
                 {children}
             </Link>

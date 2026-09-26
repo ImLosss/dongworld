@@ -14,13 +14,21 @@ import { Fragment } from "react";
 import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
 import TopDonation from "@/components/home/topDonation";
+import {
+  SITE_NAME,
+  absoluteUrl,
+  imageProxyUrl,
+  truncate,
+  seriesJsonLd,
+  breadcrumbJsonLd,
+} from "@/lib/seo";
 
 type Params = {
   params: Promise<{ slug: string }>;
 };
 
 async function getSeriesData(slug: string, options?: { revalidate?: number }) {
-  const res = await fetch(`${process.env.BASE_URL_BACKEND}api/series/${slug}`, {
+  const res = await fetch(`${process.env.BASE_URL_BACKEND}/series/${slug}`, {
     headers: {
       'X-API-KEY': process.env.APIKEY_BACKEND as string,
     },
@@ -38,32 +46,37 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
     if (!data || !data.series) {
         return {
-            title: "Not Found | DongWorld",
-            description: "Halaman tidak ditemukan."
+            title: "Not Found",
+            description: "Halaman tidak ditemukan.",
+            robots: { index: false, follow: false },
         };
     }
     
     const series = data.series;
 
-    const title = `${series.name} | DongWorld`;
-    const description = series.synopsis?.slice(0, 160) || "Tonton donghua terbaru di DongWorld.";
-    const image = process.env.BASE_URL_BACKEND + series.thumbnail;
-    const url = `${process.env.NEXT_PUBLIC_SITE_URL}/series/${series.slug}`;
+    const title = `${series.name} Subtitle Indonesia`;
+    const description = series.synopsis
+      ? truncate(series.synopsis, 160)
+      : `Nonton ${series.name} subtitle Indonesia kualitas HD di ${SITE_NAME}.`;
+    const image = imageProxyUrl(series.thumbnail);
+    const url = absoluteUrl(`/series/${series.slug}`);
 
     return {
         title,
         description,
         alternates: { canonical: url },
         openGraph: {
-          title,
+          title: `${series.name} | ${SITE_NAME}`,
           description,
           url,
-          images: [{ url: image }],
+          siteName: SITE_NAME,
+          locale: "id_ID",
+          images: [{ url: image, alt: series.name }],
           type: "video.tv_show",
         },
         twitter: {
             card: "summary_large_image",
-            title,
+            title: `${series.name} | ${SITE_NAME}`,
             description,
             images: [image],
         },
@@ -73,7 +86,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 export default async function SeriesDetail({ params }: Params) {
   const { slug } = await params
 
-  const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}api/recommendations`, {
+  const recommendations = await fetch(`${process.env.BASE_URL_BACKEND}/recommendations`, {
     headers: {
       'X-API-KEY': process.env.APIKEY_BACKEND as string,
     },
@@ -93,6 +106,19 @@ export default async function SeriesDetail({ params }: Params) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            seriesJsonLd(series),
+            breadcrumbJsonLd([
+              { name: "Beranda", path: "/" },
+              { name: "Semua Donghua", path: "/series" },
+              { name: series.name, path: `/series/${series.slug}` },
+            ]),
+          ]),
+        }}
+      />
       {/* Stream Notification */}
       <StreamNotificationRotator
         intervalMs={15_000}
@@ -127,7 +153,7 @@ export default async function SeriesDetail({ params }: Params) {
           <section className="dl-donghua-details">
             <div className="dl-details-content">
               <div className="dl-details-poster">
-                <Image src={process.env.BASE_URL_BACKEND + series.thumbnail} alt={series.name} width={600} height={600} priority />
+                <Image src={`/api/image?path=${encodeURIComponent(series.thumbnail)}`} alt={series.name} width={600} height={600} priority />
               </div>
               <div className="dl-details-info">
                 <h1 className="dl-details-title">{series.name}</h1>

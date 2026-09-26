@@ -6,8 +6,54 @@ import { notFound } from "next/navigation";
 import HistorySection from "@/components/home/HistorySection";
 import { Suspense } from "react";
 import TopDonation from "@/components/home/topDonation";
+import type { Metadata } from "next";
+import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export default async function Series({ searchParams }: { searchParams: Promise<{ search?: string; type?: string; genre?: string; status?: string, page?: string }>; }) {
+type SeriesSearchParams = {
+  search?: string;
+  type?: string;
+  genre?: string;
+  status?: string;
+  page?: string;
+};
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SeriesSearchParams>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const hasFilters = !!(params.search || params.type || params.genre || params.status);
+  const page = Number(params.page || 1);
+
+  const title = params.search
+    ? `Hasil Pencarian "${params.search}"`
+    : params.type === "movie"
+      ? "Daftar Movie Donghua"
+      : "Semua Donghua";
+
+  const description = params.search
+    ? `Hasil pencarian donghua untuk "${params.search}" di ${SITE_NAME}.`
+    : "Jelajahi koleksi lengkap donghua (anime China) subtitle Indonesia terbaru dan terlengkap di DongWorld.";
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: hasFilters ? undefined : "/series",
+    },
+    // Avoid indexing filtered/paginated variants to prevent duplicate content.
+    robots: hasFilters || page > 1 ? { index: false, follow: true } : undefined,
+    openGraph: {
+      title: `${title} | ${SITE_NAME}`,
+      description,
+      url: absoluteUrl("/series"),
+      type: "website",
+    },
+  };
+}
+
+export default async function Series({ searchParams }: { searchParams: Promise<SeriesSearchParams>; }) {
     const params = await searchParams;
 
     const qs = new URLSearchParams();
@@ -17,7 +63,7 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
     if (params.status) qs.set("status", params.status);
     if (params.page) qs.set("page", params.page);
 
-    const response = await fetch(`${process.env.BASE_URL_BACKEND}api/series?${qs.toString()}`, {
+    const response = await fetch(`${process.env.BASE_URL_BACKEND}/series?${qs.toString()}`, {
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
         },
@@ -25,7 +71,7 @@ export default async function Series({ searchParams }: { searchParams: Promise<{
     });
     const data = await response.json();
 
-    const responseGenres = await fetch(`${process.env.BASE_URL_BACKEND}api/genres`, {
+    const responseGenres = await fetch(`${process.env.BASE_URL_BACKEND}/genres`, {
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
         },
