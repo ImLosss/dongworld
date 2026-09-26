@@ -14,6 +14,7 @@ export default function DonatePage() {
         <div className="row" style={{ marginTop: '70px' }}>
             {/* Bagian Kiri: Form Donasi */}
             <div className="col-12 col-lg-8">
+                <h1 className="sr-only">Donasi untuk DongWorld</h1>
                 <DonateForm />
             </div>
             

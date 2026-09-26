@@ -25,7 +25,7 @@ export default async function RecentComments() {
         },
         cache: 'no-store' 
     });
-    
+
     const json = await response.json();
     const comments = json.data || [];
 
@@ -43,6 +43,8 @@ export default async function RecentComments() {
                                 </ol>
                             </nav>
                         </div>
+
+                        <h1 className="sr-only">Komentar Terbaru DongWorld</h1>
 
                         {/* <div className="dl-section-header">
                             <h2>Komentar Terbaru</h2>

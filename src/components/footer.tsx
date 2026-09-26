@@ -10,7 +10,7 @@ export default function Footer() {
             <span>DongWorld</span>
           </Link>
           <p>
-            Platform streaming donghua terbaik dengan koleksi terlengkap dan kualitas HD
+            Platform streaming donghua subtitle Indonesia terbaik dengan koleksi terlengkap dan kualitas HD
           </p>
           {/* <div className="dl-social-links">
             <a href="#" aria-label="Facebook">

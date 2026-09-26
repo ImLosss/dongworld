@@ -122,6 +122,7 @@ export default async function Series({ searchParams }: { searchParams: Promise<S
                             </nav>
                         </div>
                         <div className="dl-section-header">
+                            <h1 className="sr-only">Semua Donghua Subtitle Indonesia</h1>
                             <h2>Semua Donghua</h2>
                         </div>
                         <Suspense fallback={null}>

@@ -164,7 +164,7 @@ export default async function StreamPage({ params } : Params) {
                                 <Image src={`/api/image?path=${encodeURIComponent(detail.series.thumbnail)}`} alt={detail.series.name} width={600} height={600} priority />
                             </div>
                             <div className="dl-details-info">
-                                <h1 className="dl-details-title">{detail.series.name}</h1>
+                                <h2 className="dl-details-title">{detail.series.name}</h2>
                                 <div className="dl-details-meta">
                                     <span><i className="fas fa-star"></i>{detail.series.rating ? detail.series.rating : "N/A"}</span>
                                     <span><i className="fas fa-tags"></i>{detail.series.genres_string ? detail.series.genres_string : "Unknown"}</span>

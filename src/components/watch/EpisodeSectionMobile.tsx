@@ -53,9 +53,9 @@ export default function EpisodeSection({ slugSeries, slugEpisode, initialEpisode
   };
 
   return (
-    <section className="dl-mobile-episodes">
+    <section className="dl-mobile-episodes" aria-label="Daftar Episode">
       <div className="dl-episode-header">
-        <h2>Daftar Episode</h2>
+        <span className="dl-episode-heading">Daftar Episode</span>
       </div>
       <div className="dl-mobile-episode-list-container">
         {loading && (

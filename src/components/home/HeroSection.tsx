@@ -52,6 +52,10 @@ export default function HeroSection({ slides }: { slides: Slide[] }) {
       onTouchStart={() => setPaused(true)}
       onTouchEnd={() => setPaused(false)}
     >
+      {/* Single page H1 (visually hidden) — slide titles below are H2 to avoid duplicate H1s. */}
+      <h1 className="sr-only">
+        DongWorld - Streaming Donghua Subtitle Indonesia
+      </h1>
       <div 
         className="dl-hero-slider" 
         style={{ transform: `translateX(-${index * 100}%)` }}
@@ -69,7 +73,7 @@ export default function HeroSection({ slides }: { slides: Slide[] }) {
             >
               <div className="dl-hero-content">
                 <div className="dl-hero-info">
-                  <h1 className="dl-hero-title">{s.name}</h1>
+                  <h2 className="dl-hero-title">{s.name}</h2>
                   <p className="dl-hero-synopsis">{s.synopsis}</p>
                   <Link href={`/series/${s.slug}`} className="dl-btn-primary dl-hero-watch-btn">
                     <i className="fas fa-play"></i> Mulai Nonton
