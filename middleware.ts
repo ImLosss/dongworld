@@ -21,7 +21,8 @@ export function middleware(request: NextRequest) {
     const host = (request.headers.get("host") || request.nextUrl.host).toLowerCase();
     if (host === `www.${CANONICAL_HOST}`) {
         const url = request.nextUrl.clone();
-        url.host = CANONICAL_HOST;
+        url.hostname = CANONICAL_HOST;
+        url.port = "";
         url.protocol = "https:";
         return NextResponse.redirect(url, 301);
     }
