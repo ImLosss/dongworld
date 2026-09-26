@@ -19,7 +19,7 @@ const getInitials = (name: string) => {
 };
 
 export default async function RecentComments() {
-    const response = await fetch(`${process.env.BASE_URL_BACKEND}api/recent-comments`, {
+    const response = await fetch(`${process.env.BASE_URL_BACKEND}/recent-comments`, {
         headers: {
             'X-API-KEY': process.env.APIKEY_BACKEND as string,
         },
