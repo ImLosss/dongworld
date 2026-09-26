@@ -11,9 +11,9 @@ export async function GET(req: NextRequest) {
 
   const res = await fetch(`${BACKEND}${path}`);
 
-  console.log(`Fetching image from: ${BACKEND}${path}, Status: ${res.status}`);
-
   if (!res.ok) {
+    console.error(`Failed to fetch image from backend: ${res.status} ${res.statusText}`);
+    
     return new Response("Image not found", { status: 404 });
   }
 
