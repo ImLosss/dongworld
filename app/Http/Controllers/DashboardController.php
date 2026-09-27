@@ -28,8 +28,6 @@ class DashboardController extends Controller
 
         // Statistik hari ini
         $todayStats = [
-            'series'   => Series::whereDate('created_at', $today)->count(),
-            'episodes' => Episode::whereDate('created_at', $today)->count(),
             'views'    => (int) View::whereDate('created_at', $today)->sum('views'),
             'comments' => Comment::whereDate('created_at', $today)->count(),
         ];

@@ -22,7 +22,6 @@
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Series</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ number_format($stats['total_series'], 0, ',', '.') }}
-                                    <span class="text-success text-sm font-weight-bolder">+{{ number_format($todayStats['series'], 0, ',', '.') }} hari ini</span>
                                 </h5>
                             </div>
                         </div>
@@ -44,7 +43,6 @@
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Episode</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ number_format($stats['total_episodes'], 0, ',', '.') }}
-                                    <span class="text-success text-sm font-weight-bolder">+{{ number_format($todayStats['episodes'], 0, ',', '.') }} hari ini</span>
                                 </h5>
                             </div>
                         </div>
@@ -66,7 +64,7 @@
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Views</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ number_format($stats['total_views'], 0, ',', '.') }}
-                                    <span class="text-success text-sm font-weight-bolder">+{{ number_format($todayStats['views'], 0, ',', '.') }} hari ini</span>
+                                    <span class="text-success text-sm font-weight-bolder">+{{ number_format($todayStats['views'], 0, ',', '.') }}</span>
                                 </h5>
                             </div>
                         </div>
@@ -88,7 +86,7 @@
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Komentar</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ number_format($stats['total_comments'], 0, ',', '.') }}
-                                    <span class="text-success text-sm font-weight-bolder">+{{ number_format($todayStats['comments'], 0, ',', '.') }} hari ini</span>
+                                    <span class="text-success text-sm font-weight-bolder">+{{ number_format($todayStats['comments'], 0, ',', '.') }}</span>
                                 </h5>
                             </div>
                         </div>
