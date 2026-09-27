@@ -162,7 +162,7 @@ export default async function SeriesDetail({ params }: Params) {
                   <span><i className="fas fa-tags"></i>{series.genres_string ? series.genres_string : "Unknown"}</span>
                   <span><i className="fas fa-calendar"></i>{series.release_date ? series.release_date : "Unknown"}</span>
                   <span><i className="fas fa-video"></i>{series.episodes_max_episode_number || 0}/{series.total_episodes ? series.total_episodes : "?"} Episode</span>
-                  <span><i className="fas fa-eye"></i>{series.views}</span>
+                  <span><i className="fas fa-eye"></i>{series.views || 0}</span>
                 </div>
                 <div className="dl-details-synopsis">
                   <h3>Sinopsis</h3>

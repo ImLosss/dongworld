@@ -3,10 +3,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ["image/avif", "image/webp"],
     localPatterns: [
       {
         pathname: "/api/image",
-        // `search` omitted => any query string (e.g. ?path=...) is allowed
       },
     ],
     remotePatterns: [
