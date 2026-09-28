@@ -203,6 +203,14 @@
                         <div class="col d-flex align-items-center">
                             <h6 class="mb-0">Episode Belum Ada Server</h6>
                         </div>
+                        <div class="col-auto">
+                            <select id="serverFilter" class="form-control form-control-sm" style="min-width: 200px;">
+                                <option value="">All Server</option>
+                                @foreach($servers as $srv)
+                                    <option value="{{ $srv->id }}">{{ $srv->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
@@ -314,7 +322,10 @@
             pageLength: 10,
             ajax: {
                 url: "{{ route('dashboard.episodes-without-server.datatable') }}",
-                type: 'GET'
+                type: 'GET',
+                data: function (d) {
+                    d.server_id = $('#serverFilter').val();
+                }
             },
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-sm' },
@@ -324,11 +335,21 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-sm' },
             ],
             language: {
-                emptyTable: 'Semua episode sudah memiliki server'
+                emptyTable: function () {
+                    const serverName = $('#serverFilter option:selected').text();
+                    return $('#serverFilter').val()
+                        ? 'Semua episode sudah memiliki server ' + serverName
+                        : 'Semua episode sudah memiliki server';
+                }
             },
             headerCallback: function (thead) {
                 $(thead).find('th').css('text-align', 'left');
             },
+        });
+
+        // Filter tabel berdasarkan server yang belum ada di episode
+        $('#serverFilter').on('change', function () {
+            $('#episodesWithoutServerTable').DataTable().ajax.reload();
         });
     });
 </script>

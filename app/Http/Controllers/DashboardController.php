@@ -75,21 +75,35 @@ class DashboardController extends Controller
             'comments' => $chartComments,
         ];
 
+        // Daftar server untuk filter tabel episode tanpa server
+        $servers = Server::orderBy('name')->get();
+
         return view('admin.dashboard', compact(
             'stats',
             'todayStats',
             'episodesWithoutServerCount',
-            'chart'
+            'chart',
+            'servers'
         ));
     }
 
     /**
      * DataTable: episode yang belum memiliki server/link sama sekali.
+     *
+     * Jika parameter `server_id` diisi, hanya menampilkan episode yang belum
+     * memiliki link pada server tersebut. Jika kosong, menampilkan episode yang
+     * belum memiliki link sama sekali (semua server).
      */
     public function episodesWithoutServerDatatable(Request $request)
     {
+        $serverId = $request->integer('server_id');
+
         $query = Episode::with('series')
-            ->whereDoesntHave('links')
+            ->whereDoesntHave('links', function ($q) use ($serverId) {
+                if ($serverId) {
+                    $q->where('server_id', $serverId);
+                }
+            })
             ->orderByDesc('created_at');
 
         return DataTables::of($query)
