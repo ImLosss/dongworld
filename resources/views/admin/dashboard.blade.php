@@ -204,12 +204,28 @@
                             <h6 class="mb-0">Episode Belum Ada Server</h6>
                         </div>
                         <div class="col-auto">
-                            <select id="serverFilter" class="form-control form-control-sm" multiple style="min-width: 200px; min-height: 74px;">
-                                <option value="">All Server</option>
+                            <div class="dropdown">
+                                <button id="serverFilterToggle" type="button"
+                                    class="btn btn-outline-secondary btn-sm dropdown-toggle mb-0"
+                                    data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                    aria-expanded="false">
+                                    All Server
+                                </button>
+                                <div id="serverFilterMenu" class="dropdown-menu dropdown-menu-end p-2"
+                                    style="min-width: 230px; max-height: 280px; overflow-y: auto;">
+                                    <button id="clearServerFilter" type="button" class="dropdown-item rounded px-2 mb-1">
+                                        All Server
+                                    </button>
+                                    <div class="dropdown-divider"></div>
                                 @foreach($servers as $srv)
-                                    <option value="{{ $srv->id }}">{{ $srv->name }}</option>
+                                    <label class="dropdown-item rounded px-2 d-flex align-items-center gap-2 mb-1">
+                                        <input class="form-check-input server-filter-option mt-0" type="checkbox"
+                                            value="{{ $srv->id }}" data-server-name="{{ $srv->name }}">
+                                        <span class="text-sm">{{ $srv->name }}</span>
+                                    </label>
                                 @endforeach
-                            </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -222,7 +238,7 @@
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Series</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Episode</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Dibuat</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">cmd</th>
+                                    <th class="text-secondary text-xxs font-weight-bolder opacity-7 ps-1">cmd</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Aksi</th>
                                 </tr>
                             </thead>
@@ -325,7 +341,7 @@
                 url: "{{ route('dashboard.episodes-without-server.datatable') }}",
                 type: 'GET',
                 data: function (d) {
-                    d.server_ids = $('#serverFilter').val() || [];
+                    d.server_ids = getSelectedServerIds();
                 }
             },
             columns: [
@@ -340,10 +356,8 @@
                 search: '',
                 searchPlaceholder: 'Cari judul series...',
                 emptyTable: function () {
-                    const serverNames = $('#serverFilter option:selected').map(function () {
-                        return $(this).text();
-                    }).get().join(', ');
-                    return $('#serverFilter').val()?.length
+                    const serverNames = getSelectedServerNames().join(', ');
+                    return getSelectedServerIds().length
                         ? 'Semua episode sudah memiliki server ' + serverNames
                         : 'Semua episode sudah memiliki server';
                 }
@@ -353,8 +367,32 @@
             },
         });
 
-        // Filter tabel berdasarkan server yang belum ada di episode
-        $('#serverFilter').on('change', function () {
+        function getSelectedServerIds() {
+            return $('.server-filter-option:checked').map(function () {
+                return $(this).val();
+            }).get();
+        }
+
+        function getSelectedServerNames() {
+            return $('.server-filter-option:checked').map(function () {
+                return $(this).data('server-name');
+            }).get();
+        }
+
+        function updateServerFilterLabel() {
+            const selectedCount = getSelectedServerIds().length;
+            $('#serverFilterToggle').text(selectedCount ? selectedCount + ' Server Dipilih' : 'All Server');
+        }
+
+        // Filter tabel berdasarkan satu atau beberapa server
+        $('.server-filter-option').on('change', function () {
+            updateServerFilterLabel();
+            $('#episodesWithoutServerTable').DataTable().ajax.reload();
+        });
+
+        $('#clearServerFilter').on('click', function () {
+            $('.server-filter-option').prop('checked', false);
+            updateServerFilterLabel();
             $('#episodesWithoutServerTable').DataTable().ajax.reload();
         });
 
