@@ -204,7 +204,7 @@
                             <h6 class="mb-0">Episode Belum Ada Server</h6>
                         </div>
                         <div class="col-auto">
-                            <select id="serverFilter" class="form-control form-control-sm" style="min-width: 200px;">
+                            <select id="serverFilter" class="form-control form-control-sm" multiple style="min-width: 200px; min-height: 74px;">
                                 <option value="">All Server</option>
                                 @foreach($servers as $srv)
                                     <option value="{{ $srv->id }}">{{ $srv->name }}</option>
@@ -222,7 +222,7 @@
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Series</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Episode</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Dibuat</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">CMD</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">cmd</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Aksi</th>
                                 </tr>
                             </thead>
@@ -325,7 +325,7 @@
                 url: "{{ route('dashboard.episodes-without-server.datatable') }}",
                 type: 'GET',
                 data: function (d) {
-                    d.server_id = $('#serverFilter').val();
+                    d.server_ids = $('#serverFilter').val() || [];
                 }
             },
             columns: [
@@ -340,9 +340,11 @@
                 search: '',
                 searchPlaceholder: 'Cari judul series...',
                 emptyTable: function () {
-                    const serverName = $('#serverFilter option:selected').text();
-                    return $('#serverFilter').val()
-                        ? 'Semua episode sudah memiliki server ' + serverName
+                    const serverNames = $('#serverFilter option:selected').map(function () {
+                        return $(this).text();
+                    }).get().join(', ');
+                    return $('#serverFilter').val()?.length
+                        ? 'Semua episode sudah memiliki server ' + serverNames
                         : 'Semua episode sudah memiliki server';
                 }
             },

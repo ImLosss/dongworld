@@ -92,13 +92,22 @@ class DashboardController extends Controller
      */
     public function episodesWithoutServerDatatable(Request $request)
     {
-        $serverId = $request->integer('server_id');
+        $serverIds = collect($request->input('server_ids', []))
+            ->filter(fn ($id) => is_numeric($id) && (int) $id > 0)
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        if ($serverIds->isEmpty() && $request->filled('server_id')) {
+            $serverIds = collect([$request->integer('server_id')]);
+        }
+
         $search = trim((string) $request->input('search.value', ''));
 
         $query = Episode::with('series')
-            ->whereDoesntHave('links', function ($q) use ($serverId) {
-                if ($serverId) {
-                    $q->where('server_id', $serverId);
+            ->whereDoesntHave('links', function ($q) use ($serverIds) {
+                if ($serverIds->isNotEmpty()) {
+                    $q->whereIn('server_id', $serverIds->all());
                 }
             });
 
