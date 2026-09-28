@@ -222,6 +222,7 @@
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Series</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Episode</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Dibuat</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">CMD</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Aksi</th>
                                 </tr>
                             </thead>
@@ -329,12 +330,15 @@
             },
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-sm' },
-                { data: 'series', name: 'series', className: 'text-sm', orderable: false, searchable: false },
+                { data: 'series', name: 'series', className: 'text-sm', orderable: false, searchable: true },
                 { data: 'episode', name: 'episode', className: 'text-sm', orderable: false, searchable: false },
                 { data: 'created_at', name: 'created_at', className: 'text-sm' },
+                { data: 'cmd', name: 'cmd', orderable: false, searchable: false, className: 'text-sm' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-sm' },
             ],
             language: {
+                search: '',
+                searchPlaceholder: 'Cari judul series...',
                 emptyTable: function () {
                     const serverName = $('#serverFilter option:selected').text();
                     return $('#serverFilter').val()
@@ -350,6 +354,21 @@
         // Filter tabel berdasarkan server yang belum ada di episode
         $('#serverFilter').on('change', function () {
             $('#episodesWithoutServerTable').DataTable().ajax.reload();
+        });
+
+        $(document).on('click', '.copy-command', async function () {
+            const button = $(this);
+            const command = button.data('command');
+
+            try {
+                await navigator.clipboard.writeText(command);
+                button.find('i').removeClass('fa-copy').addClass('fa-check text-success');
+                setTimeout(function () {
+                    button.find('i').removeClass('fa-check text-success').addClass('fa-copy text-primary');
+                }, 1200);
+            } catch (error) {
+                window.prompt('Salin command berikut:', command);
+            }
         });
     });
 </script>

@@ -88,45 +88,136 @@ class DashboardController extends Controller
     }
 
     /**
-     * DataTable: episode yang belum memiliki server/link sama sekali.
-     *
-     * Jika parameter `server_id` diisi, hanya menampilkan episode yang belum
-     * memiliki link pada server tersebut. Jika kosong, menampilkan episode yang
-     * belum memiliki link sama sekali (semua server).
+     * DataTable: rentang episode yang belum memiliki server/link.
      */
     public function episodesWithoutServerDatatable(Request $request)
     {
         $serverId = $request->integer('server_id');
+        $search = trim((string) $request->input('search.value', ''));
 
         $query = Episode::with('series')
             ->whereDoesntHave('links', function ($q) use ($serverId) {
                 if ($serverId) {
                     $q->where('server_id', $serverId);
                 }
-            })
-            ->orderByDesc('created_at');
+            });
 
-        return DataTables::of($query)
+        if ($search !== '') {
+            $query->whereHas('series', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        $episodes = $query->get()
+            ->sortBy([
+                ['series.name', 'asc'],
+                ['episode_number', 'asc'],
+            ]);
+
+        $rows = collect();
+
+        foreach ($episodes->groupBy('series_id') as $seriesEpisodes) {
+            $firstEpisode = $seriesEpisodes->first();
+            $series = $firstEpisode?->series;
+
+            if (!$series) {
+                continue;
+            }
+
+            $sortedEpisodes = $seriesEpisodes->sortBy('episode_number')->values();
+            $rangeStart = null;
+            $rangeEnd = null;
+            $rangeFirstEpisode = null;
+
+            foreach ($sortedEpisodes as $episode) {
+                $episodeNumber = $episode->episode_number;
+
+                if (!is_numeric($episodeNumber)) {
+                    $rows->push([
+                        'series_id' => $series->id,
+                        'series' => e($series->name),
+                        'episode' => e($series->type === 'movie' ? $series->name . ' (Movie)' : '-'),
+                        'created_at' => optional($episode->created_at)->format('d M Y H:i'),
+                        'action_episode_id' => $episode->id,
+                        'cmd' => '',
+                    ]);
+                    continue;
+                }
+
+                $episodeNumber = (float) $episodeNumber;
+
+                if ($rangeStart === null) {
+                    $rangeStart = $episodeNumber;
+                    $rangeEnd = $episodeNumber;
+                    $rangeFirstEpisode = $episode;
+                    continue;
+                }
+
+                if ($episodeNumber === $rangeEnd + 1) {
+                    $rangeEnd = $episodeNumber;
+                    continue;
+                }
+
+                $rows->push($this->makeMissingEpisodeRangeRow(
+                    $series,
+                    $rangeStart,
+                    $rangeEnd,
+                    $rangeFirstEpisode
+                ));
+
+                $rangeStart = $episodeNumber;
+                $rangeEnd = $episodeNumber;
+                $rangeFirstEpisode = $episode;
+            }
+
+            if ($rangeStart !== null) {
+                $rows->push($this->makeMissingEpisodeRangeRow(
+                    $series,
+                    $rangeStart,
+                    $rangeEnd,
+                    $rangeFirstEpisode
+                ));
+            }
+        }
+
+        return DataTables::of($rows->values())
             ->addIndexColumn()
-            ->addColumn('series', fn (Episode $e) => e(optional($e->series)->name ?? '-'))
-            ->addColumn('episode', function (Episode $e) {
-                if (optional($e->series)->type === 'movie') {
-                    return e(optional($e->series)->name . ' (Movie)');
-                }
-
-                return e($e->episode_number ?? '-');
-            })
-            ->addColumn('created_at', fn (Episode $e) => optional($e->created_at)->format('d M Y H:i'))
-            ->addColumn('action', function (Episode $e) {
-                if (!$e->series) {
-                    return '-';
-                }
-
-                return '<a href="' . route('episode.edit', [$e->series->id, $e->id]) . '" class="me-2" data-bs-toggle="tooltip" title="Tambah Server">'
+            ->addColumn('action', function (array $row) {
+                return '<a href="' . route('episode.edit', [$row['series_id'], $row['action_episode_id']]) . '" class="me-2" data-bs-toggle="tooltip" title="Tambah Server">'
                     . '<i class="fa-solid fa-circle-plus text-success"></i>'
                     . '</a>';
             })
-            ->rawColumns(['action'])
+            ->addColumn('cmd', function (array $row) {
+                if ($row['cmd'] === '') {
+                    return '-';
+                }
+
+                $command = e($row['cmd']);
+
+                return '<button type="button" class="btn btn-link btn-sm p-0 copy-command" data-command="' . $command . '" title="Salin command">'
+                    . '<code>' . $command . '</code> '
+                    . '<i class="fa-regular fa-copy text-primary"></i>'
+                    . '</button>';
+            })
+            ->rawColumns(['action', 'cmd'])
             ->toJson();
+    }
+
+    private function makeMissingEpisodeRangeRow(Series $series, float $start, float $end, Episode $episode): array
+    {
+        $formatNumber = static fn (float $number): string =>
+            fmod($number, 1.0) === 0.0 ? (string) (int) $number : (string) $number;
+
+        $startLabel = $formatNumber($start);
+        $endLabel = $formatNumber($end);
+
+        return [
+            'series_id' => $series->id,
+            'series' => e($series->name),
+            'episode' => $start === $end ? $startLabel : $startLabel . '-' . $endLabel,
+            'created_at' => optional($episode->created_at)->format('d M Y H:i'),
+            'action_episode_id' => $episode->id,
+            'cmd' => '/reupload ' . $series->id . ' ' . $startLabel . ' ' . $endLabel,
+        ];
     }
 }
