@@ -12,4 +12,9 @@ class View extends Model
     {
         return $this->belongsTo(Series::class);
     }
+
+    public function episode()
+    {
+        return $this->belongsTo(Episode::class);
+    }
 }

@@ -196,6 +196,56 @@
     </div>
 
     <div class="row mt-2">
+        <div class="col-xl-6 col-sm-12 mb-xl-0 mb-4">
+            <div class="card h-100">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Episode Terpopuler</h6>
+                </div>
+                <div class="card-body p-3">
+                    @forelse($popularEpisodes as $popularEpisode)
+                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <div class="me-3">
+                                <p class="text-sm font-weight-bold mb-0">
+                                    {{ optional($popularEpisode->series)->name ?? '-' }}
+                                </p>
+                                <span class="text-xs text-secondary">
+                                    Episode {{ optional($popularEpisode->episode)->episode_number ?? '-' }}
+                                </span>
+                            </div>
+                            <span class="text-sm font-weight-bolder text-success text-nowrap">
+                                {{ number_format($popularEpisode->total_views, 0, ',', '.') }} views
+                            </span>
+                        </div>
+                    @empty
+                        <p class="text-sm text-secondary mb-0">Belum ada data episode.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-sm-12 mb-xl-0 mb-4">
+            <div class="card h-100">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Series Terpopuler</h6>
+                </div>
+                <div class="card-body p-3">
+                    @forelse($popularSeries as $popular)
+                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <p class="text-sm font-weight-bold mb-0 me-3">
+                                {{ optional($popular->series)->name ?? '-' }}
+                            </p>
+                            <span class="text-sm font-weight-bolder text-success text-nowrap">
+                                {{ number_format($popular->total_views, 0, ',', '.') }} views
+                            </span>
+                        </div>
+                    @empty
+                        <p class="text-sm text-secondary mb-0">Belum ada data series.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2">
         <div class="col-12">
             <div class="card mb-1 p-3">
                 <div class="card-header pb-3">

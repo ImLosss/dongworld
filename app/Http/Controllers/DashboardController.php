@@ -75,6 +75,23 @@ class DashboardController extends Controller
             'comments' => $chartComments,
         ];
 
+        $popularEpisodes = View::with(['episode', 'series'])
+            ->select('episode_id', 'series_id')
+            ->selectRaw('SUM(views) as total_views')
+            ->whereNotNull('episode_id')
+            ->groupBy('episode_id', 'series_id')
+            ->orderByDesc('total_views')
+            ->limit(5)
+            ->get();
+
+        $popularSeries = View::with('series')
+            ->select('series_id')
+            ->selectRaw('SUM(views) as total_views')
+            ->groupBy('series_id')
+            ->orderByDesc('total_views')
+            ->limit(5)
+            ->get();
+
         // Daftar server untuk filter tabel episode tanpa server
         $servers = Server::orderBy('name')->get();
 
@@ -83,6 +100,8 @@ class DashboardController extends Controller
             'todayStats',
             'episodesWithoutServerCount',
             'chart',
+            'popularEpisodes',
+            'popularSeries',
             'servers'
         ));
     }
