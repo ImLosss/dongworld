@@ -35,8 +35,31 @@ class DashboardController extends Controller
         // Episode yang belum punya server/link sama sekali
         $episodesWithoutServerCount = Episode::whereDoesntHave('links')->count();
 
-        // Data grafik 7 hari terakhir
-        $startDate = now()->subDays(6)->startOfDay();
+        $trend = $this->getTrendData(7);
+
+        // Daftar server untuk filter tabel episode tanpa server
+        $servers = Server::orderBy('name')->get();
+
+        return view('admin.dashboard', compact(
+            'stats',
+            'todayStats',
+            'episodesWithoutServerCount',
+            'trend',
+            'servers'
+        ));
+    }
+
+    public function trendData(Request $request)
+    {
+        $days = $request->integer('days', 7);
+        $days = in_array($days, [7, 30], true) ? $days : 7;
+
+        return response()->json($this->getTrendData($days));
+    }
+
+    private function getTrendData(int $days): array
+    {
+        $startDate = now()->subDays($days - 1)->startOfDay();
 
         $viewsPerDay = View::selectRaw('DATE(created_at) as date, SUM(views) as total')
             ->where('created_at', '>=', $startDate)
@@ -58,7 +81,7 @@ class DashboardController extends Controller
         $chartEpisodes = [];
         $chartComments = [];
 
-        foreach (range(6, 0) as $i) {
+        foreach (range($days - 1, 0) as $i) {
             $date = now()->subDays($i);
             $key = $date->toDateString();
 
@@ -68,42 +91,47 @@ class DashboardController extends Controller
             $chartComments[] = (int) ($commentsPerDay[$key] ?? 0);
         }
 
-        $chart = [
-            'labels'   => $chartLabels,
-            'views'    => $chartViews,
-            'episodes' => $chartEpisodes,
-            'comments' => $chartComments,
-        ];
-
         $popularEpisodes = View::with(['episode', 'series'])
             ->select('episode_id', 'series_id')
             ->selectRaw('SUM(views) as total_views')
             ->whereNotNull('episode_id')
+            ->where('created_at', '>=', $startDate)
             ->groupBy('episode_id', 'series_id')
             ->orderByDesc('total_views')
             ->limit(5)
-            ->get();
+            ->get()
+            ->map(fn (View $view) => [
+                'series' => optional($view->series)->name ?? '-',
+                'episode' => optional($view->episode)->episode_number ?? '-',
+                'views' => (int) $view->total_views,
+            ])
+            ->values();
 
         $popularSeries = View::with('series')
             ->select('series_id')
             ->selectRaw('SUM(views) as total_views')
+            ->where('created_at', '>=', $startDate)
             ->groupBy('series_id')
             ->orderByDesc('total_views')
             ->limit(5)
-            ->get();
+            ->get()
+            ->map(fn (View $view) => [
+                'series' => optional($view->series)->name ?? '-',
+                'views' => (int) $view->total_views,
+            ])
+            ->values();
 
-        // Daftar server untuk filter tabel episode tanpa server
-        $servers = Server::orderBy('name')->get();
-
-        return view('admin.dashboard', compact(
-            'stats',
-            'todayStats',
-            'episodesWithoutServerCount',
-            'chart',
-            'popularEpisodes',
-            'popularSeries',
-            'servers'
-        ));
+        return [
+            'periodLabel' => $days === 30 ? '1 Bulan Terakhir' : '7 Hari Terakhir',
+            'chart' => [
+                'labels'   => $chartLabels,
+                'views'    => $chartViews,
+                'episodes' => $chartEpisodes,
+                'comments' => $chartComments,
+            ],
+            'popularEpisodes' => $popularEpisodes,
+            'popularSeries' => $popularSeries,
+        ];
     }
 
     /**

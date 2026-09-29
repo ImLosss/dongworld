@@ -26,6 +26,7 @@ Route::group([
 
     // routeDashboard
     Route::get('/', [DashboardController::class, 'index'])->name('home');
+    Route::get('dashboard/trend-data', [DashboardController::class, 'trendData'])->name('dashboard.trend-data');
     Route::get('dashboard/episodes-without-server/datatable', [DashboardController::class, 'episodesWithoutServerDatatable'])->name('dashboard.episodes-without-server.datatable');
     //endRoute
 

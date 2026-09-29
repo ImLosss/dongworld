@@ -172,7 +172,13 @@
         <div class="col-xl-8 col-sm-12 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Views 7 Hari Terakhir</h6>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 id="viewsTrendTitle" class="mb-0">Views {{ $trend['periodLabel'] }}</h6>
+                        <select id="trendPeriod" class="form-control form-control-sm w-auto ms-3">
+                            <option value="7" selected>7 Hari</option>
+                            <option value="30">1 Bulan</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="card-body p-3">
                     <div class="chart">
@@ -184,7 +190,7 @@
         <div class="col-xl-4 col-sm-12 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Episode &amp; Komentar 7 Hari Terakhir</h6>
+                    <h6 id="contentTrendTitle" class="mb-0">Episode &amp; Komentar {{ $trend['periodLabel'] }}</h6>
                 </div>
                 <div class="card-body p-3">
                     <div class="chart">
@@ -199,47 +205,45 @@
         <div class="col-xl-6 col-sm-12 mb-xl-0 mb-4">
             <div class="card h-100">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Episode Terpopuler</h6>
+                    <h6 id="popularEpisodesTitle" class="mb-0">Episode Terpopuler {{ $trend['periodLabel'] }}</h6>
                 </div>
                 <div class="card-body p-3">
-                    @forelse($popularEpisodes as $popularEpisode)
-                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                            <div class="me-3">
-                                <p class="text-sm font-weight-bold mb-0">
-                                    {{ optional($popularEpisode->series)->name ?? '-' }}
-                                </p>
-                                <span class="text-xs text-secondary">
-                                    Episode {{ optional($popularEpisode->episode)->episode_number ?? '-' }}
+                    <div id="popularEpisodesList">
+                        @forelse($trend['popularEpisodes'] as $popularEpisode)
+                            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <div class="me-3">
+                                    <p class="text-sm font-weight-bold mb-0">{{ $popularEpisode['series'] }}</p>
+                                    <span class="text-xs text-secondary">Episode {{ $popularEpisode['episode'] }}</span>
+                                </div>
+                                <span class="text-sm font-weight-bolder text-success text-nowrap">
+                                    {{ number_format($popularEpisode['views'], 0, ',', '.') }} views
                                 </span>
                             </div>
-                            <span class="text-sm font-weight-bolder text-success text-nowrap">
-                                {{ number_format($popularEpisode->total_views, 0, ',', '.') }} views
-                            </span>
-                        </div>
-                    @empty
-                        <p class="text-sm text-secondary mb-0">Belum ada data episode.</p>
-                    @endforelse
+                        @empty
+                            <p class="text-sm text-secondary mb-0">Belum ada data episode.</p>
+                        @endforelse
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-xl-6 col-sm-12 mb-xl-0 mb-4">
             <div class="card h-100">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Series Terpopuler</h6>
+                    <h6 id="popularSeriesTitle" class="mb-0">Series Terpopuler {{ $trend['periodLabel'] }}</h6>
                 </div>
                 <div class="card-body p-3">
-                    @forelse($popularSeries as $popular)
-                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                            <p class="text-sm font-weight-bold mb-0 me-3">
-                                {{ optional($popular->series)->name ?? '-' }}
-                            </p>
-                            <span class="text-sm font-weight-bolder text-success text-nowrap">
-                                {{ number_format($popular->total_views, 0, ',', '.') }} views
-                            </span>
-                        </div>
-                    @empty
-                        <p class="text-sm text-secondary mb-0">Belum ada data series.</p>
-                    @endforelse
+                    <div id="popularSeriesList">
+                        @forelse($trend['popularSeries'] as $popular)
+                            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <p class="text-sm font-weight-bold mb-0 me-3">{{ $popular['series'] }}</p>
+                                <span class="text-sm font-weight-bolder text-success text-nowrap">
+                                    {{ number_format($popular['views'], 0, ',', '.') }} views
+                                </span>
+                            </div>
+                        @empty
+                            <p class="text-sm text-secondary mb-0">Belum ada data series.</p>
+                        @endforelse
+                    </div>
                 </div>
             </div>
         </div>
@@ -304,10 +308,7 @@
 @section('script')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const chartLabels = @json($chart['labels']);
-        const chartViews = @json($chart['views']);
-        const chartEpisodes = @json($chart['episodes']);
-        const chartComments = @json($chart['comments']);
+        const trendData = @json($trend);
 
         // Line chart: views 7 hari terakhir
         const viewsCtx = document.getElementById('chartViews').getContext('2d');
@@ -315,13 +316,13 @@
         gradientViews.addColorStop(0, 'rgba(203, 12, 159, 0.4)');
         gradientViews.addColorStop(1, 'rgba(203, 12, 159, 0.0)');
 
-        new Chart(viewsCtx, {
+        const viewsChart = new Chart(viewsCtx, {
             type: 'line',
             data: {
-                labels: chartLabels,
+                labels: trendData.chart.labels,
                 datasets: [{
                     label: 'Views',
-                    data: chartViews,
+                    data: trendData.chart.views,
                     borderColor: '#cb0c9f',
                     backgroundColor: gradientViews,
                     borderWidth: 2,
@@ -348,20 +349,20 @@
 
         // Bar chart: episode & komentar 7 hari terakhir
         const contentCtx = document.getElementById('chartContent').getContext('2d');
-        new Chart(contentCtx, {
+        const contentChart = new Chart(contentCtx, {
             type: 'bar',
             data: {
-                labels: chartLabels,
+                labels: trendData.chart.labels,
                 datasets: [
                     {
                         label: 'Episode',
-                        data: chartEpisodes,
+                        data: trendData.chart.episodes,
                         backgroundColor: '#17c1e8',
                         borderRadius: 4,
                     },
                     {
                         label: 'Komentar',
-                        data: chartComments,
+                        data: trendData.chart.comments,
                         backgroundColor: '#f53939',
                         borderRadius: 4,
                     }
@@ -380,6 +381,78 @@
                     }
                 }
             }
+        });
+
+        function escapeHtml(value) {
+            return $('<div>').text(value).html();
+        }
+
+        function renderPopularEpisodes(items) {
+            if (!items.length) {
+                return '<p class="text-sm text-secondary mb-0">Belum ada data episode.</p>';
+            }
+
+            return items.map(function (item) {
+                return '<div class="d-flex justify-content-between align-items-center py-2 border-bottom">'
+                    + '<div class="me-3">'
+                    + '<p class="text-sm font-weight-bold mb-0">' + escapeHtml(item.series) + '</p>'
+                    + '<span class="text-xs text-secondary">Episode ' + escapeHtml(item.episode) + '</span>'
+                    + '</div>'
+                    + '<span class="text-sm font-weight-bolder text-success text-nowrap">'
+                    + Number(item.views).toLocaleString('id-ID') + ' views'
+                    + '</span></div>';
+            }).join('');
+        }
+
+        function renderPopularSeries(items) {
+            if (!items.length) {
+                return '<p class="text-sm text-secondary mb-0">Belum ada data series.</p>';
+            }
+
+            return items.map(function (item) {
+                return '<div class="d-flex justify-content-between align-items-center py-2 border-bottom">'
+                    + '<p class="text-sm font-weight-bold mb-0 me-3">' + escapeHtml(item.series) + '</p>'
+                    + '<span class="text-sm font-weight-bolder text-success text-nowrap">'
+                    + Number(item.views).toLocaleString('id-ID') + ' views'
+                    + '</span></div>';
+            }).join('');
+        }
+
+        function updateTrend(data) {
+            viewsChart.data.labels = data.chart.labels;
+            viewsChart.data.datasets[0].data = data.chart.views;
+            viewsChart.update();
+
+            contentChart.data.labels = data.chart.labels;
+            contentChart.data.datasets[0].data = data.chart.episodes;
+            contentChart.data.datasets[1].data = data.chart.comments;
+            contentChart.update();
+
+            $('#viewsTrendTitle').text('Views ' + data.periodLabel);
+            $('#contentTrendTitle').text('Episode & Komentar ' + data.periodLabel);
+            $('#popularEpisodesTitle').text('Episode Terpopuler ' + data.periodLabel);
+            $('#popularSeriesTitle').text('Series Terpopuler ' + data.periodLabel);
+            $('#popularEpisodesList').html(renderPopularEpisodes(data.popularEpisodes));
+            $('#popularSeriesList').html(renderPopularSeries(data.popularSeries));
+        }
+
+        $('#trendPeriod').on('change', function () {
+            const days = $(this).val();
+            const url = "{{ route('dashboard.trend-data') }}?days=" + days;
+
+            $('#trendPeriod').prop('disabled', true);
+            fetch(url)
+                .then(function (response) {
+                    if (!response.ok) throw new Error('Gagal mengambil data tren');
+                    return response.json();
+                })
+                .then(updateTrend)
+                .catch(function (error) {
+                    console.error(error);
+                })
+                .finally(function () {
+                    $('#trendPeriod').prop('disabled', false);
+                });
         });
 
         $('#episodesWithoutServerTable').DataTable({
