@@ -2,15 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-type HistoryItem = {
-    slugEpisode: string;
-    episodeNumber: number;
-    title: string;
-    watchedAt: string;
-};
-
-type HistoryMap = Record<string, HistoryItem>;
+import {
+    clearHistory as clearHistoryDb,
+    getHistory,
+    migrateLegacyHistory,
+    type HistoryItem,
+} from "@/lib/historyDb";
 
 function formatRelativeTime(date: string) {
     const now = Date.now();
@@ -32,29 +29,30 @@ function formatRelativeTime(date: string) {
 }
 
 export default function HistorySection() {
-    const [history, setHistory] = useState<HistoryMap>({});
+    const [history, setHistory] = useState<HistoryItem[]>([]);
 
     useEffect(() => {
-        try {
-            // Safely attempt to read from localStorage
-            const saved = window.localStorage.getItem("history");
-            setHistory(saved ? JSON.parse(saved) : {});
-        } catch (error) {
-            console.warn("localStorage is blocked or unavailable:", error);
-            setHistory({}); // Fallback to empty state
-        }
+        let active = true;
+
+        (async () => {
+            // Salin data lama dari localStorage (jika ada) ke IndexedDB
+            await migrateLegacyHistory();
+
+            const items = await getHistory();
+            if (active) setHistory(items);
+        })();
+
+        return () => {
+            active = false;
+        };
     }, []);
 
-    const clearHistory = () => {
-        try {
-            window.localStorage.removeItem("history");
-        } catch (error) {
-            console.warn("localStorage is blocked or unavailable:", error);
-        }
-        setHistory({});
+    const clearHistory = async () => {
+        await clearHistoryDb();
+        setHistory([]);
     };
 
-    const items = Object.entries(history);
+    const items = history;
 
     return (
         <section id="history" className="dl-section">
@@ -80,8 +78,8 @@ export default function HistorySection() {
 
                 {/* List */}
                 <div className="dl-history-list">
-                    {items.length > 0 && items.map(([slug, item]) => (
-                        <Link href={`/watch/${item.slugEpisode}`} key={slug} style={{ textDecoration: "none", color: "inherit" }}>
+                    {items.length > 0 && items.map((item) => (
+                        <Link href={`/watch/${item.slugEpisode}`} key={item.seriesSlug} style={{ textDecoration: "none", color: "inherit" }}>
                             <div className="dl-history-item">
                                 <div className="dl-history-content">
                                     <h3 className="dl-history-title">{item.title}</h3>

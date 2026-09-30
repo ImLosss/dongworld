@@ -2,26 +2,25 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { openSmartlink } from "@/lib/smartlink";
+import { saveHistory as saveHistoryToDb } from "@/lib/historyDb";
 
 interface StreamPlayerProps {
     detail: any;
 }
 
-type HistoryItem = {
-    slugEpisode: string;
-    episodeNumber: number;
-    title: string;
-    watchedAt: string;
-};
-
-type HistoryMap = Record<string, HistoryItem>;
-
 export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
     const sortedLinks = [...(detail.links || [])]
         .sort((a: any, b: any) => {
-            const aOkru = (a.server?.name || "").toLowerCase() === "okru";
-            const bOkru = (b.server?.name || "").toLowerCase() === "okru";
-            return Number(bOkru) - Number(aOkru);
+            const getPriority = (name: string) => {
+                name = name.toLowerCase();
+
+                if (name === "player 5 [ads]") return 1;
+                if (name === "ruby[ads]") return 2;
+
+                return 3;
+            };
+
+            return getPriority(a.server?.name || "") - getPriority(b.server?.name || "");
         });
 
     const [selectedServer, setSelectedServer] = useState(sortedLinks[0]?.server.name || "");
@@ -73,35 +72,17 @@ export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug 
         if (saved) return;
         setSaved(true);
 
-        try {
-            const key = "history";
-            const raw = localStorage.getItem(key);
-            let history: HistoryMap = {};
-            try {
-                history = raw ? JSON.parse(raw) : {};
-            } catch {
-                console.warn("Data history rusak, mengulang dari kosong.");
-            }
+        const seriesSlug = detail.series?.slug || detail.slug;
 
-            const seriesSlug = detail.series?.slug || detail.slug;
-
-            history[seriesSlug] = {
-                slugEpisode: detail.slug,
-                episodeNumber: detail.episode_number,
-                title: `${detail.series?.name}`,
-                watchedAt: new Date().toISOString(),
-            };
-
-            const pruned = Object.entries(history)
-                .sort((a, b) => new Date(b[1].watchedAt).getTime() - new Date(a[1].watchedAt).getTime())
-                .slice(0, 20);
-
-            const limitedHistory = Object.fromEntries(pruned);
-
-            localStorage.setItem(key, JSON.stringify(limitedHistory));
-        } catch (error) {
-            console.warn("Gagal mengakses localStorage untuk menyimpan riwayat:", error);
-        }
+        saveHistoryToDb({
+            seriesSlug,
+            slugEpisode: detail.slug,
+            episodeNumber: detail.episode_number,
+            title: `${detail.series?.name}`,
+            watchedAt: new Date().toISOString(),
+        }).catch((error) => {
+            console.warn("Gagal menyimpan riwayat tontonan:", error);
+        });
     };
 
     return (
