@@ -18,9 +18,15 @@ export type HistoryItem = {
     watchedAt: string;
 };
 
+export type EpisodePage = {
+    seriesSlug: string;
+    page: number;
+};
+
 const DB_NAME = "dongworld";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE = "history";
+const EPISODE_PAGE_STORE = "episodePages";
 const INDEX_WATCHED_AT = "watchedAt";
 const MAX_ITEMS = 20;
 const LEGACY_KEY = "history";
@@ -47,6 +53,10 @@ function openDb(): Promise<IDBDatabase> {
             if (!db.objectStoreNames.contains(STORE)) {
                 const store = db.createObjectStore(STORE, { keyPath: "seriesSlug" });
                 store.createIndex(INDEX_WATCHED_AT, "watchedAt", { unique: false });
+            }
+
+            if (!db.objectStoreNames.contains(EPISODE_PAGE_STORE)) {
+                db.createObjectStore(EPISODE_PAGE_STORE, { keyPath: "seriesSlug" });
             }
         };
 
@@ -208,5 +218,70 @@ export async function migrateLegacyHistory(): Promise<void> {
         });
     } catch (error) {
         console.warn("Gagal migrasi riwayat lama ke IndexedDB:", error);
+    }
+}
+
+export async function getEpisodePage(seriesSlug: string): Promise<number | null> {
+    const legacyKey = `episode_page_${seriesSlug}`;
+
+    if (!isIndexedDbSupported()) {
+        try {
+            const value = window.localStorage.getItem(legacyKey);
+            return value ? Number(value) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    try {
+        const db = await openDb();
+        const request = db.transaction(EPISODE_PAGE_STORE, "readonly")
+            .objectStore(EPISODE_PAGE_STORE)
+            .get(seriesSlug);
+        const item = await promisifyRequest<EpisodePage | undefined>(request);
+
+        if (item?.page) return item.page;
+
+        const legacyValue = window.localStorage.getItem(legacyKey);
+        const legacyPage = legacyValue ? Number(legacyValue) : null;
+        if (legacyPage && Number.isFinite(legacyPage)) {
+            await saveEpisodePage(seriesSlug, legacyPage);
+            return legacyPage;
+        }
+    } catch (error) {
+        console.warn("Gagal membaca halaman episode dari IndexedDB:", error);
+    }
+
+    return null;
+}
+
+export async function saveEpisodePage(seriesSlug: string, page: number): Promise<void> {
+    const legacyKey = `episode_page_${seriesSlug}`;
+
+    if (!isIndexedDbSupported()) {
+        try {
+            window.localStorage.setItem(legacyKey, String(page));
+        } catch (error) {
+            console.warn("Gagal menyimpan halaman episode:", error);
+        }
+        return;
+    }
+
+    try {
+        const db = await openDb();
+        const transaction = db.transaction(EPISODE_PAGE_STORE, "readwrite");
+        transaction.objectStore(EPISODE_PAGE_STORE).put({ seriesSlug, page });
+
+        await new Promise<void>((resolve, reject) => {
+            transaction.oncomplete = () => resolve();
+            transaction.onerror = () => reject(transaction.error ?? new Error("Gagal menyimpan halaman episode"));
+        });
+    } catch (error) {
+        console.warn("Gagal menyimpan halaman episode ke IndexedDB:", error);
+        try {
+            window.localStorage.setItem(legacyKey, String(page));
+        } catch {
+            /* ignore fallback errors */
+        }
     }
 }

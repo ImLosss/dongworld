@@ -1,16 +1,19 @@
 "use client";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { openSmartlink } from "@/lib/smartlink";
+import { getEpisodePage, saveEpisodePage } from "@/lib/historyDb";
 
 export default function EpisodeSectionDesktop({ slugSeries, slugEpisode, initialEpisodes, selectedEpisode }: { slugSeries: string, slugEpisode: string, initialEpisodes: any, selectedEpisode: any }) {
     const pageSize = 25;
-    const storageKey = `episode_page_${slugSeries}`;
-    const episodeList = Array.isArray(initialEpisodes) ? initialEpisodes : (initialEpisodes?.data || []);
-
-    const didInit = useRef(false);
-    const sortedEpisodes = [...episodeList].sort((a: any, b: any) => a.episode_number - b.episode_number);
+    const sortedEpisodes = useMemo(
+        () => {
+            const episodeList = Array.isArray(initialEpisodes) ? initialEpisodes : (initialEpisodes?.data || []);
+            return [...episodeList].sort((a: any, b: any) => a.episode_number - b.episode_number);
+        },
+        [initialEpisodes]
+    );
 
     const pageItems = Array.from({ length: Math.ceil(sortedEpisodes.length / pageSize) }, (_, idx) => {
         const startIndex = idx * pageSize;
@@ -36,19 +39,31 @@ export default function EpisodeSectionDesktop({ slugSeries, slugEpisode, initial
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (didInit.current) return; 
-        didInit.current = true;
-
         const initialPage = getPageFromSelectedEpisode();
-        try { localStorage.setItem(storageKey, String(initialPage)); } catch (error) { console.warn("localStorage is blocked or unavailable:", error); }
-    }, [getPageFromSelectedEpisode, storageKey]);
+        let active = true;
+
+        if (selectedEpisode != null) {
+            setPage(initialPage);
+            void saveEpisodePage(slugSeries, initialPage);
+        } else {
+            getEpisodePage(slugSeries).then((storedPage) => {
+                if (active && storedPage && storedPage <= pageItems.length) {
+                    setPage(storedPage);
+                }
+            });
+        }
+
+        return () => {
+            active = false;
+        };
+    }, [getPageFromSelectedEpisode, pageItems.length, selectedEpisode, slugSeries]);
 
     const startIndex = (page - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize, sortedEpisodes.length);
     const pageEpisodes = sortedEpisodes.slice(startIndex, endIndex);
 
     const handlePageChange = (nextPage: number) => {
-        try { localStorage.setItem(storageKey, nextPage.toString()); } catch (error) { console.warn("localStorage is blocked or unavailable:", error); }
+        void saveEpisodePage(slugSeries, nextPage);
         setLoading(true);
         setTimeout(() => {
             setPage(nextPage);

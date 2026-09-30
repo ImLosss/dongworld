@@ -1,15 +1,16 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { openSmartlink } from "@/lib/smartlink";
+import { getEpisodePage, saveEpisodePage } from "@/lib/historyDb";
 
 export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug: string, initialEpisodes: any }) {
     const pageSize = 25;
-    const storageKey = `episode_page_${slug}`;
-    const episodeList = Array.isArray(initialEpisodes) ? initialEpisodes : (initialEpisodes?.data || []);
-
-    const sortedEpisodes = [...episodeList].sort((a: any, b: any) => a.episode_number - b.episode_number);
+    const sortedEpisodes = useMemo(() => {
+        const episodeList = Array.isArray(initialEpisodes) ? initialEpisodes : (initialEpisodes?.data || []);
+        return [...episodeList].sort((a: any, b: any) => a.episode_number - b.episode_number);
+    }, [initialEpisodes]);
 
     const pageItems = Array.from({ length: Math.ceil(sortedEpisodes.length / pageSize) }, (_, idx) => {
         const startIndex = idx * pageSize;
@@ -23,42 +24,31 @@ export default function EpisodeSectionDesktop({ slug, initialEpisodes }: { slug:
         };
     });
 
-    const getSavedPage = useCallback((totalPages: number) => {
-        if (typeof window !== 'undefined') {
-            try {
-                const saved = localStorage.getItem(storageKey);
-                const savedPage = saved ? parseInt(saved) : 1;
-                const validPage = Math.min(Math.max(savedPage, 1), totalPages);
-                
-                if (savedPage !== validPage) {
-                    localStorage.setItem(storageKey, validPage.toString());
-                }
-                
-                return validPage;
-            } catch (error) {
-                console.warn("Akses localStorage diblokir:", error);
-                // Jika diblokir, tetap kembalikan halaman 1 agar aplikasi bisa berlanjut
-                return 1; 
-            }
-        }
-        return 1;
-    }, [storageKey]);
-
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
     const totalPages = Math.max(1, pageItems.length);
 
     useEffect(() => {
-        setPage(getSavedPage(totalPages));
-    }, [slug, totalPages, getSavedPage]);
+        let active = true;
+
+        getEpisodePage(slug).then((savedPage) => {
+            const validPage = Math.min(Math.max(savedPage ?? 1, 1), totalPages);
+            if (active) setPage(validPage);
+            if (savedPage !== validPage) void saveEpisodePage(slug, validPage);
+        });
+
+        return () => {
+            active = false;
+        };
+    }, [slug, totalPages]);
 
     const startIndex = (page - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize, sortedEpisodes.length);
     const pageEpisodes = sortedEpisodes.slice(startIndex, endIndex);
 
     const handlePageChange = (nextPage: number) => {
-        try { localStorage.setItem(storageKey, nextPage.toString()); } catch (error) { console.warn("Akses localStorage diblokir:", error); }
+        void saveEpisodePage(slug, nextPage);
         setLoading(true);
         setPage(nextPage);
         setTimeout(() => setLoading(false), 150);
