@@ -8,20 +8,24 @@ interface StreamPlayerProps {
     detail: any;
 }
 
-export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null }) {
-    const sortedLinks = [...(detail.links || [])]
-        .sort((a: any, b: any) => {
-            const getPriority = (name: string) => {
-                name = name.toLowerCase();
+export default function StreamPlayer({ detail, nextEpisodeSlug, prevEpisodeSlug, countryCode }: StreamPlayerProps & { nextEpisodeSlug: string | null; prevEpisodeSlug: string | null; countryCode?: string | null }) {
+    const isMalaysia = (countryCode || "").toUpperCase() === "MY";
 
-                if (name === "player 5 [ads]") return 1;
-                if (name === "ruby[ads]") return 2;
+    const sortedLinks = [...(detail.links || [])].sort((a: any, b: any) => {
+        const getPriority = (name: string) => {
+            const n = name.toLowerCase();
 
-                return 3;
-            };
+            if (isMalaysia) {
+                if (n === "player 5 [ads]") return 1;
+            } else {
+                if (n === "okru") return 1;
+            }
 
-            return getPriority(a.server?.name || "") - getPriority(b.server?.name || "");
-        });
+            return 50;
+        };
+
+        return getPriority(a.server?.name || "") - getPriority(b.server?.name || "");
+    });
 
     const [selectedServer, setSelectedServer] = useState(sortedLinks[0]?.server.name || "");
     const [saved, setSaved] = useState(false);

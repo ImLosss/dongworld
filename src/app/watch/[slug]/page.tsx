@@ -14,6 +14,7 @@ import { Fragment } from "react";
 import Link from "next/link";
 import SynopsisText from "@/components/series/SynopsisText";
 import { createCsrfToken } from "@/lib/csrfToken";
+import { getCountryCode } from "@/lib/geo";
 import DownloadSection from "@/components/watch/DownloadSection";
 import TopDonation from "@/components/home/topDonation";
 import {
@@ -100,6 +101,7 @@ export default async function StreamPage({ params } : Params) {
     if (!res.ok) return notFound();
 
     const csrfToken = createCsrfToken();
+    const countryCode = await getCountryCode();
     
     const data = await res.json();
     const episodes = data.episodes;
@@ -153,7 +155,7 @@ export default async function StreamPage({ params } : Params) {
             <div className="row">
                 <div className="col-12 col-lg-8">
                     {/* Stream Player Section */}
-                    <StreamPlayer detail={detail} nextEpisodeSlug={nextEpisodeSlug} prevEpisodeSlug={prevEpisodeSlug} />
+                    <StreamPlayer detail={detail} nextEpisodeSlug={nextEpisodeSlug} prevEpisodeSlug={prevEpisodeSlug} countryCode={countryCode} />
                     {/* Download Section */}
                     <DownloadSection downloads={detail.downloads} episodeNumber={detail.episode_number} />
                     <EpisodeSectionMobile slugSeries={detail.series.slug} slugEpisode={slug} initialEpisodes={episodes} selectedEpisode={detail.episode_number} />

@@ -32,6 +32,8 @@ export function middleware(request: NextRequest) {
         request.headers.get("x-forwarded-for")?.split(',')[0].trim() || 
         "Unknown IP";
 
+    const clientCountry = request.headers.get("cf-ipcountry") || "Unknown Country";
+
     const waktu = new Date().toLocaleString("id-ID", {
         timeZone: "Asia/Makassar",
         hour12: false,
@@ -50,7 +52,7 @@ export function middleware(request: NextRequest) {
     }
 
     console.log(
-        `[${request.method}] ${waktu} WITA | IP: ${clientIp} | ${pathname}`
+        `[${request.method}] ${waktu} WITA | IP: ${clientIp} (${clientCountry}) | ${pathname}`
     );
 
     return NextResponse.next();
