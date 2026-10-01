@@ -12,20 +12,21 @@ import {
 function formatRelativeTime(date: string) {
     const now = Date.now();
     const then = new Date(date).getTime();
+
+    if (!Number.isFinite(then)) return "Invalid Date";
+
     const diff = now - then;
 
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    const weeks = Math.floor(diff / 604800000);
+    const months = Math.floor(diff / 2592000000);
 
-    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-
-    if (minutes < 1) return rtf.format(-1, "minute");
-    if (minutes < 60) return rtf.format(-minutes, "minute");
-    if (hours < 24) return rtf.format(-hours, "hour");
-    if (days < 7) return rtf.format(-days, "day");
-    return rtf.format(-weeks, "week");
+    if (minutes < 1) return "baru saja";
+    if (minutes < 60) return `${minutes} menit yang lalu`;
+    if (hours < 24) return `${hours} jam yang lalu`;
+    if (days < 30) return `${days} hari yang lalu`;
+    return `${months} bulan yang lalu`;
 }
 
 export default function HistorySection() {
